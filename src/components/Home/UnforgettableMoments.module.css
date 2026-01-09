@@ -1,0 +1,379 @@
+.momentsSection {
+    padding: 6rem 1rem;
+    background: linear-gradient(to bottom, #f0f4f8, #e6eef6);
+    /* Subtle shift from global bg */
+    overflow: hidden;
+    /* Essential for lateral animations */
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.sectionTitle {
+    text-align: center;
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 4rem;
+    color: #1F6D8C;
+    /* Primary Teal */
+    background: linear-gradient(90deg, #1F6D8C, #F24822);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    padding-bottom: 0.5rem;
+}
+
+.momentsGrid {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.momentCard {
+    display: flex;
+    align-items: center;
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 250px;
+    /* Taller for vertical visual */
+    /* Slight increase for skew clearance */
+    position: relative;
+    border: none;
+
+    /* Rhomboid Shape & Colors */
+    transform: skewX(-12deg);
+    border-left: 8px solid #F24822;
+    /* Carey Orange */
+    border-right: 8px solid #1F6D8C;
+    /* Primary Teal */
+    margin: 0 2rem;
+    /* Clearance for skew */
+}
+
+/* Alternating Layout */
+.reverseLayout {
+    flex-direction: row-reverse;
+    border-left: 8px solid #1F6D8C;
+    /* Swap colors */
+    border-right: 8px solid #F24822;
+}
+
+/* Un-skew content */
+/* Un-skew content except imageWrapper (which keeps skew for rhomboid shape) */
+.momentCard>*:not(.imageWrapper) {
+    transform: skewX(12deg);
+}
+
+.momentCard:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 15px 40px rgba(0, 60, 255, 0.15);
+}
+
+/* Image/Thumbnail Area */
+.imageWrapper {
+    width: 45%;
+    /* Increased width */
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    /* Ensure image fills the skewed container fully */
+    margin-left: -15px;
+    /* Pull left to cover gap */
+    width: calc(45% + 30px);
+    /* Compensate */
+    transform: skewX(0);
+    /* explicitly keep parent skew */
+}
+
+.reverseLayout .imageWrapper {
+    margin-left: 0;
+    margin-right: -15px;
+}
+
+.thumbnail {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+    transform: skewX(12deg) scale(1.1);
+    /* Unskew video content and scale to cover corners */
+}
+
+.momentCard:hover .thumbnail {
+    transform: skewX(12deg) scale(1.2);
+}
+
+.playOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.momentCard:hover .playOverlay {
+    opacity: 1;
+}
+
+.playCircle {
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+/* Card Content Area */
+.cardContent {
+    flex: 1;
+    padding: 0 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.cardTitle {
+    font-size: 1.5rem;
+    color: #333;
+    margin: 0 0 0.5rem 0;
+    font-weight: 700;
+}
+
+.cardLocation {
+    color: #888;
+    font-size: 0.95rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Modal */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 20, 40, 0.8);
+    backdrop-filter: blur(10px);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    animation: fadeIn 0.3s ease;
+}
+
+.modalContent {
+    background: white;
+    width: 100%;
+    max-width: 900px;
+    border-radius: 24px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    /* Flex row for Side-by-Side */
+    flex-direction: row;
+    height: 85vh;
+    /* Fixed height for vertical layout */
+}
+
+.closeBtn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(255, 255, 255, 0.8);
+    color: #333;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.8);
+    color: #333;
+    z-index: 20;
+}
+
+.closeBtn:hover {
+    background: white;
+    transform: scale(1.1);
+}
+
+.videoContainer {
+    height: 100%;
+    width: auto;
+    aspect-ratio: 9/16;
+    /* Vertical Video Ratio */
+    background: black;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.videoPlaceholder {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modalImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.7;
+}
+
+.actualPlayButton {
+    position: absolute;
+    color: white;
+    filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.5));
+}
+
+.modalInfo {
+    padding: 3rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow-y: auto;
+}
+
+.modalTitle {
+    font-size: 2rem;
+    margin: 0 0 0.5rem 0;
+    color: #1F6D8C;
+}
+
+.modalLocation {
+    color: #666;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+}
+
+.modalDescription {
+    color: #444;
+    line-height: 1.6;
+    font-size: 1.1rem;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes scaleUp {
+    from {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .momentCard {
+        height: auto;
+        flex-direction: column;
+        transform: skewX(0);
+        /* Remove skew on mobile for simpler stack */
+        border-width: 0 0 0 8px;
+        /* Left border only */
+        border-radius: 12px;
+        margin: 0;
+    }
+
+    .reverseLayout {
+        flex-direction: column;
+        /* Stack same way */
+        border-width: 0 8px 0 0;
+        /* Right border for reverse */
+    }
+
+    .momentCard>* {
+        transform: skewX(0);
+        /* Remove reverse skew */
+    }
+
+    .imageWrapper,
+    .reverseLayout .imageWrapper {
+        width: 100%;
+        height: 250px;
+        margin: 0;
+        clip-path: none;
+    }
+
+    .cardContent {
+        padding: 1.5rem;
+        width: 100%;
+        text-align: center;
+    }
+
+    .modalContent {
+        flex-direction: column;
+        height: auto;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    .videoContainer {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 9/16;
+        max-height: 60vh;
+    }
+
+    .modalInfo {
+        padding: 1.5rem;
+        flex: 0 0 auto;
+    }
+
+    .modalTitle {
+        font-size: 1.5rem;
+    }
+
+    .sectionTitle {
+        font-size: 2rem;
+    }
+}

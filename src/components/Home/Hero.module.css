@@ -1,0 +1,124 @@
+.hero {
+    position: relative;
+    height: 100vh;
+    /* Reduced size */
+    max-height: 900px;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+}
+
+.videoBg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    z-index: -2;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom,
+            rgba(0, 20, 40, 0.2) 0%,
+            rgba(0, 174, 239, 0.05) 50%,
+            rgba(0, 20, 40, 0.3) 100%);
+    z-index: -1;
+}
+
+.content {
+    z-index: 1;
+    max-width: 1000px;
+    padding: 0 1rem;
+    margin-top: -80px;
+    /* Offset for navbar visual balance */
+}
+
+.title {
+    font-size: 4rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    line-height: 1.1;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8), 0 2px 10px rgba(0, 0, 0, 0.6);
+    color: #F24822;
+    /* Fallback */
+}
+
+.brandTitle {
+    -webkit-text-stroke: 2px white;
+    /* Ensure fill remains the same, though inherited from title */
+    color: #F24822;
+    paint-order: stroke fill;
+}
+
+.venezuela {
+    background: linear-gradient(90deg,
+            #FFD700 0%,
+            #FFD700 25%,
+            #3385FF 35%,
+            #3385FF 60%,
+            #FF3333 70%,
+            #FF3333 90%,
+            #FFD700 100%);
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    text-shadow: none;
+    /* Remove parent title's heavy black shadow */
+    animation: flagFlow 4s linear infinite;
+    display: inline-block;
+    /* Clean white glow to lift it */
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.6));
+}
+
+@keyframes flagFlow {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    100% {
+        background-position: 100% 50%;
+    }
+}
+
+.subtitle {
+    font-size: 1.5rem;
+    margin-bottom: 3rem;
+    color: #ffffff;
+    font-weight: 400;
+
+    /* Translucent Box Box */
+    background: rgba(0, 20, 40, 0.6);
+    /* Dark blue-ish tint matches overlay */
+    backdrop-filter: blur(8px);
+    padding: 12px 40px;
+    border-radius: 50px;
+    display: inline-block;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+@media (max-width: 768px) {
+    .title {
+        font-size: 2.5rem;
+    }
+
+    .subtitle {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+    }
+}

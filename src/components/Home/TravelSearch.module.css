@@ -1,0 +1,360 @@
+.searchContainer {
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 2rem;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    max-width: 1100px;
+    width: 95%;
+    margin: 0 auto;
+}
+
+/* Type Toggle */
+.typeToggle {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.toggleBtn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background: transparent;
+    color: #666;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.toggleBtn:hover {
+    border-color: #1F6D8C;
+    color: #1F6D8C;
+}
+
+.toggleBtn.active {
+    background: #1F6D8C;
+    color: white;
+    border-color: #1F6D8C;
+}
+
+/* Input Row */
+.inputsRow {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    width: 100%;
+}
+
+.field {
+    position: relative;
+    background: transparent;
+    border-radius: 8px;
+    padding: 0.75rem 0;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.field:focus-within {
+    border-bottom-color: #1F6D8C;
+}
+
+.label {
+    display: block;
+    font-size: 0.7rem;
+    color: #999;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.inputWrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    position: relative;
+}
+
+.icon {
+    color: #999;
+    flex-shrink: 0;
+}
+
+.chevron {
+    color: #ccc;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.field:focus-within .chevron {
+    transform: rotate(180deg);
+    color: #1F6D8C;
+}
+
+.input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-size: 0.95rem;
+    font-weight: 400;
+    color: #333;
+    outline: none;
+    cursor: pointer;
+}
+
+.input::placeholder {
+    color: #ccc;
+}
+
+/* Date inputs */
+.input[type="date"] {
+    cursor: pointer;
+}
+
+.input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.4;
+}
+
+/* Dropdown */
+.dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1000;
+    animation: slideDown 0.15s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dropdownItem {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    color: #333;
+    font-size: 0.9rem;
+}
+
+.dropdownItem:hover {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+.dropdownItem:first-child {
+    border-radius: 8px 8px 0 0;
+}
+
+.dropdownItem:last-child {
+    border-radius: 0 0 8px 8px;
+}
+
+.dropdownItem svg {
+    color: #999;
+}
+
+/* Guest Picker */
+.guestPicker {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    padding: 1rem;
+    z-index: 1000;
+    animation: slideDown 0.15s ease;
+    min-width: 300px;
+}
+
+.guestRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.guestRow:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.guestLabel {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.guestLabel svg {
+    color: #999;
+}
+
+.guestTitle {
+    font-weight: 500;
+    color: #333;
+    font-size: 0.9rem;
+}
+
+.guestSubtitle {
+    font-size: 0.75rem;
+    color: #999;
+    font-weight: 400;
+}
+
+.counter {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.counterBtn {
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    background: white;
+    color: #666;
+    font-size: 1.1rem;
+    font-weight: 400;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.counterBtn:hover:not(:disabled) {
+    border-color: #1F6D8C;
+    color: #1F6D8C;
+}
+
+.counterBtn:disabled {
+    opacity: 0.2;
+    cursor: not-allowed;
+}
+
+.counterValue {
+    font-weight: 500;
+    font-size: 0.95rem;
+    min-width: 24px;
+    text-align: center;
+    color: #333;
+}
+
+/* Search Button */
+.searchBtn {
+    background: #1F6D8C;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 0.9rem 2rem;
+    font-weight: 500;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.searchBtn:hover {
+    background: #001f66;
+}
+
+.searchBtn:active {
+    transform: scale(0.98);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .searchContainer {
+        padding: 1.5rem;
+        gap: 1rem;
+    }
+
+    .typeToggle {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .toggleBtn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .inputsRow {
+        grid-template-columns: 1fr;
+        gap: 0.8rem;
+    }
+
+    .searchBtn {
+        padding: 0.9rem;
+        width: 100%;
+    }
+
+    .guestPicker {
+        min-width: auto;
+        left: -1rem;
+        right: -1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .searchContainer {
+        padding: 1rem;
+        border-radius: 8px;
+    }
+
+    .field {
+        padding: 0.6rem 0;
+    }
+
+    .label {
+        font-size: 0.65rem;
+    }
+
+    .input {
+        font-size: 0.9rem;
+    }
+
+    .guestTitle {
+        font-size: 0.85rem;
+    }
+
+    .guestSubtitle {
+        font-size: 0.7rem;
+    }
+}

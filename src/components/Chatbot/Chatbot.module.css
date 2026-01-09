@@ -1,0 +1,101 @@
+.fab {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--color-caribe-blue);
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0, 174, 239, 0.4);
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+}
+
+.chatWindow {
+    position: fixed;
+    bottom: 7rem;
+    right: 2rem;
+    width: 350px;
+    height: 500px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    box-shadow: var(--glass-shadow);
+    display: flex;
+    flex-direction: column;
+    z-index: 999;
+    overflow: hidden;
+}
+
+.header {
+    padding: 1rem;
+    background: var(--color-caribe-blue);
+    color: white;
+    font-weight: bold;
+}
+
+.messages {
+    flex: 1;
+    padding: 1rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.message {
+    padding: 0.8rem;
+    border-radius: 12px;
+    max-width: 80%;
+    font-size: 0.9rem;
+}
+
+.bot {
+    background: white;
+    align-self: flex-start;
+    border-bottom-left-radius: 2px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.user {
+    background: var(--color-caribe-blue);
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 2px;
+}
+
+.inputArea {
+    padding: 1rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    gap: 0.5rem;
+}
+
+.inputArea input {
+    flex: 1;
+    padding: 0.8rem;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+    outline: none;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.inputArea button {
+    background: var(--color-caribe-blue);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

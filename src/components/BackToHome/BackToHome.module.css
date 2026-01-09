@@ -1,0 +1,39 @@
+.backButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--color-caribe-blue);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+}
+
+.backButton:hover {
+    background: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 123, 255, 0.3);
+}
+
+.backButton:active {
+    transform: translateY(0);
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+}
+
+@media (max-width: 768px) {
+    .backButton {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+    }
+}

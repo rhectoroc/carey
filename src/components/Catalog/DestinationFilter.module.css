@@ -1,0 +1,41 @@
+.filterContainer {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    padding: 2rem 1rem;
+    flex-wrap: wrap;
+}
+
+.filterButton {
+    padding: 0.75rem 2rem;
+    border: 2px solid var(--color-caribe-blue);
+    background: transparent;
+    color: var(--color-caribe-blue);
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filterButton:hover {
+    background: rgba(0, 123, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+.filterButton.active {
+    background: var(--color-caribe-blue);
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+@media (max-width: 768px) {
+    .filterContainer {
+        gap: 0.5rem;
+    }
+
+    .filterButton {
+        padding: 0.6rem 1.5rem;
+        font-size: 0.9rem;
+    }
+}

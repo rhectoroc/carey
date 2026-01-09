@@ -1,0 +1,44 @@
+.footer {
+    background: #1a1a1a;
+    color: white;
+    padding: 4rem 2rem 2rem;
+    margin-top: 4rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.column h3 {
+    color: var(--color-caribe-blue);
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+}
+
+.column p,
+.column a {
+    color: #aaa;
+    line-height: 1.8;
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.column a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+.bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: 3rem;
+    padding-top: 2rem;
+    text-align: center;
+    color: #666;
+    font-size: 0.85rem;
+}
