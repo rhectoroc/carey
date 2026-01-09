@@ -64,7 +64,7 @@ export default function TravelPlanner() {
                     boxShadow: '0 10px 25px rgba(0,0,0,0.2)',
                     transition: 'transform 0.2s'
                 }}>
-                    Contactanos
+                    Contáctanos
                 </button>
             </div>
         </section>
