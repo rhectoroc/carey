@@ -113,6 +113,14 @@
 }
 
 @media (max-width: 768px) {
+    .hero {
+        height: auto;
+        min-height: 100vh;
+        max-height: none;
+        overflow: visible;
+        padding-bottom: 4rem;
+    }
+
     .title {
         font-size: 2.5rem;
     }
@@ -120,6 +128,11 @@
     .subtitle {
         font-size: 1.1rem;
         margin-bottom: 2rem;
+    }
+
+    .content {
+        margin-top: 100px;
+        /* Navbar clearance */
     }
 }
 
