@@ -334,23 +334,69 @@
 
 @media (max-width: 480px) {
     .searchContainer {
-        padding: 1rem;
-        border-radius: 8px;
+        padding: 0.75rem;
+        /* Drastic reduction */
+        gap: 0.5rem;
+        /* Tighter gap */
+        border-radius: 12px;
         width: 100%;
-        /* Ensure it doesn't overflow parent padding */
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        margin-top: 1rem;
+    }
+
+    .typeToggle {
+        padding-bottom: 0.75rem;
+        gap: 0.25rem;
+        flex-direction: row;
+        /* Keep side-by-side if possible, or tightly stacked */
+    }
+
+    .toggleBtn {
+        padding: 0.5rem 0.5rem;
+        font-size: 0.85rem;
+        flex: 1;
+        /* Distribute width evenly */
+        justify-content: center;
+        width: auto;
+    }
+
+    .inputsRow {
+        gap: 0;
+        /* Removing gap to stack tightly */
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        overflow: hidden;
     }
 
     .field {
-        padding: 0.6rem 0;
+        padding: 0.5rem 0.75rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 0;
+        margin-bottom: 0;
+    }
+
+    .field:last-child {
+        border-bottom: none;
     }
 
     .label {
-        font-size: 0.65rem;
+        font-size: 0.6rem;
+        margin-bottom: 0.1rem;
+    }
+
+    .inputWrapper {
+        gap: 6px;
     }
 
     .input {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
+        height: auto;
+    }
+
+    .searchBtn {
+        padding: 0.75rem;
+        margin-top: 0.5rem;
+        font-size: 0.95rem;
     }
 
     .guestTitle {
@@ -363,14 +409,15 @@
 
     .dropdown {
         position: fixed;
-        /* Fixed on mobile for better visibility */
         top: auto;
         bottom: 0;
         left: 0;
         right: 0;
         max-height: 50vh;
         border-radius: 20px 20px 0 0;
-        box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.15);
         z-index: 2000;
+        padding-bottom: 2rem;
+        /* Safe area for iOS home bar */
     }
 }
