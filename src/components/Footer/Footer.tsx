@@ -33,7 +33,10 @@ export default function Footer() {
                 </div>
             </div>
             <div className={styles.bottom}>
-                &copy; {new Date().getFullYear()} Carey Tour & Travel. All rights reserved.
+                <p>&copy; {new Date().getFullYear()} Carey Tour & Travel. All rights reserved.</p>
+                <div style={{ marginTop: '10px', fontSize: '0.8rem', opacity: 0.8 }}>
+                    Developed by <a href="http://adrielssystems.com" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none', fontWeight: 'bold' }}>Adriel&apos;s Systems</a> | The Engine of Your Global Software Solutions
+                </div>
             </div>
         </footer>
     );
