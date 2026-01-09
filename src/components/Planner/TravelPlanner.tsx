@@ -1,10 +1,12 @@
 "use client";
 
+import { useChatbot } from '@/context/ChatbotContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { Plane, CalendarCheck, FileQuestion } from 'lucide-react';
 
 export default function TravelPlanner() {
     const { t } = useLanguage();
+    const { openChatbot } = useChatbot();
 
     return (
         <section style={{
@@ -52,21 +54,27 @@ export default function TravelPlanner() {
                     ))}
                 </div>
 
-                <button style={{
-                    padding: '1rem 3rem',
-                    fontSize: '1.2rem',
-                    background: 'white',
-                    color: 'var(--color-caribe-blue)',
-                    border: 'none',
-                    borderRadius: '50px',
-                    fontWeight: 'bold',
-                    cursor: 'pointer',
-                    boxShadow: '0 10px 25px rgba(0,0,0,0.2)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '10px'
-                }}>
-                    <img src="/images/carey-avatar.png" alt="Carey" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} />
+                <button
+                    onClick={() => openChatbot()}
+                    style={{
+                        padding: '0.8rem 2.5rem',
+                        fontSize: '1.2rem',
+                        background: 'white',
+                        color: 'var(--color-caribe-blue)',
+                        border: 'none',
+                        borderRadius: '50px',
+                        fontWeight: 'bold',
+                        cursor: 'pointer',
+                        boxShadow: '0 10px 25px rgba(0,0,0,0.2)',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '15px',
+                        margin: '0 auto',
+                        transition: 'transform 0.2s',
+                        minWidth: '220px',
+                        justifyContent: 'center'
+                    }}>
+                    <img src="/images/carey-avatar.png" alt="Carey" style={{ width: '50px', height: '50px', objectFit: 'contain' }} />
                     Contáctanos
                 </button>
             </div>
