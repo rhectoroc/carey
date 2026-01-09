@@ -20,7 +20,8 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center;
+    object-position: center 30%;
+    /* Show slightly more top */
     z-index: -2;
 }
 
