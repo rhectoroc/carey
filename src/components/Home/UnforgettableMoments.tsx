@@ -49,6 +49,7 @@ export default function UnforgettableMoments() {
     const sectionRef = useRef<HTMLElement>(null);
     const titleRef = useRef<HTMLHeadingElement>(null);
     const itemsRef = useRef<(HTMLDivElement | null)[]>([]);
+    const videoThumbnailsRef = useRef<(HTMLVideoElement | null)[]>([]);
 
     useEffect(() => {
         const ctx = gsap.context(() => {
@@ -78,6 +79,21 @@ export default function UnforgettableMoments() {
                         }
                     }
                 );
+            });
+
+            // Video Playback on Scroll
+            videoThumbnailsRef.current.forEach((video) => {
+                if (!video) return;
+
+                ScrollTrigger.create({
+                    trigger: video,
+                    start: "top bottom",
+                    end: "bottom top",
+                    onEnter: () => video.play(),
+                    onLeave: () => video.pause(),
+                    onEnterBack: () => video.play(),
+                    onLeaveBack: () => video.pause()
+                });
             });
 
             // Animate Title
@@ -115,12 +131,13 @@ export default function UnforgettableMoments() {
                         >
                             <div className={styles.imageWrapper}>
                                 <video
+                                    ref={el => { videoThumbnailsRef.current[index] = el }}
                                     src={moment.video}
                                     className={styles.thumbnail}
                                     muted
-                                    autoPlay
                                     loop
                                     playsInline
+                                    preload="metadata"
                                 />
 
                             </div>
