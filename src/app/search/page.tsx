@@ -60,9 +60,13 @@ export default async function SearchPage({ searchParams }: SearchParamsProps) {
     return (
         <main className={styles.container}>
             <header className={styles.header}>
+                <a href="/" className={styles.headerBackBtn}>
+                    ← Volver al Inicio
+                </a>
                 <h1>Resultados para "{location || 'Todo'}"</h1>
                 <p>{results.length} opciones encontradas en {type === 'tours' ? 'Experiencias' : type === 'flights' ? 'Vuelos' : 'Hoteles'}</p>
             </header>
+
 
             <div className={styles.resultsGrid}>
                 {results.length === 0 ? (

@@ -1,8 +1,34 @@
+/* Main Container */
 .container {
     padding: 8rem 5% 4rem;
     max-width: 1200px;
     margin: 0 auto;
     min-height: 80vh;
+    position: relative;
+}
+
+/* Back Button */
+.headerBackBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    color: #1F6D8C;
+    background: rgba(31, 109, 140, 0.08);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    margin-bottom: 2rem;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(31, 109, 140, 0.1);
+    backdrop-filter: blur(4px);
+}
+
+.headerBackBtn:hover {
+    background: #1F6D8C;
+    color: white;
+    transform: translateX(-5px);
+    box-shadow: 0 4px 12px rgba(31, 109, 140, 0.2);
 }
 
 .header {
