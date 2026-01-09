@@ -49,6 +49,9 @@ async function getResults(params: { [key: string]: string | string[] | undefined
     return { type, data: [] };
 }
 
+import SearchHeader from '@/components/Search/SearchHeader';
+import ResultCard from '@/components/Search/ResultCard';
+
 export default async function SearchPage({ searchParams }: SearchParamsProps) {
     // Await the searchParams promise (Required for Next.js 15+)
     const resolvedParams = await searchParams;
@@ -59,14 +62,11 @@ export default async function SearchPage({ searchParams }: SearchParamsProps) {
 
     return (
         <main className={styles.container}>
-            <header className={styles.header}>
-                <a href="/" className={styles.headerBackBtn}>
-                    ← Volver al Inicio
-                </a>
-                <h1>Resultados para "{location || 'Todo'}"</h1>
-                <p>{results.length} opciones encontradas en {type === 'tours' ? 'Experiencias' : type === 'flights' ? 'Vuelos' : 'Hoteles'}</p>
-            </header>
-
+            <SearchHeader
+                location={(Array.isArray(location) ? location[0] : location) || 'Todo'}
+                count={results.length}
+                type={(Array.isArray(type) ? type[0] : type) || 'hotels'}
+            />
 
             <div className={styles.resultsGrid}>
                 {results.length === 0 ? (
@@ -76,36 +76,7 @@ export default async function SearchPage({ searchParams }: SearchParamsProps) {
                     </div>
                 ) : (
                     results.map((item: any) => (
-                        <div key={item.id} className={styles.card}>
-                            <div className={styles.cardImage}>
-                                {/* Using placeholder as we don't have real images yet */}
-                                <div className={styles.placeholderImg}>
-                                    {type === 'hotels' ? <Briefcase /> : <MapPin />}
-                                </div>
-                            </div>
-                            <div className={styles.cardContent}>
-                                <div className={styles.cardHeader}>
-                                    <h3>{item.name || item.title}</h3>
-                                    {item.stars && (
-                                        <div className={styles.rating}>
-                                            <Star size={14} fill="#FFD700" color="#FFD700" />
-                                            <span>{item.stars}</span>
-                                        </div>
-                                    )}
-                                </div>
-                                <p className={styles.location}>
-                                    <MapPin size={14} /> {item.destination_name}
-                                </p>
-                                {item.description && <p className={styles.desc}>{item.description}</p>}
-                                <div className={styles.cardFooter}>
-                                    <div className={styles.price}>
-                                        <small>Desde</small>
-                                        <span>${item.price_per_night || item.price}</span>
-                                    </div>
-                                    <button className={styles.bookBtn}>Ver Disponibilidad</button>
-                                </div>
-                            </div>
-                        </div>
+                        <ResultCard key={item.id} item={item} type={(Array.isArray(type) ? type[0] : type) || 'hotels'} />
                     ))
                 )}
             </div>
