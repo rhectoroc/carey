@@ -46,7 +46,7 @@ const moments = [
 
 export default function UnforgettableMoments() {
     const [selectedMoment, setSelectedMoment] = useState<typeof moments[0] | null>(null);
-    const sectionRef = useRef<HTMLSectionElement>(null);
+    const sectionRef = useRef<HTMLElement>(null);
     const titleRef = useRef<HTMLHeadingElement>(null);
     const itemsRef = useRef<(HTMLDivElement | null)[]>([]);
 
