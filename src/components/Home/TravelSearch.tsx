@@ -17,7 +17,51 @@ export default function TravelSearch() {
     const router = useRouter();
     const [activeTab, setActiveTab] = useState<'hotels' | 'flights' | 'tours'>('hotels');
 
-    // ... (rest of states remain the same)
+    // Form States
+    const [destination, setDestination] = useState('');
+    const [origin, setOrigin] = useState(''); // For flights
+    const [suggestions, setSuggestions] = useState<Destination[]>([]);
+    const [showSuggestions, setShowSuggestions] = useState<'dest' | 'origin' | null>(null);
+
+    const [checkIn, setCheckIn] = useState('');
+    const [checkOut, setCheckOut] = useState('');
+
+    const [adults, setAdults] = useState(2);
+    const [children, setChildren] = useState(0);
+    const [pets, setPets] = useState(0);
+    const [showGuestPicker, setShowGuestPicker] = useState(false);
+
+    // Flights specific
+    const [flightClass, setFlightClass] = useState('Economy');
+
+    const wrapperRef = useRef<HTMLDivElement>(null);
+
+    // Close dropdowns
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+                setShowSuggestions(null);
+                setShowGuestPicker(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    // Autocomplete Fetch
+    const fetchDestinations = async (query: string) => {
+        if (query.length < 2) {
+            setSuggestions([]);
+            return;
+        }
+        try {
+            const res = await fetch(`/api/search/destinations?q=${encodeURIComponent(query)}`);
+            const data = await res.json();
+            setSuggestions(data);
+        } catch (err) {
+            console.error(err);
+        }
+    };
 
     const handleSearch = () => {
         const params = new URLSearchParams();
