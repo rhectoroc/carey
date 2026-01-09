@@ -9,7 +9,7 @@ import styles from './Chatbot.module.css';
 export default function Chatbot() {
     const { isOpen, openChatbot, closeChatbot, predefinedMessage, clearPredefinedMessage } = useChatbot();
     const [messages, setMessages] = useState<{ role: 'user' | 'bot', text: string }[]>([
-        { role: 'bot', text: '¡Hola! Soy Carey, tu asistente virtual. ¿En qué puedo ayudarte a planificar tu viaje?' }
+        { role: 'bot', text: '¡Hola! Soy Carey, tu asistente virtual. ¿En qué puedo ayudarte?' }
     ]);
     const [input, setInput] = useState('');
     const messagesEndRef = useRef<HTMLDivElement>(null);
