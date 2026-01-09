@@ -338,9 +338,10 @@
         /* Right border for reverse */
     }
 
-    .momentCard>* {
+    .momentCard>*,
+    .momentCard>*:not(.imageWrapper) {
         transform: skewX(0);
-        /* Remove reverse skew */
+        /* Remove reverse skew and override desktop specificity */
     }
 
     .imageWrapper,
