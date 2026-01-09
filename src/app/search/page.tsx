@@ -19,6 +19,8 @@ async function getResults(params: SearchParams['searchParams']) {
     const type = params.type || 'hotels';
     const location = params.location || '';
 
+    console.log('Search Params:', { type, location }); // DEBUG
+
     try {
         if (type === 'hotels') {
             const sql = `
@@ -28,6 +30,7 @@ async function getResults(params: SearchParams['searchParams']) {
                 WHERE d.name ILIKE $1
             `;
             const res = await query(sql, [`%${location}%`]);
+            console.log(`Found ${res.rows.length} hotels`); // DEBUG
             return { type, data: res.rows };
         }
         else if (type === 'tours') {
@@ -38,6 +41,7 @@ async function getResults(params: SearchParams['searchParams']) {
                 WHERE d.name ILIKE $1
             `;
             const res = await query(sql, [`%${location}%`]);
+            console.log(`Found ${res.rows.length} tours`); // DEBUG
             return { type, data: res.rows };
         }
         else if (type === 'flights') {
