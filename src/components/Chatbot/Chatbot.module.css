@@ -39,6 +39,26 @@
     background: var(--color-caribe-blue);
     color: white;
     font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.closeBtn {
+    background: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    border-radius: 50%;
+    transition: background 0.2s;
+}
+
+.closeBtn:hover {
+    background: rgba(255, 255, 255, 0.2);
 }
 
 .messages {
@@ -98,4 +118,37 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+@media (max-width: 480px) {
+    .chatWindow {
+        position: fixed;
+        width: 100%;
+        height: 100dvh;
+        /* Dynamic viewport height for mobile browsers */
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: 0;
+        z-index: 2000;
+        /* Cover the FAB */
+    }
+
+    .fab {
+        bottom: 1.5rem;
+        right: 1.5rem;
+        width: 50px;
+        height: 50px;
+    }
+
+    .messages {
+        font-size: 1rem;
+        /* Better readability */
+    }
+
+    .inputArea input {
+        font-size: 16px;
+        /* Prevents iOS zoom on focus */
+    }
 }

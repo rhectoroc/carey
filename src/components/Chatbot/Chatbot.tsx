@@ -77,6 +77,9 @@ export default function Chatbot() {
                     >
                         <div className={styles.header}>
                             <h3>Carey Assistant</h3>
+                            <button onClick={closeChatbot} className={styles.closeBtn}>
+                                <X size={20} />
+                            </button>
                         </div>
                         <div className={styles.messages}>
                             {messages.map((m, i) => (
