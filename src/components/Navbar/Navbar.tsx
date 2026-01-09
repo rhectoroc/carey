@@ -41,6 +41,21 @@ export default function Navbar() {
                     <Menu size={24} />
                 </button>
             </div>
+
+            {/* Mobile Menu Overlay */}
+            <div
+                className={`${styles.menuOverlay} ${mobileMenuOpen ? styles.open : ''}`}
+                onClick={() => setMobileMenuOpen(false)}
+            />
+
+            {/* Mobile Menu Drawer */}
+            <div className={`${styles.mobileMenu} ${mobileMenuOpen ? styles.open : ''}`}>
+                <button className={styles.closeMenuBtn} onClick={() => setMobileMenuOpen(false)}>×</button>
+                <Link href="/" className={styles.mobileLink} onClick={() => setMobileMenuOpen(false)}>{t('nav.home')}</Link>
+                <Link href="/about" className={styles.mobileLink} onClick={() => setMobileMenuOpen(false)}>{t('nav.about')}</Link>
+                <Link href="/destinations" className={styles.mobileLink} onClick={() => setMobileMenuOpen(false)}>{t('nav.destinations')}</Link>
+                <Link href="/contact" className={styles.mobileLink} onClick={() => setMobileMenuOpen(false)}>{t('nav.contact')}</Link>
+            </div>
         </nav>
     );
 }

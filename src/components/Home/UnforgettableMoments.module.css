@@ -377,3 +377,25 @@
         font-size: 2rem;
     }
 }
+
+@media (max-width: 480px) {
+
+    .imageWrapper,
+    .reverseLayout .imageWrapper {
+        height: 200px;
+        /* Shorter image on small phones */
+    }
+
+    .sectionTitle {
+        font-size: 1.8rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .momentsSection {
+        padding: 4rem 1rem;
+    }
+
+    .cardContent {
+        padding: 1.2rem;
+    }
+}

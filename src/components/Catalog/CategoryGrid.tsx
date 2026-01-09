@@ -4,30 +4,23 @@ import { useState } from 'react';
 import { mockServices, Service } from '@/data/mockServices';
 import ServiceCard from './ServiceCard';
 import ServiceModal from './ServiceModal';
+import styles from './CategoryGrid.module.css';
 
 export default function CategoryGrid() {
     const [selectedService, setSelectedService] = useState<Service | null>(null);
 
     return (
-        <section style={{ padding: '5rem 5%', maxWidth: '1400px', margin: '0 auto' }}>
-            <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-                <h2 style={{
-                    fontSize: '2.5rem',
-                    color: 'var(--color-caribe-blue)',
-                    marginBottom: '1rem'
-                }}>
+        <section className={styles.section}>
+            <div className={styles.header}>
+                <h2 className={styles.title}>
                     Experiencias Destacadas
                 </h2>
-                <p style={{ fontSize: '1.2rem', color: '#666', maxWidth: '600px', margin: '0 auto' }}>
+                <p className={styles.subtitle}>
                     Descubre lo mejor de Venezuela con nuestra selección exclusiva de destinos y aventuras.
                 </p>
             </div>
 
-            <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-                gap: '2rem'
-            }}>
+            <div className={styles.grid}>
                 {mockServices.map(service => (
                     <ServiceCard
                         key={service.id}

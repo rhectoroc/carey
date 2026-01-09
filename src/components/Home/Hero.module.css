@@ -122,3 +122,23 @@
         margin-bottom: 2rem;
     }
 }
+
+@media (max-width: 480px) {
+    .title {
+        font-size: 2rem;
+        /* Smaller for very narrow screens */
+        padding: 0 0.5rem;
+    }
+
+    .subtitle {
+        font-size: 1rem;
+        padding: 10px 20px;
+        /* Reduce horizontal padding significantly */
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .content {
+        padding: 0 1.5rem;
+    }
+}

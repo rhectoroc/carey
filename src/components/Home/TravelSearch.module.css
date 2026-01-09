@@ -336,6 +336,9 @@
     .searchContainer {
         padding: 1rem;
         border-radius: 8px;
+        width: 100%;
+        /* Ensure it doesn't overflow parent padding */
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     }
 
     .field {
@@ -356,5 +359,18 @@
 
     .guestSubtitle {
         font-size: 0.7rem;
+    }
+
+    .dropdown {
+        position: fixed;
+        /* Fixed on mobile for better visibility */
+        top: auto;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        max-height: 50vh;
+        border-radius: 20px 20px 0 0;
+        box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.1);
+        z-index: 2000;
     }
 }
