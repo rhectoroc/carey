@@ -154,20 +154,23 @@
 }
 
 .avatarWrapper {
-    width: 38px;
-    height: 38px;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
     overflow: hidden;
     background: white;
     margin-right: 0.8rem;
     flex-shrink: 0;
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .avatar {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 .fabAvatarWrapper {
@@ -175,13 +178,17 @@
     height: 100%;
     border-radius: 50%;
     overflow: hidden;
-    padding: 2px;
-    /* Small gap */
+    padding: 0;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid white;
 }
 
 .fabAvatar {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     border-radius: 50%;
 }
