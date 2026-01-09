@@ -62,8 +62,11 @@ export default function TravelPlanner() {
                     fontWeight: 'bold',
                     cursor: 'pointer',
                     boxShadow: '0 10px 25px rgba(0,0,0,0.2)',
-                    transition: 'transform 0.2s'
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px'
                 }}>
+                    <img src="/images/carey-avatar.png" alt="Carey" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} />
                     Contáctanos
                 </button>
             </div>

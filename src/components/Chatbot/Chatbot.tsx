@@ -64,7 +64,11 @@ export default function Chatbot() {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
             >
-                {isOpen ? <X size={24} /> : <MessageCircle size={24} />}
+                {isOpen ? <X size={24} /> : (
+                    <div className={styles.fabAvatarWrapper}>
+                        <img src="/images/carey-avatar.png" alt="Carey" className={styles.fabAvatar} />
+                    </div>
+                )}
             </motion.button>
 
             <AnimatePresence>
@@ -76,6 +80,9 @@ export default function Chatbot() {
                         exit={{ opacity: 0, y: 20, scale: 0.9 }}
                     >
                         <div className={styles.header}>
+                            <div className={styles.avatarWrapper}>
+                                <img src="/images/carey-avatar.png" alt="Carey" className={styles.avatar} />
+                            </div>
                             <h3>Carey Assistant</h3>
                             <button onClick={closeChatbot} className={styles.closeBtn}>
                                 <X size={20} />
