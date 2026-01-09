@@ -1,272 +1,232 @@
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
-import { Search, Calendar, MapPin, Users, Hotel, Compass, ChevronDown, Dog } from 'lucide-react';
+import { Search, Calendar, MapPin, Users, Hotel, Plane, Compass, ChevronDown, Dog, Briefcase } from 'lucide-react';
 import styles from './TravelSearch.module.css';
 
-// Popular destinations in Venezuela
-const destinations = [
-    "Isla de Margarita",
-    "Los Roques",
-    "Canaima",
-    "Mérida",
-    "Delta del Orinoco",
-    "Isla de Coche",
-    "Isla de Cubagua",
-    "Morrocoy",
-    "Caracas",
-    "Maracaibo",
-    "Valencia",
-    "Barquisimeto"
-];
+interface Destination {
+    id: number;
+    name: string;
+    type: string;
+    country: string;
+}
 
 export default function TravelSearch() {
-    const [searchType, setSearchType] = useState<'hotels' | 'experiences'>('hotels');
+    const [activeTab, setActiveTab] = useState<'hotels' | 'flights' | 'tours'>('hotels');
+
+    // Form States
     const [destination, setDestination] = useState('');
-    const [showDestinations, setShowDestinations] = useState(false);
+    const [origin, setOrigin] = useState(''); // For flights
+    const [suggestions, setSuggestions] = useState<Destination[]>([]);
+    const [showSuggestions, setShowSuggestions] = useState<'dest' | 'origin' | null>(null);
+
     const [checkIn, setCheckIn] = useState('');
     const [checkOut, setCheckOut] = useState('');
+
     const [adults, setAdults] = useState(2);
     const [children, setChildren] = useState(0);
     const [pets, setPets] = useState(0);
     const [showGuestPicker, setShowGuestPicker] = useState(false);
 
-    const destinationRef = useRef<HTMLDivElement>(null);
-    const guestRef = useRef<HTMLDivElement>(null);
+    // Flights specific
+    const [flightClass, setFlightClass] = useState('Economy');
 
-    // Close dropdowns when clicking outside
+    const wrapperRef = useRef<HTMLDivElement>(null);
+
+    // Close dropdowns
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            if (destinationRef.current && !destinationRef.current.contains(event.target as Node)) {
-                setShowDestinations(false);
-            }
-            if (guestRef.current && !guestRef.current.contains(event.target as Node)) {
+            if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+                setShowSuggestions(null);
                 setShowGuestPicker(false);
             }
         };
-
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
-    const handleSearch = () => {
-        const searchData = {
-            type: searchType,
-            destination,
-            checkIn,
-            checkOut,
-            guests: { adults, children, pets }
-        };
-        console.log('Search:', searchData);
-        // TODO: Implement search logic
+    // Autocomplete Fetch
+    const fetchDestinations = async (query: string) => {
+        if (query.length < 2) {
+            setSuggestions([]);
+            return;
+        }
+        try {
+            const res = await fetch(`/api/search/destinations?q=${encodeURIComponent(query)}`);
+            const data = await res.json();
+            setSuggestions(data);
+        } catch (err) {
+            console.error(err);
+        }
     };
 
-    const totalGuests = adults + children + pets;
+    const handleSearch = () => {
+        console.log({ activeTab, destination, origin, checkIn, checkOut, guests: { adults, children, pets } });
+        // Redirect to results page
+    };
 
     return (
-        <div className={styles.searchContainer}>
-            {/* Type Toggle */}
-            <div className={styles.typeToggle}>
+        <div className={styles.searchContainer} ref={wrapperRef}>
+            {/* TABS HEADER */}
+            <div className={styles.tabsHeader}>
                 <button
-                    className={`${styles.toggleBtn} ${searchType === 'hotels' ? styles.active : ''}`}
-                    onClick={() => setSearchType('hotels')}
+                    className={`${styles.tabBtn} ${activeTab === 'hotels' ? styles.activeTab : ''}`}
+                    onClick={() => setActiveTab('hotels')}
                 >
-                    <Hotel size={20} />
-                    <span>Hoteles</span>
+                    <Hotel size={18} /> Hoteles
                 </button>
                 <button
-                    className={`${styles.toggleBtn} ${searchType === 'experiences' ? styles.active : ''}`}
-                    onClick={() => setSearchType('experiences')}
+                    className={`${styles.tabBtn} ${activeTab === 'flights' ? styles.activeTab : ''}`}
+                    onClick={() => setActiveTab('flights')}
                 >
-                    <Compass size={20} />
-                    <span>Experiencias</span>
+                    <Plane size={18} /> Vuelos
+                </button>
+                <button
+                    className={`${styles.tabBtn} ${activeTab === 'tours' ? styles.activeTab : ''}`}
+                    onClick={() => setActiveTab('tours')}
+                >
+                    <Compass size={18} /> Tours
                 </button>
             </div>
 
-            {/* Search Fields */}
-            <div className={styles.inputsRow}>
-                {/* Destination Selector */}
-                <div className={styles.field} ref={destinationRef}>
-                    <label className={styles.label}>Destino</label>
-                    <div
-                        className={styles.inputWrapper}
-                        onClick={() => setShowDestinations(!showDestinations)}
-                    >
-                        <MapPin size={18} className={styles.icon} />
-                        <input
-                            type="text"
-                            placeholder="¿A dónde quieres ir?"
-                            className={styles.input}
-                            value={destination}
-                            onChange={(e) => setDestination(e.target.value)}
-                            onFocus={() => setShowDestinations(true)}
-                        />
-                        <ChevronDown size={18} className={styles.chevron} />
-                    </div>
+            <div className={styles.searchBody}>
+                <div className={styles.inputsGrid}>
 
-                    {showDestinations && (
-                        <div className={styles.dropdown}>
-                            {destinations
-                                .filter(dest =>
-                                    dest.toLowerCase().includes(destination.toLowerCase())
-                                )
-                                .map((dest, index) => (
-                                    <div
-                                        key={index}
-                                        className={styles.dropdownItem}
-                                        onClick={() => {
-                                            setDestination(dest);
-                                            setShowDestinations(false);
-                                        }}
-                                    >
-                                        <MapPin size={16} />
-                                        <span>{dest}</span>
-                                    </div>
-                                ))
-                            }
+                    {/* ORIGIN (Only for Flights) */}
+                    {activeTab === 'flights' && (
+                        <div className={styles.field}>
+                            <label>Origen</label>
+                            <div className={styles.inputWrapper}>
+                                <MapPin size={18} className={styles.inputIcon} />
+                                <input
+                                    type="text"
+                                    placeholder="Ciudad de origen"
+                                    value={origin}
+                                    onChange={(e) => {
+                                        setOrigin(e.target.value);
+                                        fetchDestinations(e.target.value);
+                                        setShowSuggestions('origin');
+                                    }}
+                                />
+                            </div>
+                            {showSuggestions === 'origin' && suggestions.length > 0 && (
+                                <div className={styles.suggestionsList}>
+                                    {suggestions.map((s) => (
+                                        <div key={s.id} onClick={() => { setOrigin(s.name); setShowSuggestions(null); }} className={styles.suggestionItem}>
+                                            <MapPin size={14} /> {s.name}, {s.country}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     )}
-                </div>
 
-                {/* Check-in Date */}
-                <div className={styles.field}>
-                    <label className={styles.label}>Check In</label>
-                    <div className={styles.inputWrapper}>
-                        <Calendar size={18} className={styles.icon} />
-                        <input
-                            type="date"
-                            className={styles.input}
-                            value={checkIn}
-                            onChange={(e) => setCheckIn(e.target.value)}
-                            min={new Date().toISOString().split('T')[0]}
-                        />
-                    </div>
-                </div>
-
-                {/* Check-out Date */}
-                <div className={styles.field}>
-                    <label className={styles.label}>Check Out</label>
-                    <div className={styles.inputWrapper}>
-                        <Calendar size={18} className={styles.icon} />
-                        <input
-                            type="date"
-                            className={styles.input}
-                            value={checkOut}
-                            onChange={(e) => setCheckOut(e.target.value)}
-                            min={checkIn || new Date().toISOString().split('T')[0]}
-                        />
-                    </div>
-                </div>
-
-                {/* Guests Picker */}
-                <div className={styles.field} ref={guestRef}>
-                    <label className={styles.label}>Huéspedes</label>
-                    <div
-                        className={styles.inputWrapper}
-                        onClick={() => setShowGuestPicker(!showGuestPicker)}
-                    >
-                        <Users size={18} className={styles.icon} />
-                        <input
-                            type="text"
-                            className={styles.input}
-                            value={`${totalGuests} ${totalGuests === 1 ? 'Huésped' : 'Huéspedes'}`}
-                            readOnly
-                        />
-                        <ChevronDown size={18} className={styles.chevron} />
-                    </div>
-
-                    {showGuestPicker && (
-                        <div className={styles.guestPicker}>
-                            {/* Adults */}
-                            <div className={styles.guestRow}>
-                                <div className={styles.guestLabel}>
-                                    <Users size={18} />
-                                    <div>
-                                        <div className={styles.guestTitle}>Adultos</div>
-                                        <div className={styles.guestSubtitle}>13+ años</div>
-                                    </div>
-                                </div>
-                                <div className={styles.counter}>
-                                    <button
-                                        className={styles.counterBtn}
-                                        onClick={() => setAdults(Math.max(1, adults - 1))}
-                                        disabled={adults <= 1}
-                                    >
-                                        −
-                                    </button>
-                                    <span className={styles.counterValue}>{adults}</span>
-                                    <button
-                                        className={styles.counterBtn}
-                                        onClick={() => setAdults(adults + 1)}
-                                    >
-                                        +
-                                    </button>
-                                </div>
-                            </div>
-
-                            {/* Children */}
-                            <div className={styles.guestRow}>
-                                <div className={styles.guestLabel}>
-                                    <Users size={18} />
-                                    <div>
-                                        <div className={styles.guestTitle}>Niños</div>
-                                        <div className={styles.guestSubtitle}>2-12 años</div>
-                                    </div>
-                                </div>
-                                <div className={styles.counter}>
-                                    <button
-                                        className={styles.counterBtn}
-                                        onClick={() => setChildren(Math.max(0, children - 1))}
-                                        disabled={children <= 0}
-                                    >
-                                        −
-                                    </button>
-                                    <span className={styles.counterValue}>{children}</span>
-                                    <button
-                                        className={styles.counterBtn}
-                                        onClick={() => setChildren(children + 1)}
-                                    >
-                                        +
-                                    </button>
-                                </div>
-                            </div>
-
-                            {/* Pets */}
-                            <div className={styles.guestRow}>
-                                <div className={styles.guestLabel}>
-                                    <Dog size={18} />
-                                    <div>
-                                        <div className={styles.guestTitle}>Mascotas</div>
-                                        <div className={styles.guestSubtitle}>Perros, gatos, etc.</div>
-                                    </div>
-                                </div>
-                                <div className={styles.counter}>
-                                    <button
-                                        className={styles.counterBtn}
-                                        onClick={() => setPets(Math.max(0, pets - 1))}
-                                        disabled={pets <= 0}
-                                    >
-                                        −
-                                    </button>
-                                    <span className={styles.counterValue}>{pets}</span>
-                                    <button
-                                        className={styles.counterBtn}
-                                        onClick={() => setPets(pets + 1)}
-                                    >
-                                        +
-                                    </button>
-                                </div>
-                            </div>
+                    {/* DESTINATION */}
+                    <div className={styles.field} style={{ flex: 2 }}>
+                        <label>Destino</label>
+                        <div className={styles.inputWrapper}>
+                            <MapPin size={18} className={styles.inputIcon} />
+                            <input
+                                type="text"
+                                placeholder={activeTab === 'flights' ? "Ciudad de destino" : "¿A dónde quieres ir?"}
+                                value={destination}
+                                onChange={(e) => {
+                                    setDestination(e.target.value);
+                                    fetchDestinations(e.target.value);
+                                    setShowSuggestions('dest');
+                                }}
+                            />
                         </div>
-                    )}
+                        {showSuggestions === 'dest' && suggestions.length > 0 && (
+                            <div className={styles.suggestionsList}>
+                                {suggestions.map((s) => (
+                                    <div key={s.id} onClick={() => { setDestination(s.name); setShowSuggestions(null); }} className={styles.suggestionItem}>
+                                        <MapPin size={14} /> {s.name}, {s.country}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+
+                    {/* DATES */}
+                    <div className={styles.field}>
+                        <label>{activeTab === 'flights' ? 'Ida' : 'Entrada'}</label>
+                        <div className={styles.inputWrapper}>
+                            <Calendar size={18} className={styles.inputIcon} />
+                            <input type="date" value={checkIn} onChange={e => setCheckIn(e.target.value)} min={new Date().toISOString().split('T')[0]} />
+                        </div>
+                    </div>
+
+                    <div className={styles.field}>
+                        <label>{activeTab === 'flights' ? 'Vuelta' : 'Salida'}</label>
+                        <div className={styles.inputWrapper}>
+                            <Calendar size={18} className={styles.inputIcon} />
+                            <input type="date" value={checkOut} onChange={e => setCheckOut(e.target.value)} min={checkIn} />
+                        </div>
+                    </div>
+
+                    {/* GUESTS / PASSENGERS */}
+                    <div className={styles.field} style={{ position: 'relative' }}>
+                        <label>{activeTab === 'flights' ? 'Pasajeros' : 'Huéspedes'}</label>
+                        <div className={styles.inputWrapper} onClick={() => setShowGuestPicker(!showGuestPicker)}>
+                            <Users size={18} className={styles.inputIcon} />
+                            <span style={{ flex: 1, fontSize: '0.95rem' }}>
+                                {adults + children + pets} {activeTab === 'flights' ? 'Pasajeros' : 'Personas'}
+                            </span>
+                            <ChevronDown size={16} />
+                        </div>
+
+                        {showGuestPicker && (
+                            <div className={styles.guestPopup}>
+                                <div className={styles.guestRow}>
+                                    <div><span>Adultos</span><small>13+ años</small></div>
+                                    <div className={styles.counterControl}>
+                                        <button onClick={() => setAdults(Math.max(1, adults - 1))}>-</button>
+                                        <span>{adults}</span>
+                                        <button onClick={() => setAdults(adults + 1)}>+</button>
+                                    </div>
+                                </div>
+                                <div className={styles.guestRow}>
+                                    <div><span>Niños</span><small>2-12 años</small></div>
+                                    <div className={styles.counterControl}>
+                                        <button onClick={() => setChildren(Math.max(0, children - 1))}>-</button>
+                                        <span>{children}</span>
+                                        <button onClick={() => setChildren(children + 1)}>+</button>
+                                    </div>
+                                </div>
+                                {activeTab !== 'flights' && (
+                                    <div className={styles.guestRow}>
+                                        <div><span>Mascotas</span><small>Si aplica</small></div>
+                                        <div className={styles.counterControl}>
+                                            <button onClick={() => setPets(Math.max(0, pets - 1))}>-</button>
+                                            <span>{pets}</span>
+                                            <button onClick={() => setPets(pets + 1)}>+</button>
+                                        </div>
+                                    </div>
+                                )}
+                                {activeTab === 'flights' && (
+                                    <div className={styles.classSelector}>
+                                        <label>Clase</label>
+                                        <select value={flightClass} onChange={(e) => setFlightClass(e.target.value)}>
+                                            <option value="Economy">Económica</option>
+                                            <option value="Premium">Premium</option>
+                                            <option value="Business">Business</option>
+                                            <option value="First">Primera</option>
+                                        </select>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                <div className={styles.searchFooter}>
+                    <button className={styles.searchActionBtn} onClick={handleSearch}>
+                        <Search size={20} />
+                        Buscar {activeTab === 'flights' ? 'Vuelos' : activeTab === 'tours' ? 'Experiencias' : 'Hoteles'}
+                    </button>
                 </div>
             </div>
-
-            {/* Search Button */}
-            <button className={styles.searchBtn} onClick={handleSearch}>
-                <Search size={20} />
-                <span>Buscar {searchType === 'hotels' ? 'Hoteles' : 'Experiencias'}</span>
-            </button>
         </div>
     );
 }

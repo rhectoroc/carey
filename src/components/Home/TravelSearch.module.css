@@ -1,423 +1,275 @@
 .searchContainer {
     background: white;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    padding: 2rem;
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     max-width: 1100px;
     width: 95%;
-    margin: 0 auto;
+    margin: -40px auto 0;
+    /* Overlap with hero video */
+    position: relative;
+    z-index: 10;
+    overflow: visible;
 }
 
-/* Type Toggle */
-.typeToggle {
+/* Tabs Header */
+.tabsHeader {
     display: flex;
-    gap: 0.5rem;
-    justify-content: center;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    overflow-x: auto;
+    border-bottom: 1px solid #eee;
+    padding: 0 1rem;
 }
 
-.toggleBtn {
+.tabBtn {
+    padding: 1.2rem 1.5rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #666;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.6rem 1.5rem;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    background: transparent;
-    color: #666;
-    border-radius: 6px;
-    font-weight: 500;
-    font-size: 0.95rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
+    gap: 8px;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
 }
 
-.toggleBtn:hover {
-    border-color: #1F6D8C;
+.tabBtn:hover {
     color: #1F6D8C;
+    background: rgba(31, 109, 140, 0.05);
 }
 
-.toggleBtn.active {
-    background: #1F6D8C;
-    color: white;
-    border-color: #1F6D8C;
+.activeTab {
+    color: #1F6D8C;
+    border-bottom-color: #1F6D8C;
+    font-weight: 600;
 }
 
-/* Input Row */
-.inputsRow {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+/* Search Body */
+.searchBody {
+    padding: 1.5rem;
+}
+
+.inputsGrid {
+    display: flex;
     gap: 1rem;
-    width: 100%;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
 .field {
+    flex: 1;
+    min-width: 150px;
     position: relative;
-    background: transparent;
+    border: 1px solid #e0e0e0;
     border-radius: 8px;
-    padding: 0.75rem 0;
-    transition: all 0.2s ease;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 0.5rem 1rem;
+    transition: border-color 0.2s;
+    background: white;
 }
 
 .field:focus-within {
-    border-bottom-color: #1F6D8C;
+    border-color: #1F6D8C;
+    box-shadow: 0 0 0 2px rgba(31, 109, 140, 0.1);
 }
 
-.label {
+.field label {
     display: block;
-    font-size: 0.7rem;
-    color: #999;
-    font-weight: 500;
-    margin-bottom: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #888;
+    margin-bottom: 0.2rem;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
 }
 
 .inputWrapper {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 0.5rem;
+}
+
+.inputIcon {
+    color: #1F6D8C;
+    width: 18px;
+    height: 18px;
+}
+
+.field input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 0.95rem;
+    color: #333;
+    background: transparent;
+}
+
+.searchFooter {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.searchActionBtn {
+    background: #1F6D8C;
+    color: white;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
     cursor: pointer;
-    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background 0.2s;
 }
 
-.icon {
-    color: #999;
-    flex-shrink: 0;
+.searchActionBtn:hover {
+    background: #16526b;
 }
 
-.chevron {
-    color: #ccc;
-    flex-shrink: 0;
-    transition: transform 0.2s ease;
+/* Dropdowns & Popups */
+.suggestionsList {
+    position: absolute;
+    top: 110%;
+    left: 0;
+    width: 100%;
+    background: white;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    max-height: 250px;
+    overflow-y: auto;
 }
 
-.field:focus-within .chevron {
-    transform: rotate(180deg);
+.suggestionItem {
+    padding: 0.8rem 1rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #444;
+}
+
+.suggestionItem:hover {
+    background: #f5f9fa;
     color: #1F6D8C;
 }
 
-.input {
-    width: 100%;
-    border: none;
-    background: transparent;
-    font-size: 0.95rem;
-    font-weight: 400;
-    color: #333;
-    outline: none;
-    cursor: pointer;
-}
-
-.input::placeholder {
-    color: #ccc;
-}
-
-/* Date inputs */
-.input[type="date"] {
-    cursor: pointer;
-}
-
-.input[type="date"]::-webkit-calendar-picker-indicator {
-    cursor: pointer;
-    opacity: 0.4;
-}
-
-/* Dropdown */
-.dropdown {
+.guestPopup {
     position: absolute;
-    top: calc(100% + 8px);
+    top: 110%;
     left: 0;
-    right: 0;
+    min-width: 280px;
     background: white;
+    border: 1px solid #eee;
     border-radius: 8px;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    max-height: 300px;
-    overflow-y: auto;
-    z-index: 1000;
-    animation: slideDown 0.15s ease;
-}
-
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-8px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.dropdownItem {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 0.75rem 1rem;
-    cursor: pointer;
-    transition: background 0.15s ease;
-    color: #333;
-    font-size: 0.9rem;
-}
-
-.dropdownItem:hover {
-    background: rgba(0, 0, 0, 0.02);
-}
-
-.dropdownItem:first-child {
-    border-radius: 8px 8px 0 0;
-}
-
-.dropdownItem:last-child {
-    border-radius: 0 0 8px 8px;
-}
-
-.dropdownItem svg {
-    color: #999;
-}
-
-/* Guest Picker */
-.guestPicker {
-    position: absolute;
-    top: calc(100% + 8px);
-    left: 0;
-    right: 0;
-    background: white;
-    border-radius: 8px;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    z-index: 100;
     padding: 1rem;
-    z-index: 1000;
-    animation: slideDown 0.15s ease;
-    min-width: 300px;
 }
 
 .guestRow {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    margin-bottom: 1rem;
 }
 
 .guestRow:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
+    margin-bottom: 0;
 }
 
-.guestLabel {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.guestLabel svg {
-    color: #999;
-}
-
-.guestTitle {
+.guestRow span {
     font-weight: 500;
     color: #333;
+    display: block;
+}
+
+.guestRow small {
+    color: #888;
+    font-size: 0.75rem;
+}
+
+.counterControl {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 2px;
+}
+
+.counterControl button {
+    width: 24px;
+    height: 24px;
+    background: #f5f5f5;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    font-weight: bold;
+    color: #555;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.counterControl span {
+    min-width: 20px;
+    text-align: center;
+}
+
+.classSelector {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+}
+
+.classSelector label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.classSelector select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
     font-size: 0.9rem;
 }
 
-.guestSubtitle {
-    font-size: 0.75rem;
-    color: #999;
-    font-weight: 400;
-}
-
-.counter {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.counterBtn {
-    width: 28px;
-    height: 28px;
-    border-radius: 4px;
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    background: white;
-    color: #666;
-    font-size: 1.1rem;
-    font-weight: 400;
-    cursor: pointer;
-    transition: all 0.15s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.counterBtn:hover:not(:disabled) {
-    border-color: #1F6D8C;
-    color: #1F6D8C;
-}
-
-.counterBtn:disabled {
-    opacity: 0.2;
-    cursor: not-allowed;
-}
-
-.counterValue {
-    font-weight: 500;
-    font-size: 0.95rem;
-    min-width: 24px;
-    text-align: center;
-    color: #333;
-}
-
-/* Search Button */
-.searchBtn {
-    background: #1F6D8C;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 0.9rem 2rem;
-    font-weight: 500;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
-
-.searchBtn:hover {
-    background: #001f66;
-}
-
-.searchBtn:active {
-    transform: scale(0.98);
-}
-
-/* Responsive Design */
+/* Mobile Responsive */
 @media (max-width: 768px) {
     .searchContainer {
-        padding: 1.5rem;
-        gap: 1rem;
-    }
-
-    .typeToggle {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    .toggleBtn {
-        width: 100%;
-        justify-content: center;
-    }
-
-    .inputsRow {
-        grid-template-columns: 1fr;
-        gap: 0.8rem;
-    }
-
-    .searchBtn {
-        padding: 0.9rem;
-        width: 100%;
-    }
-
-    .guestPicker {
-        min-width: auto;
-        left: -1rem;
-        right: -1rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .searchContainer {
-        padding: 0.75rem;
-        /* Drastic reduction */
-        gap: 0.5rem;
-        /* Tighter gap */
-        border-radius: 12px;
-        width: 100%;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        margin-top: 1rem;
-    }
-
-    .typeToggle {
-        padding-bottom: 0.75rem;
-        gap: 0.25rem;
-        flex-direction: row;
-        /* Keep side-by-side if possible, or tightly stacked */
-    }
-
-    .toggleBtn {
-        padding: 0.5rem 0.5rem;
-        font-size: 0.85rem;
-        flex: 1;
-        /* Distribute width evenly */
-        justify-content: center;
+        margin: 0 1rem;
         width: auto;
     }
 
-    .inputsRow {
-        gap: 0;
-        /* Removing gap to stack tightly */
-        border: 1px solid rgba(0, 0, 0, 0.1);
-        border-radius: 8px;
-        overflow: hidden;
+    .inputsGrid {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.8rem;
     }
 
     .field {
-        padding: 0.5rem 0.75rem;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-        border-radius: 0;
-        margin-bottom: 0;
+        width: 100%;
     }
 
-    .field:last-child {
-        border-bottom: none;
+    .tabsHeader {
+        justify-content: space-between;
     }
 
-    .label {
-        font-size: 0.6rem;
-        margin-bottom: 0.1rem;
+    .tabBtn {
+        padding: 1rem 0.5rem;
+        font-size: 0.9rem;
     }
 
-    .inputWrapper {
-        gap: 6px;
-    }
-
-    .input {
-        font-size: 0.85rem;
-        height: auto;
-    }
-
-    .searchBtn {
-        padding: 0.75rem;
-        margin-top: 0.5rem;
-        font-size: 0.95rem;
-    }
-
-    .guestTitle {
-        font-size: 0.85rem;
-    }
-
-    .guestSubtitle {
-        font-size: 0.7rem;
-    }
-
-    .dropdown {
-        position: fixed;
-        top: auto;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        max-height: 50vh;
-        border-radius: 20px 20px 0 0;
-        box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.15);
-        z-index: 2000;
-        padding-bottom: 2rem;
-        /* Safe area for iOS home bar */
+    .searchActionBtn {
+        width: 100%;
+        justify-content: center;
     }
 }
