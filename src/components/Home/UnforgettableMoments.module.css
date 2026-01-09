@@ -396,6 +396,14 @@
         font-size: 2.2rem;
         margin-bottom: 2.5rem;
     }
+
+    .thumbnail {
+        transform: skewX(0) scale(1);
+    }
+
+    .momentCard:hover .thumbnail {
+        transform: scale(1);
+    }
 }
 
 @media (max-width: 480px) {
