@@ -14,6 +14,13 @@
     gap: 2rem;
 }
 
+.logo {
+    max-width: 180px;
+    height: auto;
+    margin-bottom: 1rem;
+    display: block;
+}
+
 .column h3 {
     color: var(--color-caribe-blue);
     margin-bottom: 1.5rem;
