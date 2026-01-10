@@ -102,15 +102,15 @@
     flex: 1;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
 }
 
 .guestItem {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 3px;
     color: #333;
-    font-size: 0.95rem;
+    font-size: 0.85rem;
     font-weight: 600;
 }
 

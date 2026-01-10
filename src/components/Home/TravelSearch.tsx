@@ -206,24 +206,23 @@ export default function TravelSearch() {
                     <div className={styles.field} style={{ position: 'relative' }}>
                         <label>{activeTab === 'flights' ? 'Pasajeros' : activeTab === 'tours' ? 'Personas' : 'Huéspedes'}</label>
                         <div className={styles.inputWrapper} onClick={() => setShowGuestPicker(!showGuestPicker)}>
-                            <Users size={18} className={styles.inputIcon} />
                             <div className={styles.guestSummary}>
                                 <div className={styles.guestItem}>
-                                    <User size={18} fill="#1F6D8C" color="#1F6D8C" /> <span>{adults}</span>
+                                    <User size={16} fill="#1F6D8C" color="#1F6D8C" /> <span>{adults}</span>
                                 </div>
                                 {children > 0 && (
                                     <div className={styles.guestItem}>
-                                        <UserRound size={18} fill="#1F6D8C" color="#1F6D8C" /> <span>{children}</span>
+                                        <UserRound size={16} fill="#1F6D8C" color="#1F6D8C" /> <span>{children}</span>
                                     </div>
                                 )}
                                 {infants > 0 && (
                                     <div className={styles.guestItem}>
-                                        <Milk size={18} fill="#1F6D8C" color="#1F6D8C" /> <span>{infants}</span>
+                                        <Milk size={16} fill="#1F6D8C" color="#1F6D8C" /> <span>{infants}</span>
                                     </div>
                                 )}
                                 {pets > 0 && (
                                     <div className={styles.guestItem}>
-                                        <PawPrint size={18} fill="#1F6D8C" color="#1F6D8C" /> <span>{pets}</span>
+                                        <PawPrint size={16} fill="#1F6D8C" color="#1F6D8C" /> <span>{pets}</span>
                                     </div>
                                 )}
                             </div>
