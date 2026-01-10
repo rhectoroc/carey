@@ -59,11 +59,11 @@
 
 .field {
     flex: 1;
-    min-width: 150px;
+    min-width: 140px;
     position: relative;
     border: 1px solid #e0e0e0;
     border-radius: 8px;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 0.75rem;
     transition: border-color 0.2s;
     background: white;
 }
@@ -79,14 +79,13 @@
     font-weight: 600;
     color: #888;
     margin-bottom: 0.2rem;
-    margin-bottom: 0.2rem;
     text-transform: uppercase;
 }
 
 .checkboxLabel {
     display: flex;
     align-items: center;
-    gap: 0.3rem;
+    gap: 2rem;
     cursor: pointer;
     font-size: 0.75rem;
     text-transform: none !important;
@@ -95,25 +94,28 @@
 
 .checkboxLabel input {
     margin: 0;
+    margin-right: 0.8rem;
     width: auto !important;
+    cursor: pointer;
 }
 
 .guestSummary {
     flex: 1;
     display: flex;
     align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
+    gap: 5px;
+    flex-wrap: nowrap;
 }
 
 .guestItem {
     display: flex;
     align-items: center;
-    gap: 3px;
+    gap: 2px;
     color: #333;
     font-size: 0.85rem;
     font-weight: 600;
     white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .inputWrapper {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
-import { Search, Calendar, MapPin, Users, Hotel, Plane, Compass, ChevronDown, MousePointer2, Briefcase, User, PawPrint, UserRound, Milk } from 'lucide-react';
+import { Search, Calendar, MapPin, Users, Hotel, Plane, Compass, ChevronDown, MousePointer2, Briefcase, User, PawPrint, IceCream, Baby } from 'lucide-react';
 import styles from './TravelSearch.module.css';
 
 import { useRouter } from 'next/navigation';
@@ -117,7 +117,7 @@ export default function TravelSearch() {
 
                     {/* ORIGIN (Only for Flights) */}
                     {activeTab === 'flights' && (
-                        <div className={styles.field}>
+                        <div className={styles.field} style={{ flex: 2.2 }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <label>Origen</label>
                                 <label className={styles.checkboxLabel}>
@@ -182,7 +182,7 @@ export default function TravelSearch() {
                     </div>
 
                     {/* DATES */}
-                    <div className={styles.field}>
+                    <div className={styles.field} style={{ flex: 1.5 }}>
                         <label>{activeTab === 'tours' ? 'Fecha' : activeTab === 'flights' ? 'Ida' : 'Entrada'}</label>
                         <div className={styles.inputWrapper}>
                             <Calendar size={18} className={styles.inputIcon} />
@@ -192,7 +192,7 @@ export default function TravelSearch() {
 
                     {activeTab !== 'tours' && (
                         (!isOneWay || activeTab !== 'flights') && (
-                            <div className={styles.field}>
+                            <div className={styles.field} style={{ flex: 1.5 }}>
                                 <label>{activeTab === 'flights' ? 'Vuelta' : 'Salida'}</label>
                                 <div className={styles.inputWrapper}>
                                     <Calendar size={18} className={styles.inputIcon} />
@@ -203,7 +203,7 @@ export default function TravelSearch() {
                     )}
 
                     {/* GUESTS / PASSENGERS */}
-                    <div className={styles.field} style={{ position: 'relative' }}>
+                    <div className={styles.field} style={{ position: 'relative', flex: 1 }}>
                         <label>{activeTab === 'flights' ? 'Pasajeros' : activeTab === 'tours' ? 'Personas' : 'Huéspedes'}</label>
                         <div className={styles.inputWrapper} onClick={() => setShowGuestPicker(!showGuestPicker)}>
                             <div className={styles.guestSummary}>
@@ -212,12 +212,12 @@ export default function TravelSearch() {
                                 </div>
                                 {children > 0 && (
                                     <div className={styles.guestItem}>
-                                        <UserRound size={16} fill="#1F6D8C" color="#1F6D8C" /> <span>{children}</span>
+                                        <IceCream size={16} fill="#1F6D8C" color="#1F6D8C" /> <span>{children}</span>
                                     </div>
                                 )}
                                 {infants > 0 && (
                                     <div className={styles.guestItem}>
-                                        <Milk size={16} fill="#1F6D8C" color="#1F6D8C" /> <span>{infants}</span>
+                                        <Baby size={16} fill="#1F6D8C" color="#1F6D8C" /> <span>{infants}</span>
                                     </div>
                                 )}
                                 {pets > 0 && (
