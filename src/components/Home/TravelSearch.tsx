@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
-import { Search, Calendar, MapPin, Users, Hotel, Plane, Compass, ChevronDown, Dog, Briefcase, User, Baby } from 'lucide-react';
+import { Search, Calendar, MapPin, Users, Hotel, Plane, Compass, ChevronDown, MousePointer2, Briefcase, User, Baby, PawPrint } from 'lucide-react';
 import styles from './TravelSearch.module.css';
 
 import { useRouter } from 'next/navigation';
@@ -202,21 +202,21 @@ export default function TravelSearch() {
 
                     {/* GUESTS / PASSENGERS */}
                     <div className={styles.field} style={{ position: 'relative' }}>
-                        <label>{activeTab === 'flights' ? 'Pasajeros' : 'Huéspedes'}</label>
+                        <label>{activeTab === 'flights' ? 'Pasajeros' : activeTab === 'tours' ? 'Personas' : 'Huéspedes'}</label>
                         <div className={styles.inputWrapper} onClick={() => setShowGuestPicker(!showGuestPicker)}>
                             <Users size={18} className={styles.inputIcon} />
                             <div className={styles.guestSummary}>
-                                <div className={styles.guestItem} title="Adultos">
-                                    <User size={16} /> <span>{adults}</span>
+                                <div className={styles.guestItem}>
+                                    <User size={18} fill="#1F6D8C" color="#1F6D8C" /> <span>{adults}</span>
                                 </div>
                                 {children > 0 && (
-                                    <div className={styles.guestItem} title="Niños">
-                                        <Baby size={16} /> <span>{children}</span>
+                                    <div className={styles.guestItem}>
+                                        <Baby size={18} fill="#1F6D8C" color="#1F6D8C" /> <span>{children}</span>
                                     </div>
                                 )}
                                 {pets > 0 && (
-                                    <div className={styles.guestItem} title="Mascotas">
-                                        <Dog size={16} /> <span>{pets}</span>
+                                    <div className={styles.guestItem}>
+                                        <PawPrint size={18} fill="#1F6D8C" color="#1F6D8C" /> <span>{pets} {pets === 1 ? 'Mascota' : 'Mascotas'}</span>
                                     </div>
                                 )}
                             </div>
