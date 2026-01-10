@@ -54,6 +54,15 @@ export default function TermsPage() {
                 <p>Estos términos se rigen por las leyes de la República Bolivariana de Venezuela. Cualquier disputa será resuelta en los tribunales competentes del Estado Nueva Esparta.</p>
             </section>
 
+            <section style={{ marginBottom: '2rem' }}>
+                <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: '#1F6D8C' }}>7. Contacto</h2>
+                <p>Para cualquier duda o consulta sobre estos términos, puede contactarnos a través de:</p>
+                <ul style={{ paddingLeft: '20px', marginTop: '10px' }}>
+                    <li>Correo electrónico: info@viajes-carey.com</li>
+                    <li>Teléfono: +58 412-2476575</li>
+                </ul>
+            </section>
+
             <p style={{ marginTop: '3rem', fontSize: '0.9rem', color: '#666', borderTop: '1px solid #eee', paddingTop: '1rem' }}>
                 Última actualización: {new Date().toLocaleDateString('es-VE')}
             </p>

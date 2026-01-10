@@ -27,8 +27,8 @@ export default function Footer() {
                 </div>
                 <div className={styles.column}>
                     <h3>Contacto</h3>
-                    <p>info@careytour.com</p>
-                    <p>+58 412-2476475</p>
+                    <p>info@viajes-carey.com</p>
+                    <p>+58 412-2476575</p>
                     <p>Isla de Margarita, Nueva Esparta</p>
                 </div>
             </div>
