@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
-import { Search, Calendar, MapPin, Users, Hotel, Plane, Compass, ChevronDown, MousePointer2, Briefcase, User, Baby, PawPrint } from 'lucide-react';
+import { Search, Calendar, MapPin, Users, Hotel, Plane, Compass, ChevronDown, MousePointer2, Briefcase, User, Baby, PawPrint, PersonStanding } from 'lucide-react';
 import styles from './TravelSearch.module.css';
 
 import { useRouter } from 'next/navigation';
@@ -28,6 +28,7 @@ export default function TravelSearch() {
 
     const [adults, setAdults] = useState(2);
     const [children, setChildren] = useState(0);
+    const [infants, setInfants] = useState(0);
     const [pets, setPets] = useState(0);
     const [showGuestPicker, setShowGuestPicker] = useState(false);
 
@@ -75,6 +76,7 @@ export default function TravelSearch() {
         // Guests
         params.set('adults', adults.toString());
         params.set('children', children.toString());
+        params.set('infants', infants.toString());
         params.set('pets', pets.toString());
 
         if (activeTab === 'flights') {
@@ -211,7 +213,12 @@ export default function TravelSearch() {
                                 </div>
                                 {children > 0 && (
                                     <div className={styles.guestItem}>
-                                        <Baby size={18} fill="#1F6D8C" color="#1F6D8C" /> <span>{children}</span>
+                                        <PersonStanding size={18} fill="#1F6D8C" color="#1F6D8C" /> <span>{children}</span>
+                                    </div>
+                                )}
+                                {infants > 0 && (
+                                    <div className={styles.guestItem}>
+                                        <Baby size={18} fill="#1F6D8C" color="#1F6D8C" /> <span>{infants}</span>
                                     </div>
                                 )}
                                 {pets > 0 && (
@@ -226,7 +233,7 @@ export default function TravelSearch() {
                         {showGuestPicker && (
                             <div className={styles.guestPopup}>
                                 <div className={styles.guestRow}>
-                                    <div><span>Adultos</span><small>13+ años</small></div>
+                                    <div><span>Adultos</span><small>11+ años</small></div>
                                     <div className={styles.counterControl}>
                                         <button onClick={() => setAdults(Math.max(1, adults - 1))}>-</button>
                                         <span>{adults}</span>
@@ -234,16 +241,24 @@ export default function TravelSearch() {
                                     </div>
                                 </div>
                                 <div className={styles.guestRow}>
-                                    <div><span>Niños</span><small>2-12 años</small></div>
+                                    <div><span>Niños</span><small>4-10 años</small></div>
                                     <div className={styles.counterControl}>
                                         <button onClick={() => setChildren(Math.max(0, children - 1))}>-</button>
                                         <span>{children}</span>
                                         <button onClick={() => setChildren(children + 1)}>+</button>
                                     </div>
                                 </div>
+                                <div className={styles.guestRow}>
+                                    <div><span>Infantes</span><small>0-3 años</small></div>
+                                    <div className={styles.counterControl}>
+                                        <button onClick={() => setInfants(Math.max(0, infants - 1))}>-</button>
+                                        <span>{infants}</span>
+                                        <button onClick={() => setInfants(infants + 1)}>+</button>
+                                    </div>
+                                </div>
                                 {activeTab !== 'flights' && (
                                     <div className={styles.guestRow}>
-                                        <div><span>Mascotas</span><small>Si aplica</small></div>
+                                        <div><span>Mascotas</span><small>Gatos o Perros</small></div>
                                         <div className={styles.counterControl}>
                                             <button onClick={() => setPets(Math.max(0, pets - 1))}>-</button>
                                             <span>{pets}</span>
