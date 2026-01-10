@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
-import { Search, Calendar, MapPin, Users, Hotel, Plane, Compass, ChevronDown, Dog, Briefcase } from 'lucide-react';
+import { Search, Calendar, MapPin, Users, Hotel, Plane, Compass, ChevronDown, Dog, Briefcase, User, Baby } from 'lucide-react';
 import styles from './TravelSearch.module.css';
 
 import { useRouter } from 'next/navigation';
@@ -205,9 +205,21 @@ export default function TravelSearch() {
                         <label>{activeTab === 'flights' ? 'Pasajeros' : 'Huéspedes'}</label>
                         <div className={styles.inputWrapper} onClick={() => setShowGuestPicker(!showGuestPicker)}>
                             <Users size={18} className={styles.inputIcon} />
-                            <span style={{ flex: 1, fontSize: '0.95rem', color: '#333' }}>
-                                {adults + children + pets} {activeTab === 'flights' ? 'Pasajeros' : 'Personas'}
-                            </span>
+                            <div className={styles.guestSummary}>
+                                <div className={styles.guestItem} title="Adultos">
+                                    <User size={16} /> <span>{adults}</span>
+                                </div>
+                                {children > 0 && (
+                                    <div className={styles.guestItem} title="Niños">
+                                        <Baby size={16} /> <span>{children}</span>
+                                    </div>
+                                )}
+                                {pets > 0 && (
+                                    <div className={styles.guestItem} title="Mascotas">
+                                        <Dog size={16} /> <span>{pets}</span>
+                                    </div>
+                                )}
+                            </div>
                             <ChevronDown size={16} />
                         </div>
 
