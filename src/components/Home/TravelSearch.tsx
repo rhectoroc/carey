@@ -98,12 +98,14 @@ export default function TravelSearch() {
                 >
                     <Hotel size={18} /> Hoteles
                 </button>
+                {/* 
                 <button
                     className={`${styles.tabBtn} ${activeTab === 'flights' ? styles.activeTab : ''}`}
                     onClick={() => setActiveTab('flights')}
                 >
                     <Plane size={18} /> Vuelos
                 </button>
+                */}
                 <button
                     className={`${styles.tabBtn} ${activeTab === 'tours' ? styles.activeTab : ''}`}
                     onClick={() => setActiveTab('tours')}
