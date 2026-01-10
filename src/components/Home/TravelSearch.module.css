@@ -79,7 +79,23 @@
     font-weight: 600;
     color: #888;
     margin-bottom: 0.2rem;
+    margin-bottom: 0.2rem;
     text-transform: uppercase;
+}
+
+.checkboxLabel {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    cursor: pointer;
+    font-size: 0.75rem;
+    text-transform: none !important;
+    color: #555 !important;
+}
+
+.checkboxLabel input {
+    margin: 0;
+    width: auto !important;
 }
 
 .inputWrapper {

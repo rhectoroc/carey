@@ -33,6 +33,7 @@ export default function TravelSearch() {
 
     // Flights specific
     const [flightClass, setFlightClass] = useState('Economy');
+    const [isOneWay, setIsOneWay] = useState(false);
 
     const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -79,6 +80,7 @@ export default function TravelSearch() {
         if (activeTab === 'flights') {
             if (origin) params.set('origin', origin);
             params.set('class', flightClass);
+            if (isOneWay) params.set('oneWay', 'true');
         }
 
         router.push(`/search?${params.toString()}`);
@@ -114,7 +116,17 @@ export default function TravelSearch() {
                     {/* ORIGIN (Only for Flights) */}
                     {activeTab === 'flights' && (
                         <div className={styles.field}>
-                            <label>Origen</label>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <label>Origen</label>
+                                <label className={styles.checkboxLabel}>
+                                    <input
+                                        type="checkbox"
+                                        checked={isOneWay}
+                                        onChange={(e) => setIsOneWay(e.target.checked)}
+                                    />
+                                    Solo ida
+                                </label>
+                            </div>
                             <div className={styles.inputWrapper}>
                                 <MapPin size={18} className={styles.inputIcon} />
                                 <input
@@ -169,27 +181,31 @@ export default function TravelSearch() {
 
                     {/* DATES */}
                     <div className={styles.field}>
-                        <label>{activeTab === 'flights' ? 'Ida' : 'Entrada'}</label>
+                        <label>{activeTab === 'tours' ? 'Fecha' : activeTab === 'flights' ? 'Ida' : 'Entrada'}</label>
                         <div className={styles.inputWrapper}>
                             <Calendar size={18} className={styles.inputIcon} />
                             <input type="date" value={checkIn} onChange={e => setCheckIn(e.target.value)} min={new Date().toISOString().split('T')[0]} />
                         </div>
                     </div>
 
-                    <div className={styles.field}>
-                        <label>{activeTab === 'flights' ? 'Vuelta' : 'Salida'}</label>
-                        <div className={styles.inputWrapper}>
-                            <Calendar size={18} className={styles.inputIcon} />
-                            <input type="date" value={checkOut} onChange={e => setCheckOut(e.target.value)} min={checkIn} />
-                        </div>
-                    </div>
+                    {activeTab !== 'tours' && (
+                        (!isOneWay || activeTab !== 'flights') && (
+                            <div className={styles.field}>
+                                <label>{activeTab === 'flights' ? 'Vuelta' : 'Salida'}</label>
+                                <div className={styles.inputWrapper}>
+                                    <Calendar size={18} className={styles.inputIcon} />
+                                    <input type="date" value={checkOut} onChange={e => setCheckOut(e.target.value)} min={checkIn} />
+                                </div>
+                            </div>
+                        )
+                    )}
 
                     {/* GUESTS / PASSENGERS */}
                     <div className={styles.field} style={{ position: 'relative' }}>
                         <label>{activeTab === 'flights' ? 'Pasajeros' : 'Huéspedes'}</label>
                         <div className={styles.inputWrapper} onClick={() => setShowGuestPicker(!showGuestPicker)}>
                             <Users size={18} className={styles.inputIcon} />
-                            <span style={{ flex: 1, fontSize: '0.95rem' }}>
+                            <span style={{ flex: 1, fontSize: '0.95rem', color: '#333' }}>
                                 {adults + children + pets} {activeTab === 'flights' ? 'Pasajeros' : 'Personas'}
                             </span>
                             <ChevronDown size={16} />
