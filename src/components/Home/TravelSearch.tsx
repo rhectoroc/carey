@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
-import { Search, Calendar, MapPin, Users, Hotel, Plane, Compass, ChevronDown, MousePointer2, Briefcase, User, Baby, PawPrint, PersonStanding } from 'lucide-react';
+import { Search, Calendar, MapPin, Users, Hotel, Plane, Compass, ChevronDown, MousePointer2, Briefcase, User, PawPrint, UserRound, Milk } from 'lucide-react';
 import styles from './TravelSearch.module.css';
 
 import { useRouter } from 'next/navigation';
@@ -213,17 +213,17 @@ export default function TravelSearch() {
                                 </div>
                                 {children > 0 && (
                                     <div className={styles.guestItem}>
-                                        <PersonStanding size={18} fill="#1F6D8C" color="#1F6D8C" /> <span>{children}</span>
+                                        <UserRound size={18} fill="#1F6D8C" color="#1F6D8C" /> <span>{children}</span>
                                     </div>
                                 )}
                                 {infants > 0 && (
                                     <div className={styles.guestItem}>
-                                        <Baby size={18} fill="#1F6D8C" color="#1F6D8C" /> <span>{infants}</span>
+                                        <Milk size={18} fill="#1F6D8C" color="#1F6D8C" /> <span>{infants}</span>
                                     </div>
                                 )}
                                 {pets > 0 && (
                                     <div className={styles.guestItem}>
-                                        <PawPrint size={18} fill="#1F6D8C" color="#1F6D8C" /> <span>{pets} {pets === 1 ? 'Mascota' : 'Mascotas'}</span>
+                                        <PawPrint size={18} fill="#1F6D8C" color="#1F6D8C" /> <span>{pets}</span>
                                     </div>
                                 )}
                             </div>
