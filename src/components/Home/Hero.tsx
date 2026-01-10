@@ -12,9 +12,25 @@ export default function Hero() {
 
     useEffect(() => {
         if (subtitleRef.current) {
+            const fullText = "Servicios Turísticos Integrales";
+            subtitleRef.current.innerText = "";
+
+            const obj = { val: 0 };
+            gsap.to(obj, {
+                val: fullText.length,
+                duration: 3,
+                delay: 0.8,
+                ease: "none",
+                onUpdate: () => {
+                    if (subtitleRef.current) {
+                        subtitleRef.current.innerText = fullText.slice(0, Math.round(obj.val));
+                    }
+                }
+            });
+
             gsap.fromTo(subtitleRef.current,
-                { opacity: 0, y: 30 },
-                { opacity: 1, y: 0, duration: 1, delay: 0.5, ease: "power3.out" }
+                { opacity: 0 },
+                { opacity: 1, duration: 0.5, delay: 0.8 }
             );
         }
     }, []);
