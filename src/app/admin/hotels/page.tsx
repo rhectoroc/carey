@@ -20,7 +20,6 @@ interface Hotel {
     is_featured: boolean;
     is_promotion?: boolean;
     type?: string;
-    is_promotion: boolean;
 }
 
 interface Destination {
