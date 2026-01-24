@@ -47,6 +47,7 @@ export default function DynamicSection({ title, subtitle, endpoint, type }: Dyna
             features: item.features || item.included || [],
             // Add other mock fields if required by ServiceModal
             duration: item.duration || '',
+            priceValidUntil: item.price_valid_until,
             images: [item.image_url],
             reviews: 0
         };

@@ -12,6 +12,7 @@ interface Tour {
     slug: string;
     description: string;
     price: number;
+    price_valid_until?: string;
     duration: string;
     destination_id: number;
     destination_name?: string;
@@ -232,6 +233,16 @@ export default function ToursPage() {
                                                 style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
                                                 value={currentTour.price || ''}
                                                 onChange={(e) => setCurrentTour({ ...currentTour, price: Number(e.target.value) })}
+                                            />
+                                        </div>
+                                        <div className={styles.formGroup} style={{ flex: 1 }}>
+                                            <label className={styles.label} style={{ color: '#333' }}>Price Valid Until</label>
+                                            <input
+                                                type="date"
+                                                className={styles.input}
+                                                style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
+                                                value={currentTour.price_valid_until ? new Date(currentTour.price_valid_until).toISOString().split('T')[0] : ''}
+                                                onChange={(e) => setCurrentTour({ ...currentTour, price_valid_until: e.target.value })}
                                             />
                                         </div>
                                         <div className={styles.formGroup} style={{ flex: 1 }}>

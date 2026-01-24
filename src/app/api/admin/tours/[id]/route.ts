@@ -9,17 +9,17 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
         const { id } = await params;
         const body = await request.json();
-        const { name, slug, description, price, duration, destination_id, image_url, included, is_featured, is_promotion } = body;
+        const { name, slug, description, price, duration, destination_id, image_url, included, is_featured, is_promotion, price_valid_until } = body;
 
         let sql = `
             UPDATE tours
-            SET name = $1, slug = $2, description = $3, price = $4, duration = $5, destination_id = $6, image_url = $7, included = $8, is_featured = $9, is_promotion = $10
-            WHERE id = $11
+            SET name = $1, slug = $2, description = $3, price = $4, duration = $5, destination_id = $6, image_url = $7, included = $8, is_featured = $9, is_promotion = $10, price_valid_until = $11
+            WHERE id = $12
         `;
-        const values = [name, slug, description, price, duration, destination_id, image_url, included, is_featured, is_promotion, id];
+        const values = [name, slug, description, price, duration, destination_id, image_url, JSON.stringify(included || []), is_featured, is_promotion, price_valid_until, id];
 
         if (user.role !== 'administrador') {
-            sql += ' AND created_by = $12';
+            sql += ' AND created_by = $13';
             values.push(user.id);
         }
 

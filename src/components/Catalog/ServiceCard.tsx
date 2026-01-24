@@ -24,9 +24,22 @@ export default function ServiceCard({ service, onClick }: ServiceCardProps) {
                 </div>
 
                 <div className={styles.footer}>
-                    <div className={styles.price}>
-                        <span>desde</span> ${service.price}
-                    </div>
+                    {service.priceValidUntil && new Date(service.priceValidUntil) < new Date() ? (
+                        <div className={styles.consultButton} style={{
+                            backgroundColor: 'var(--color-primary-teal)',
+                            color: 'white',
+                            padding: '5px 10px',
+                            borderRadius: '5px',
+                            fontSize: '0.8rem',
+                            fontWeight: 'bold'
+                        }}>
+                            Consultar tarifa
+                        </div>
+                    ) : (
+                        <div className={styles.price}>
+                            <span>desde</span> ${service.price}
+                        </div>
+                    )}
                     <div className={styles.rating}>
                         <Star size={16} fill="var(--color-sunset-orange)" />
                         {service.rating}
