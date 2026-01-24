@@ -8,6 +8,7 @@ export interface Service {
     rating: number;
     description?: string;
     destination?: 'Los Roques' | 'Canaima' | 'Isla de Margarita' | 'Mérida';
+    duration?: string;
 }
 
 export const mockServices: Service[] = [
