@@ -28,21 +28,21 @@ export default function Home() {
                 <DynamicSection
                     title="Destinos Populares"
                     subtitle="Explora los lugares más increíbles de Venezuela."
-                    endpoint="/api/admin/destinations"
+                    endpoint="/api/catalog/destinations"
                     type="destination"
                 />
 
                 <DynamicSection
                     title="Hoteles Exclusivos"
                     subtitle="Descansa en los mejores alojamientos."
-                    endpoint="/api/admin/hotels"
+                    endpoint="/api/catalog/hotels"
                     type="hotel"
                 />
 
                 <DynamicSection
                     title="Tours & Aventuras"
                     subtitle="Vive experiencias inolvidables."
-                    endpoint="/api/admin/tours"
+                    endpoint="/api/catalog/tours"
                     type="tour"
                 />
 
