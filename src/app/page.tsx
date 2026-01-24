@@ -21,7 +21,27 @@ export default function Home() {
                     {/* TravelSearch is actually inside Hero in previous design, keeping consistency */}
                 </div>
 
-                <CategoryGrid />
+                {/* Dynamic Sections */}
+                <DynamicSection
+                    title="Destinos Populares"
+                    subtitle="Explora los lugares más increíbles de Venezuela."
+                    endpoint="/api/admin/destinations"
+                    type="destination"
+                />
+
+                <DynamicSection
+                    title="Hoteles Exclusivos"
+                    subtitle="Descansa en los mejores alojamientos."
+                    endpoint="/api/admin/hotels"
+                    type="hotel"
+                />
+
+                <DynamicSection
+                    title="Tours & Aventuras"
+                    subtitle="Vive experiencias inolvidables."
+                    endpoint="/api/admin/tours"
+                    type="tour"
+                />
 
                 <UnforgettableMoments />
 
