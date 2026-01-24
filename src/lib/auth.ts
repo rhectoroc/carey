@@ -1,4 +1,15 @@
 import { cookies } from 'next/headers';
+import bcrypt from 'bcryptjs';
+
+const SALT_ROUNDS = 12;
+
+export async function hashPassword(password: string): Promise<string> {
+    return await bcrypt.hash(password, SALT_ROUNDS);
+}
+
+export async function comparePassword(password: string, hash: string): Promise<boolean> {
+    return await bcrypt.compare(password, hash);
+}
 
 export async function getCurrentUser() {
     const cookieStore = await cookies();
@@ -11,7 +22,7 @@ export async function getCurrentUser() {
         return {
             id: sessionData.userId,
             username: sessionData.username,
-            role: sessionData.role // 'administrador', 'freelance', 'empleado'
+            role: sessionData.role
         };
     } catch (e) {
         return null;

@@ -1,22 +1,6 @@
 import { NextResponse } from 'next/server';
 import { query } from '@/lib/db';
-import crypto from 'crypto';
-
-// verifyPassword helper remains same for now (assumes salt:hash or direct compare if migrating)
-function verifyPassword(password: string, storedHash: string): Promise<boolean> {
-    return new Promise((resolve, reject) => {
-        const [salt, key] = storedHash.split(':');
-        if (!salt || !key) {
-            if (password === storedHash) resolve(true);
-            else resolve(false);
-            return;
-        }
-        crypto.scrypt(password, salt, 64, (err, derivedKey) => {
-            if (err) reject(err);
-            resolve(key === derivedKey.toString('hex'));
-        });
-    });
-}
+import { comparePassword } from '@/lib/auth';
 
 export async function POST(request: Request) {
     try {
@@ -26,15 +10,24 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Missing credentials' }, { status: 400 });
         }
 
-        // Changed table to auth_user
         const result = await query('SELECT * FROM auth_user WHERE username = $1', [username]);
         const user = result.rows[0];
 
         if (!user) {
+            // Using generic error message for security (don't reveal if user exists)
             return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
         }
 
-        const isValid = await verifyPassword(password, user.password_hash);
+        const isValid = await comparePassword(password, user.password_hash);
+
+        // Fallback for legacy plain text passwords (optional: remove this block for strict only mode)
+        // Checks if password matches hash directly (only if hash doesn't look like bcrypt)
+        // This allows the user to login once with the plain text, we could upgrade it here but simpler to just allow.
+        // Actually, for "Secure Protocols" request, we should probably prefer NOT to support plain text, 
+        // BUT the user just inserted one. 
+        // Let's keep the fallback but make it temporary/Migration logic? 
+        // Better: We will give the user the HASHED string for their SQL insert in the response, so they fix it at source.
+        // So here, I will stick to Strict comparison. If it fails, they need to update DB.
 
         if (!isValid) {
             return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
@@ -42,11 +35,10 @@ export async function POST(request: Request) {
 
         const response = NextResponse.json({ success: true, role: user.role });
 
-        // Store role and userId in session
         const sessionData = JSON.stringify({
             userId: user.id,
             username: user.username,
-            role: user.role // 'administrador', 'freelance', or 'empleado'
+            role: user.role
         });
         const base64Session = Buffer.from(sessionData).toString('base64');
 

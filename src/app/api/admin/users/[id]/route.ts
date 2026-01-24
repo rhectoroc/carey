@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { query } from '@/lib/db';
-import { getCurrentUser } from '@/lib/auth';
+import { getCurrentUser, hashPassword } from '@/lib/auth';
 
 export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
@@ -13,7 +13,6 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
         const body = await request.json();
         const { username, role, first_name, last_name, email, phone_number, password } = body;
 
-        // Dynamic update query
         let sql = `
             UPDATE auth_user
             SET username = $1, role = $2, first_name = $3, last_name = $4, email = $5, phone_number = $6
@@ -22,9 +21,10 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
         let paramIndex = 7;
 
-        if (password) {
+        if (password && password.trim() !== '') {
+            const hashedPassword = await hashPassword(password);
             sql += `, password_hash = $${paramIndex} `;
-            values.push(password); // Add hashing here
+            values.push(hashedPassword);
             paramIndex++;
         }
 
@@ -57,7 +57,6 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
 
         const { id } = await params;
 
-        // Prevent deleting self?
         if (Number(id) === currentUser.id) {
             return NextResponse.json({ error: 'Cannot delete your own account' }, { status: 400 });
         }
