@@ -71,7 +71,6 @@ export default function ServiceModal({ isOpen, onClose, service }: ServiceModalP
                                 src={images[currentImageIndex]}
                                 className={styles.image}
                                 autoPlay
-                                muted
                                 loop
                                 playsInline
                             />
