@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { Service } from '@/data/mockServices';
-import { X, MapPin } from 'lucide-react';
+import { X, MapPin, ChevronLeft, ChevronRight, Info } from 'lucide-react';
 import { useChatbot } from '@/context/ChatbotContext';
+import { getFeatureIcon } from './ServiceCard';
 import styles from './ServiceModal.module.css';
 
 interface ServiceModalProps {
@@ -14,10 +15,25 @@ interface ServiceModalProps {
 
 export default function ServiceModal({ isOpen, onClose, service }: ServiceModalProps) {
     const { openChatbot } = useChatbot();
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+    const images = useMemo(() => {
+        if (!service) return [];
+        let list = service.gallery && service.gallery.length > 0 ? [...service.gallery] : [service.image];
+        if (service.image && !list.includes(service.image)) {
+            list = [service.image, ...list];
+        } else if (service.image && list.indexOf(service.image) > 0) {
+            const index = list.indexOf(service.image);
+            list.splice(index, 1);
+            list.unshift(service.image);
+        }
+        return list;
+    }, [service]);
 
     useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = 'hidden';
+            setCurrentImageIndex(0);
         } else {
             document.body.style.overflow = 'unset';
         }
@@ -30,11 +46,16 @@ export default function ServiceModal({ isOpen, onClose, service }: ServiceModalP
 
     const handleConsultar = () => {
         const message = `Requiero más información acerca de ${service.title.toLowerCase()}`;
-        onClose(); // Close modal first
+        onClose();
         setTimeout(() => {
             openChatbot(message);
-        }, 300); // Small delay for smooth transition
+        }, 300);
     };
+
+    const nextImage = () => setCurrentImageIndex((prev) => (prev + 1) % images.length);
+    const prevImage = () => setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
+
+    const isVideo = (url: string) => url?.toLowerCase().match(/\.(mp4|webm|ogg|mov)$/);
 
     return (
         <div className={styles.overlay} onClick={onClose}>
@@ -43,8 +64,41 @@ export default function ServiceModal({ isOpen, onClose, service }: ServiceModalP
                     <X size={20} />
                 </button>
 
-                <div className={styles.imageContainer}>
-                    <img src={service.image} alt={service.title} className={styles.image} />
+                <div className={styles.imageSection}>
+                    <div className={styles.imageContainer}>
+                        {isVideo(images[currentImageIndex]) ? (
+                            <video
+                                src={images[currentImageIndex]}
+                                className={styles.image}
+                                autoPlay
+                                muted
+                                loop
+                                playsInline
+                            />
+                        ) : (
+                            <img src={images[currentImageIndex]} alt={service.title} className={styles.image} />
+                        )}
+
+                        {images.length > 1 && (
+                            <>
+                                <button className={`${styles.navButton} ${styles.prevButton}`} onClick={prevImage}>
+                                    <ChevronLeft size={24} />
+                                </button>
+                                <button className={`${styles.navButton} ${styles.nextButton}`} onClick={nextImage}>
+                                    <ChevronRight size={24} />
+                                </button>
+                                <div className={styles.carouselNav}>
+                                    {images.map((_, idx) => (
+                                        <div
+                                            key={idx}
+                                            className={`${styles.dot} ${idx === currentImageIndex ? styles.dotActive : ''}`}
+                                            onClick={() => setCurrentImageIndex(idx)}
+                                        />
+                                    ))}
+                                </div>
+                            </>
+                        )}
+                    </div>
                 </div>
 
                 <div className={styles.content}>
@@ -57,16 +111,62 @@ export default function ServiceModal({ isOpen, onClose, service }: ServiceModalP
                         </div>
                     </div>
 
-                    <p className={styles.description}>
-                        {service.description || "Descripción no disponible por el momento."}
-                    </p>
+                    <div className={styles.section}>
+                        <p className={styles.description}>
+                            {service.description || "Disfruta de una experiencia única diseñada para brindarte los mejores momentos."}
+                        </p>
+                    </div>
+
+                    {(service.price || service.price_child || service.price_infant) && (
+                        <div className={styles.section}>
+                            <h4 className={styles.sectionTitle}>Tarifas detalladas</h4>
+                            <div className={styles.pricingGrid}>
+                                {service.price && (
+                                    <div className={styles.priceItem}>
+                                        <span className={styles.priceLabel}>Adultos</span>
+                                        <span className={styles.priceValue}>${service.price}</span>
+                                    </div>
+                                )}
+                                {service.price_child && (
+                                    <div className={styles.priceItem}>
+                                        <span className={styles.priceLabel}>Niños (4-10)</span>
+                                        <span className={styles.priceValue}>${service.price_child}</span>
+                                    </div>
+                                )}
+                                {service.price_infant && (
+                                    <div className={styles.priceItem}>
+                                        <span className={styles.priceLabel}>Infantes (0-3)</span>
+                                        <span className={styles.priceValue}>${service.price_infant}</span>
+                                    </div>
+                                )}
+                            </div>
+                            {service.priceValidUntil && (
+                                <p style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '10px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                    <Info size={14} /> Tarifas vigentes hasta el {new Date(service.priceValidUntil).toLocaleDateString()}
+                                </p>
+                            )}
+                        </div>
+                    )}
+
+                    {service.features && service.features.length > 0 && (
+                        <div className={styles.section}>
+                            <h4 className={styles.sectionTitle}>¿Qué incluye?</h4>
+                            <div className={styles.featuresGrid}>
+                                {service.features.map((feature, idx) => (
+                                    <div key={idx} className={styles.featureItem}>
+                                        <div className={styles.featureIcon}>
+                                            {getFeatureIcon(feature)}
+                                        </div>
+                                        <span>{feature}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
 
                     <div className={styles.footer}>
-                        <div className={styles.price}>
-                            <span>desde</span> ${service.price}
-                        </div>
                         <button className={styles.actionButton} onClick={handleConsultar}>
-                            Consultar
+                            Reservar Ahora
                         </button>
                     </div>
                 </div>

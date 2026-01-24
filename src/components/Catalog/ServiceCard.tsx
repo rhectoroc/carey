@@ -10,7 +10,7 @@ interface ServiceCardProps {
     onClick?: () => void;
 }
 
-const getFeatureIcon = (feature: string) => {
+export const getFeatureIcon = (feature: string) => {
     const lower = feature.toLowerCase();
     if (lower.includes('almuerzo') || lower.includes('comida') || lower.includes('cena')) return <Utensils size={14} />;
     if (lower.includes('transporte') || lower.includes('traslado') || lower.includes('bus')) return <Bus size={14} />;
@@ -23,7 +23,20 @@ const getFeatureIcon = (feature: string) => {
 
 export default function ServiceCard({ service, onClick }: ServiceCardProps) {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
-    const images = service.gallery && service.gallery.length > 0 ? service.gallery : [service.image];
+
+    // Ensure the main image (service.image) is at the beginning of the images list if it's not already
+    const images = React.useMemo(() => {
+        let list = service.gallery && service.gallery.length > 0 ? [...service.gallery] : [service.image];
+        if (service.image && !list.includes(service.image)) {
+            list = [service.image, ...list];
+        } else if (service.image && list.indexOf(service.image) > 0) {
+            // Move it to the front
+            const index = list.indexOf(service.image);
+            list.splice(index, 1);
+            list.unshift(service.image);
+        }
+        return list;
+    }, [service.gallery, service.image]);
 
     const nextImage = (e: React.MouseEvent) => {
         e.stopPropagation();
@@ -34,6 +47,8 @@ export default function ServiceCard({ service, onClick }: ServiceCardProps) {
         e.stopPropagation();
         setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
     };
+
+    const isMainMedia = images[currentImageIndex] === service.image;
 
     return (
         <div className={styles.card} onClick={onClick} style={{ cursor: onClick ? 'pointer' : 'default' }}>
@@ -52,21 +67,29 @@ export default function ServiceCard({ service, onClick }: ServiceCardProps) {
                     <img src={images[currentImageIndex]} alt={service.title} className={styles.image} />
                 )}
 
+                {isMainMedia && (
+                    <div style={{ position: 'absolute', top: '10px', right: '10px', background: 'rgba(255,255,255,0.9)', borderRadius: '50%', padding: '5px', boxShadow: '0 2px 4px rgba(0,0,0,0.2)', display: 'flex', zIndex: 2 }}>
+                        <Star size={16} fill="var(--color-sunset-orange)" color="var(--color-sunset-orange)" />
+                    </div>
+                )}
+
                 {images.length > 1 && (
                     <>
                         <button
                             onClick={prevImage}
-                            style={{ position: 'absolute', left: '5px', top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.5)', color: 'white', border: 'none', borderRadius: '50%', padding: '5px', cursor: 'pointer', display: 'flex' }}
+                            className={styles.navButton}
+                            style={{ position: 'absolute', left: '5px', top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.5)', color: 'white', border: 'none', borderRadius: '50%', padding: '5px', cursor: 'pointer', display: 'flex', zIndex: 10 }}
                         >
                             <ChevronLeft size={16} />
                         </button>
                         <button
                             onClick={nextImage}
-                            style={{ position: 'absolute', right: '5px', top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.5)', color: 'white', border: 'none', borderRadius: '50%', padding: '5px', cursor: 'pointer', display: 'flex' }}
+                            className={styles.navButton}
+                            style={{ position: 'absolute', right: '5px', top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.5)', color: 'white', border: 'none', borderRadius: '50%', padding: '5px', cursor: 'pointer', display: 'flex', zIndex: 10 }}
                         >
                             <ChevronRight size={16} />
                         </button>
-                        <div style={{ position: 'absolute', bottom: '10px', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '4px' }}>
+                        <div style={{ position: 'absolute', bottom: '10px', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '4px', zIndex: 5 }}>
                             {images.map((_, idx) => (
                                 <div key={idx} style={{ width: '6px', height: '6px', borderRadius: '50%', background: idx === currentImageIndex ? 'white' : 'rgba(255,255,255,0.5)' }} />
                             ))}
@@ -91,21 +114,31 @@ export default function ServiceCard({ service, onClick }: ServiceCardProps) {
                 </div>
             </div>
             <div className={styles.content}>
-                <span className={styles.category}>{service.category}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                    <span className={styles.category}>{service.category}</span>
+                    <div className={styles.rating} style={{ margin: 0 }}>
+                        <Star size={14} fill="var(--color-sunset-orange)" color="var(--color-sunset-orange)" />
+                        {service.rating}
+                    </div>
+                </div>
                 <h3 className={styles.title}>{service.title}</h3>
                 <div className={styles.location}>
-                    <MapPin size={16} />
+                    <MapPin size={14} />
                     {service.location}
                 </div>
 
                 {service.features && service.features.length > 0 && (
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', margin: '10px 0' }}>
-                        {service.features.slice(0, 5).map((feature, idx) => (
-                            <div key={idx} title={feature} style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem', color: '#555', background: '#f1f5f9', padding: '4px 8px', borderRadius: '12px' }}>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', margin: '12px 0' }}>
+                        {service.features.slice(0, 4).map((feature, idx) => (
+                            <div key={idx} title={feature} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '28px', height: '28px', backgroundColor: '#f8fafc', borderRadius: '6px', color: 'var(--color-primary-teal)', border: '1px solid #e2e8f0' }}>
                                 {getFeatureIcon(feature)}
-                                <span style={{ maxWidth: '80px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{feature}</span>
                             </div>
                         ))}
+                        {service.features.length > 4 && (
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '28px', height: '28px', backgroundColor: '#f8fafc', borderRadius: '6px', fontSize: '0.7rem', color: '#64748b', fontWeight: '600', border: '1px solid #e2e8f0' }}>
+                                +{service.features.length - 4}
+                            </div>
+                        )}
                     </div>
                 )}
 
@@ -114,8 +147,8 @@ export default function ServiceCard({ service, onClick }: ServiceCardProps) {
                         <div className={styles.consultButton} style={{
                             backgroundColor: 'var(--color-primary-teal)',
                             color: 'white',
-                            padding: '5px 10px',
-                            borderRadius: '5px',
+                            padding: '6px 12px',
+                            borderRadius: '6px',
                             fontSize: '0.8rem',
                             fontWeight: 'bold'
                         }}>
@@ -123,12 +156,12 @@ export default function ServiceCard({ service, onClick }: ServiceCardProps) {
                         </div>
                     ) : (
                         <div className={styles.price}>
-                            <span>desde</span> ${service.price}
+                            <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 'normal' }}>desde</span>
+                            <span style={{ fontSize: '1.25rem', fontWeight: '700', color: 'var(--color-text-dark)' }}> ${service.price}</span>
                         </div>
                     )}
-                    <div className={styles.rating}>
-                        <Star size={16} fill="var(--color-sunset-orange)" />
-                        {service.rating}
+                    <div style={{ fontSize: '0.7rem', color: '#64748b' }}>
+                        {service.duration}
                     </div>
                 </div>
             </div>

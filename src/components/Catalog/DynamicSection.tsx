@@ -42,6 +42,8 @@ export default function DynamicSection({ title, subtitle, endpoint, type, classN
             category: type === 'hotel' ? 'Hotel' : type === 'tour' ? 'Tour' : type === 'vehicle' ? 'Vehicle' : 'Destination',
             location: item.destination_name || (type === 'destination' ? item.name : ''),
             price: item.price || 0,
+            price_child: item.price_child,
+            price_infant: item.price_infant,
             rating: item.stars || 5,
             image: item.image_url || 'https://via.placeholder.com/400x300?text=No+Image', // Fallback
             description: item.description,
@@ -51,7 +53,6 @@ export default function DynamicSection({ title, subtitle, endpoint, type, classN
             priceValidUntil: item.price_valid_until,
             tags: item.tags || [],
             gallery: item.gallery || [],
-            images: [item.image_url],
             reviews: 0
         };
     };

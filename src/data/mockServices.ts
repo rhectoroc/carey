@@ -3,6 +3,8 @@ export interface Service {
     title: string;
     category: string;
     price: number;
+    price_child?: number;
+    price_infant?: number;
     image: string;
     location: string;
     rating: number;
@@ -13,6 +15,7 @@ export interface Service {
     tags?: string[];
     gallery?: string[];
     features?: string[];
+    is_featured?: boolean;
 }
 
 export const mockServices: Service[] = [
@@ -21,22 +24,29 @@ export const mockServices: Service[] = [
         title: 'Expedición a Los Roques',
         category: 'Tour',
         price: 450,
+        price_child: 300,
+        price_infant: 100,
         image: '/images/los-roques-01.jpg',
         location: 'Los Roques',
         rating: 5,
         destination: 'Los Roques',
-        description: 'Disfruta de una experiencia inolvidable en el archipiélago de Los Roques. Incluye traslados aéreos, alojamiento en posada VIP, todas las comidas y excursiones diarias a los cayos más exclusivos como Cayo de Agua y Francisquí. Perfecto para parejas y amantes del mar.'
+        description: 'Disfruta de una experiencia inolvidable en el archipiélago de Los Roques. Incluye traslados aéreos, alojamiento en posada VIP, todas las comidas y excursiones diarias a los cayos más exclusivos como Cayo de Agua y Francisquí. Perfecto para parejas y amantes del mar.',
+        gallery: ['/images/los-roques-01.jpg', '/images/canaima.jpg'],
+        features: ['Vuelos directos', 'Alojamiento VIP', 'Todas las comidas', 'Paseos en lancha', 'Snorkeling'],
+        tags: ['All Included', 'Beach']
     },
     {
         id: '2',
         title: 'Canaima: Salto Ángel',
         category: 'Tour',
         price: 500,
+        price_child: 350,
         image: '/images/canaima.jpg',
         location: 'Canaima',
         rating: 3,
         destination: 'Canaima',
-        description: 'Aventúrate en el corazón de la selva para conocer la caída de agua más alta del mundo. Este paquete incluye vuelo sobre el Salto Ángel, excursión a la Laguna de Canaima, caminata al Sapo y alojamiento en campamento con vista a los tepuyes.'
+        description: 'Aventúrate en el corazón de la selva para conocer la caída de agua más alta del mundo. Este paquete incluye vuelo sobre el Salto Ángel, excursión a la Laguna de Canaima, caminata al Sapo y alojamiento en campamento con vista a los tepuyes.',
+        features: ['Vuelo en avioneta', 'Excursión guiada', 'Todas las comidas', 'Aventura en curiara']
     },
     {
         id: '3',

@@ -48,13 +48,17 @@ export default function PromotionsSection() {
             category: type === 'hotel' ? 'Hotel' : type === 'tour' ? 'Tour' : 'Destination',
             location: item.destination_name || (type === 'destination' ? item.name : ''),
             price: item.price || 0,
+            price_child: item.price_child,
+            price_infant: item.price_infant,
             originalPrice: item.price ? item.price * 1.2 : 0, // Mock original price for "Sale" effect?
             rating: item.stars || 5,
             image: item.image_url || 'https://via.placeholder.com/400x300?text=No+Image',
             description: item.description,
             features: item.features || item.included || [],
             duration: item.duration || '',
-            images: [item.image_url]
+            priceValidUntil: item.price_valid_until,
+            tags: item.tags || [],
+            gallery: item.gallery || [],
         };
     };
 
