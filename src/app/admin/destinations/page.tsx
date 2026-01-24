@@ -246,6 +246,7 @@ export default function DestinationsPage() {
                             <ImageGalleryUpload
                                 images={currentDestination.gallery || []}
                                 onChange={(newGallery) => setCurrentDestination({ ...currentDestination, gallery: newGallery })}
+                                onSetMain={(url) => setCurrentDestination({ ...currentDestination, image_url: url })}
                             />
                         </div>
 

@@ -326,6 +326,7 @@ export default function TransfersPage() {
                             <ImageGalleryUpload
                                 images={currentTransfer.gallery || []}
                                 onChange={(newGallery) => setCurrentTransfer({ ...currentTransfer, gallery: newGallery })}
+                                onSetMain={(url) => setCurrentTransfer({ ...currentTransfer, image_url: url })}
                             />
                         </div>
 

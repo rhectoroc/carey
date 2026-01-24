@@ -1,16 +1,17 @@
 'use client';
 
 import React, { useRef } from 'react';
-import { Upload, X, Loader2 } from 'lucide-react';
+import { Upload, X, Loader2, Star } from 'lucide-react';
 import styles from '../../app/admin/admin.module.css'; // Reusing styles from common admin module
 
 interface ImageGalleryUploadProps {
     images: string[];
     onChange: (images: string[]) => void;
+    onSetMain?: (url: string) => void;
     maxImages?: number;
 }
 
-export default function ImageGalleryUpload({ images, onChange, maxImages = 6 }: ImageGalleryUploadProps) {
+export default function ImageGalleryUpload({ images, onChange, onSetMain, maxImages = 6 }: ImageGalleryUploadProps) {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [uploading, setUploading] = React.useState(false);
 
@@ -74,27 +75,49 @@ export default function ImageGalleryUpload({ images, onChange, maxImages = 6 }: 
                 {images.map((img, idx) => (
                     <div key={idx} style={{ position: 'relative', width: '100px', height: '100px', borderRadius: '8px', overflow: 'hidden', border: '1px solid #ddd' }}>
                         <img src={img} alt={`Gallery ${idx}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                        <button
-                            type="button"
-                            onClick={() => removeImage(idx)}
-                            style={{
-                                position: 'absolute',
-                                top: '4px',
-                                right: '4px',
-                                background: 'rgba(0,0,0,0.5)',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '50%',
-                                width: '20px',
-                                height: '20px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                cursor: 'pointer'
-                            }}
-                        >
-                            <X size={12} />
-                        </button>
+                        <div style={{ position: 'absolute', top: '4px', right: '4px', display: 'flex', gap: '4px' }}>
+                            {onSetMain && (
+                                <button
+                                    type="button"
+                                    onClick={() => onSetMain(img)}
+                                    title="Set as Main Image"
+                                    style={{
+                                        background: 'rgba(255, 255, 255, 0.9)',
+                                        color: '#e63946', // Distinct color
+                                        border: 'none',
+                                        borderRadius: '50%',
+                                        width: '20px',
+                                        height: '20px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        cursor: 'pointer',
+                                        boxShadow: '0 1px 2px rgba(0,0,0,0.2)'
+                                    }}
+                                >
+                                    <Star size={12} fill="currentColor" />
+                                </button>
+                            )}
+                            <button
+                                type="button"
+                                onClick={() => removeImage(idx)}
+                                title="Remove Image"
+                                style={{
+                                    background: 'rgba(0,0,0,0.5)',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '50%',
+                                    width: '20px',
+                                    height: '20px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                <X size={12} />
+                            </button>
+                        </div>
                     </div>
                 ))}
 

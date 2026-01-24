@@ -10,9 +10,10 @@ interface DynamicSectionProps {
     subtitle: string;
     endpoint: string;
     type: 'hotel' | 'tour' | 'destination' | 'vehicle';
+    className?: string;
 }
 
-export default function DynamicSection({ title, subtitle, endpoint, type }: DynamicSectionProps) {
+export default function DynamicSection({ title, subtitle, endpoint, type, className }: DynamicSectionProps) {
     const [items, setItems] = useState<any[]>([]);
     const [selectedItem, setSelectedItem] = useState<any>(null);
 
@@ -58,7 +59,7 @@ export default function DynamicSection({ title, subtitle, endpoint, type }: Dyna
     if (items.length === 0) return null;
 
     return (
-        <section className={styles.section}>
+        <section className={`${styles.section} ${className || ''}`}>
             <div className={styles.header}>
                 <h2 className={styles.title}>{title}</h2>
                 <p className={styles.subtitle}>{subtitle}</p>

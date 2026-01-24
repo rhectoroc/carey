@@ -377,6 +377,7 @@ export default function HotelsPage() {
                             <ImageGalleryUpload
                                 images={currentHotel.gallery || []}
                                 onChange={(newGallery) => setCurrentHotel({ ...currentHotel, gallery: newGallery })}
+                                onSetMain={(url) => setCurrentHotel({ ...currentHotel, image_url: url })}
                             />
                         </div>
 

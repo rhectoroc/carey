@@ -348,6 +348,15 @@ export default function ToursPage() {
                                 onChange={(url) => setCurrentTour({ ...currentTour, image_url: url })}
                             />
                         </div>
+
+                        <div className={styles.formGroup}>
+                            <label className={styles.label} style={{ color: '#333' }}>Gallery (Max 6)</label>
+                            <ImageGalleryUpload
+                                images={currentTour.gallery || []}
+                                onChange={(newGallery) => setCurrentTour({ ...currentTour, gallery: newGallery })}
+                                onSetMain={(url) => setCurrentTour({ ...currentTour, image_url: url })}
+                            />
+                        </div>
                         <div className={styles.formGroup} style={{ display: 'flex', gap: '20px' }}>
                             <label style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#333' }}>
                                 <input

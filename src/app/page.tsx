@@ -11,6 +11,8 @@ import PromotionsSection from "@/components/Catalog/PromotionsSection";
 import UnforgettableMoments from "@/components/Home/UnforgettableMoments";
 import TravelPlanner from "@/components/Planner/TravelPlanner";
 
+import styles from './page.module.css';
+
 export default function Home() {
     return (
         <>
@@ -30,6 +32,7 @@ export default function Home() {
                     subtitle="Explora los lugares más increíbles de Venezuela."
                     endpoint="/api/catalog/destinations"
                     type="destination"
+                    className={styles.popularDestinations}
                 />
 
                 <DynamicSection
@@ -37,6 +40,7 @@ export default function Home() {
                     subtitle="Descansa en los mejores alojamientos."
                     endpoint="/api/catalog/hotels"
                     type="hotel"
+                    className={styles.exclusiveHotels}
                 />
 
                 <DynamicSection
@@ -44,6 +48,7 @@ export default function Home() {
                     subtitle="Vive experiencias inolvidables."
                     endpoint="/api/catalog/tours"
                     type="tour"
+                    className={styles.toursAdventures}
                 />
 
                 <DynamicSection
