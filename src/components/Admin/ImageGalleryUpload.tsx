@@ -67,23 +67,50 @@ export default function ImageGalleryUpload({ images, onChange, onSetMain, maxIma
                 ref={fileInputRef}
                 onChange={handleFileChange}
                 style={{ display: 'none' }}
-                accept="image/*"
+                accept="image/*,video/*"
                 multiple
             />
 
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-                {images.map((img, idx) => (
-                    <div key={idx} style={{ position: 'relative', width: '100px', height: '100px', borderRadius: '8px', overflow: 'hidden', border: '1px solid #ddd' }}>
-                        <img src={img} alt={`Gallery ${idx}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                        <div style={{ position: 'absolute', top: '4px', right: '4px', display: 'flex', gap: '4px' }}>
-                            {onSetMain && (
+                {images.map((img, idx) => {
+                    const isVideo = img.toLowerCase().match(/\.(mp4|webm|ogg|mov)$/);
+                    return (
+                        <div key={idx} style={{ position: 'relative', width: '100px', height: '100px', borderRadius: '8px', overflow: 'hidden', border: '1px solid #ddd', background: '#000' }}>
+                            {isVideo ? (
+                                <video src={img} style={{ width: '100%', height: '100%', objectFit: 'cover' }} muted />
+                            ) : (
+                                <img src={img} alt={`Gallery ${idx}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            )}
+                            <div style={{ position: 'absolute', top: '4px', right: '4px', display: 'flex', gap: '4px' }}>
+                                {onSetMain && !isVideo && (
+                                    <button
+                                        type="button"
+                                        onClick={() => onSetMain(img)}
+                                        title="Set as Main Image"
+                                        style={{
+                                            background: 'rgba(255, 255, 255, 0.9)',
+                                            color: '#e63946',
+                                            border: 'none',
+                                            borderRadius: '50%',
+                                            width: '20px',
+                                            height: '20px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            cursor: 'pointer',
+                                            boxShadow: '0 1px 2px rgba(0,0,0,0.2)'
+                                        }}
+                                    >
+                                        <Star size={12} fill="currentColor" />
+                                    </button>
+                                )}
                                 <button
                                     type="button"
-                                    onClick={() => onSetMain(img)}
-                                    title="Set as Main Image"
+                                    onClick={() => removeImage(idx)}
+                                    title="Remove Image"
                                     style={{
-                                        background: 'rgba(255, 255, 255, 0.9)',
-                                        color: '#e63946', // Distinct color
+                                        background: 'rgba(0,0,0,0.5)',
+                                        color: 'white',
                                         border: 'none',
                                         borderRadius: '50%',
                                         width: '20px',
@@ -91,35 +118,20 @@ export default function ImageGalleryUpload({ images, onChange, onSetMain, maxIma
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        cursor: 'pointer',
-                                        boxShadow: '0 1px 2px rgba(0,0,0,0.2)'
+                                        cursor: 'pointer'
                                     }}
                                 >
-                                    <Star size={12} fill="currentColor" />
+                                    <X size={12} />
                                 </button>
+                            </div>
+                            {isVideo && (
+                                <div style={{ position: 'absolute', bottom: '4px', left: '4px', background: 'rgba(0,0,0,0.6)', color: 'white', padding: '2px 4px', borderRadius: '4px', fontSize: '0.6rem' }}>
+                                    VIDEO
+                                </div>
                             )}
-                            <button
-                                type="button"
-                                onClick={() => removeImage(idx)}
-                                title="Remove Image"
-                                style={{
-                                    background: 'rgba(0,0,0,0.5)',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '50%',
-                                    width: '20px',
-                                    height: '20px',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    cursor: 'pointer'
-                                }}
-                            >
-                                <X size={12} />
-                            </button>
                         </div>
-                    </div>
-                ))}
+                    );
+                })}
 
                 {images.length < maxImages && (
                     <div
@@ -139,7 +151,7 @@ export default function ImageGalleryUpload({ images, onChange, onSetMain, maxIma
                         }}
                     >
                         {uploading ? <Loader2 className={styles.spinner} size={24} /> : <Upload size={24} />}
-                        <span style={{ fontSize: '0.7rem', marginTop: '4px' }}>Add Image</span>
+                        <span style={{ fontSize: '0.7rem', marginTop: '4px' }}>Add Media</span>
                     </div>
                 )}
             </div>

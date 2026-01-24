@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../admin.module.css';
 import { Plus, Edit, Trash2, X, ArrowLeft, Tag } from 'lucide-react';
-import ImageUpload from '@/components/Admin/ImageUpload';
+
 import ImageGalleryUpload from '@/components/Admin/ImageGalleryUpload';
 import ServiceCard from '@/components/Catalog/ServiceCard';
 
@@ -341,20 +341,15 @@ export default function ToursPage() {
                                 />
                             </div>
                         </div>
-                        <div className={styles.formGroup}>
-                            <label className={styles.label} style={{ color: '#333' }}>Image / Video</label>
-                            <ImageUpload
-                                value={currentTour.image_url || ''}
-                                onChange={(url) => setCurrentTour({ ...currentTour, image_url: url })}
-                            />
-                        </div>
+
 
                         <div className={styles.formGroup}>
-                            <label className={styles.label} style={{ color: '#333' }}>Gallery (Max 6)</label>
+                            <label className={styles.label} style={{ color: '#333' }}>Gallery (Max 6 images + 1 video)</label>
                             <ImageGalleryUpload
                                 images={currentTour.gallery || []}
                                 onChange={(newGallery) => setCurrentTour({ ...currentTour, gallery: newGallery })}
                                 onSetMain={(url) => setCurrentTour({ ...currentTour, image_url: url })}
+                                maxImages={7}
                             />
                         </div>
                         <div className={styles.formGroup} style={{ display: 'flex', gap: '20px' }}>
@@ -372,7 +367,7 @@ export default function ToursPage() {
                                     checked={currentTour.is_promotion || false}
                                     onChange={(e) => setCurrentTour({ ...currentTour, is_promotion: e.target.checked })}
                                 />
-                                Es Promoción
+                                Promotion
                             </label>
                         </div>
                         <div className={styles.modalFooter}>

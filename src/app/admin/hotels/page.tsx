@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../admin.module.css';
 import { Plus, Edit, Trash2, X, ArrowLeft, Tag } from 'lucide-react';
-import ImageUpload from '@/components/Admin/ImageUpload';
+
 import ImageGalleryUpload from '@/components/Admin/ImageGalleryUpload';
 import ServiceCard from '@/components/Catalog/ServiceCard';
 
@@ -364,20 +364,15 @@ export default function HotelsPage() {
                             />
                         </div>
 
-                        <div className={styles.formGroup}>
-                            <label className={styles.label} style={{ color: '#333' }}>Main Image</label>
-                            <ImageUpload
-                                value={currentHotel.image_url || ''}
-                                onChange={(url) => setCurrentHotel({ ...currentHotel, image_url: url })}
-                            />
-                        </div>
+
 
                         <div className={styles.formGroup}>
-                            <label className={styles.label} style={{ color: '#333' }}>Gallery (Max 6)</label>
+                            <label className={styles.label} style={{ color: '#333' }}>Gallery (Max 6 images + 1 video)</label>
                             <ImageGalleryUpload
                                 images={currentHotel.gallery || []}
                                 onChange={(newGallery) => setCurrentHotel({ ...currentHotel, gallery: newGallery })}
                                 onSetMain={(url) => setCurrentHotel({ ...currentHotel, image_url: url })}
+                                maxImages={7}
                             />
                         </div>
 
@@ -396,7 +391,7 @@ export default function HotelsPage() {
                                     checked={currentHotel.is_promotion || false}
                                     onChange={(e) => setCurrentHotel({ ...currentHotel, is_promotion: e.target.checked })}
                                 />
-                                Es Promoción
+                                Promotion
                             </label>
                         </div>
                         <div className={styles.modalFooter}>

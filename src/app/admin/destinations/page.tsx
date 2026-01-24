@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../admin.module.css';
 import { Plus, Edit, Trash2, X, ArrowLeft, Tag } from 'lucide-react';
-import ImageUpload from '@/components/Admin/ImageUpload';
+
 import ImageGalleryUpload from '@/components/Admin/ImageGalleryUpload';
 import ServiceCard from '@/components/Catalog/ServiceCard';
 
@@ -233,20 +233,15 @@ export default function DestinationsPage() {
                             </div>
                         </div>
 
-                        <div className={styles.formGroup}>
-                            <label className={styles.label} style={{ color: '#333' }}>Main Image</label>
-                            <ImageUpload
-                                value={currentDestination.image_url || ''}
-                                onChange={(url) => setCurrentDestination({ ...currentDestination, image_url: url })}
-                            />
-                        </div>
+
 
                         <div className={styles.formGroup}>
-                            <label className={styles.label} style={{ color: '#333' }}>Gallery (Max 6)</label>
+                            <label className={styles.label} style={{ color: '#333' }}>Gallery (Max 6 images + 1 video)</label>
                             <ImageGalleryUpload
                                 images={currentDestination.gallery || []}
                                 onChange={(newGallery) => setCurrentDestination({ ...currentDestination, gallery: newGallery })}
                                 onSetMain={(url) => setCurrentDestination({ ...currentDestination, image_url: url })}
+                                maxImages={7}
                             />
                         </div>
 
@@ -265,7 +260,7 @@ export default function DestinationsPage() {
                                     checked={currentDestination.is_promotion || false}
                                     onChange={(e) => setCurrentDestination({ ...currentDestination, is_promotion: e.target.checked })}
                                 />
-                                Es Promoción
+                                Promotion
                             </label>
                         </div>
                         <div className={styles.modalFooter}>
