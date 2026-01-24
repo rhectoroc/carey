@@ -1,7 +1,7 @@
 export interface Service {
     id: string;
     title: string;
-    category: 'Tour' | 'Hotel' | 'Vehicle' | 'Circuit';
+    category: string;
     price: number;
     image: string;
     location: string;
