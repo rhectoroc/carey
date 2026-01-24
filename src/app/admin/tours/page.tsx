@@ -12,6 +12,8 @@ interface Tour {
     slug: string;
     description: string;
     price: number;
+    price_child?: number;
+    price_infant?: number;
     price_valid_until?: string;
     duration: string;
     destination_id: number;
@@ -226,7 +228,7 @@ export default function ToursPage() {
                                     </div>
                                     <div style={{ display: 'flex', gap: '10px' }}>
                                         <div className={styles.formGroup} style={{ flex: 1 }}>
-                                            <label className={styles.label} style={{ color: '#333' }}>Price</label>
+                                            <label className={styles.label} style={{ color: '#333' }}>Price (Adult)</label>
                                             <input
                                                 type="number"
                                                 className={styles.input}
@@ -235,6 +237,28 @@ export default function ToursPage() {
                                                 onChange={(e) => setCurrentTour({ ...currentTour, price: Number(e.target.value) })}
                                             />
                                         </div>
+                                        <div className={styles.formGroup} style={{ flex: 1 }}>
+                                            <label className={styles.label} style={{ color: '#333' }}>Price (Child 4-10)</label>
+                                            <input
+                                                type="number"
+                                                className={styles.input}
+                                                style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
+                                                value={currentTour.price_child || ''}
+                                                onChange={(e) => setCurrentTour({ ...currentTour, price_child: Number(e.target.value) })}
+                                            />
+                                        </div>
+                                        <div className={styles.formGroup} style={{ flex: 1 }}>
+                                            <label className={styles.label} style={{ color: '#333' }}>Price (Infant 0-3)</label>
+                                            <input
+                                                type="number"
+                                                className={styles.input}
+                                                style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
+                                                value={currentTour.price_infant || ''}
+                                                onChange={(e) => setCurrentTour({ ...currentTour, price_infant: Number(e.target.value) })}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div style={{ display: 'flex', gap: '10px' }}>
                                         <div className={styles.formGroup} style={{ flex: 1 }}>
                                             <label className={styles.label} style={{ color: '#333' }}>Price Valid Until</label>
                                             <input

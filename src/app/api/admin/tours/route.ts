@@ -35,14 +35,14 @@ export async function POST(request: Request) {
         if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
         const body = await request.json();
-        const { name, slug, description, price, duration, destination_id, image_url, included, is_featured, is_promotion, price_valid_until } = body;
+        const { name, slug, description, price, duration, destination_id, image_url, included, is_featured, is_promotion, price_valid_until, price_child, price_infant } = body;
 
         const sql = `
-            INSERT INTO tours (name, slug, description, price, duration, destination_id, image_url, included, is_featured, is_promotion, price_valid_until, created_by)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+            INSERT INTO tours (name, slug, description, price, duration, destination_id, image_url, included, is_featured, is_promotion, price_valid_until, price_child, price_infant, created_by)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
             RETURNING *
         `;
-        const values = [name, slug, description, price, duration, destination_id, image_url, JSON.stringify(included || []), is_featured || false, is_promotion || false, price_valid_until, user.id];
+        const values = [name, slug, description, price, duration, destination_id, image_url, JSON.stringify(included || []), is_featured || false, is_promotion || false, price_valid_until, price_child || 0, price_infant || 0, user.id];
 
         const result = await query(sql, values);
         return NextResponse.json(result.rows[0], { status: 201 });

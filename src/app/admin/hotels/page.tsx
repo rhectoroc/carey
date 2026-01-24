@@ -12,6 +12,8 @@ interface Hotel {
     slug: string;
     description: string;
     price: number;
+    price_child?: number;
+    price_infant?: number;
     destination_id: number;
     destination_name?: string;
     image_url: string;
@@ -233,7 +235,7 @@ export default function HotelsPage() {
                                     </div>
                                     <div style={{ display: 'flex', gap: '10px' }}>
                                         <div className={styles.formGroup} style={{ flex: 1 }}>
-                                            <label className={styles.label} style={{ color: '#333' }}>Price</label>
+                                            <label className={styles.label} style={{ color: '#333' }}>Price (Adult)</label>
                                             <input
                                                 type="number"
                                                 className={styles.input}
@@ -242,6 +244,28 @@ export default function HotelsPage() {
                                                 onChange={(e) => setCurrentHotel({ ...currentHotel, price: Number(e.target.value) })}
                                             />
                                         </div>
+                                        <div className={styles.formGroup} style={{ flex: 1 }}>
+                                            <label className={styles.label} style={{ color: '#333' }}>Price (Child 4-10)</label>
+                                            <input
+                                                type="number"
+                                                className={styles.input}
+                                                style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
+                                                value={currentHotel.price_child || ''}
+                                                onChange={(e) => setCurrentHotel({ ...currentHotel, price_child: Number(e.target.value) })}
+                                            />
+                                        </div>
+                                        <div className={styles.formGroup} style={{ flex: 1 }}>
+                                            <label className={styles.label} style={{ color: '#333' }}>Price (Infant 0-3)</label>
+                                            <input
+                                                type="number"
+                                                className={styles.input}
+                                                style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
+                                                value={currentHotel.price_infant || ''}
+                                                onChange={(e) => setCurrentHotel({ ...currentHotel, price_infant: Number(e.target.value) })}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div style={{ display: 'flex', gap: '10px' }}>
                                         <div className={styles.formGroup} style={{ flex: 1 }}>
                                             <label className={styles.label} style={{ color: '#333' }}>Stars (1-5)</label>
                                             <input
