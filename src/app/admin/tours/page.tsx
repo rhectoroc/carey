@@ -78,6 +78,9 @@ export default function ToursPage() {
 
         const includedArray = includedInput.split(',').map(i => i.trim()).filter(i => i !== '');
 
+        const method = currentTour.id ? 'PUT' : 'POST';
+        const url = currentTour.id ? `/api/admin/tours/${currentTour.id}` : '/api/admin/tours';
+
         try {
             const res = await fetch(url, {
                 method,
