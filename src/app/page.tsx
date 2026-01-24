@@ -22,6 +22,8 @@ export default function Home() {
                     {/* TravelSearch is actually inside Hero in previous design, keeping consistency */}
                 </div>
 
+                <PromotionsSection />
+
                 {/* Dynamic Sections */}
                 <DynamicSection
                     title="Destinos Populares"

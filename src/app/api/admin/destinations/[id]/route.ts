@@ -9,18 +9,18 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
         const { id } = await params;
         const body = await request.json();
-        const { name, slug, description, image_url, is_featured } = body;
+        const { name, slug, description, image_url, is_featured, is_promotion } = body;
 
         let sql = `
             UPDATE destinations
-            SET name = $1, slug = $2, description = $3, image_url = $4, is_featured = $5
-            WHERE id = $6
+            SET name = $1, slug = $2, description = $3, image_url = $4, is_featured = $5, is_promotion = $6
+            WHERE id = $7
         `;
-        const values = [name, slug, description, image_url, is_featured, id];
+        const values = [name, slug, description, image_url, is_featured, is_promotion, id];
 
         // RBAC: Non-admin can only update their own
         if (user.role !== 'administrador') {
-            sql += ' AND created_by = $7';
+            sql += ' AND created_by = $8';
             values.push(user.id);
         }
 
