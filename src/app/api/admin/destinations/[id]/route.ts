@@ -13,14 +13,14 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
         let sql = `
             UPDATE destinations
-            SET name = $1, slug = $2, description = $3, image_url = $4, is_featured = $5, is_promotion = $6
-            WHERE id = $7
+            SET name = $1, slug = $2, description = $3, image_url = $4, is_featured = $5, is_promotion = $6, gallery = $7, tags = $8
+            WHERE id = $9
         `;
-        const values = [name, slug, description, image_url, is_featured, is_promotion, id];
+        const values = [name, slug, description, image_url, is_featured, is_promotion, body.gallery || [], body.tags || [], id];
 
         // RBAC: Non-admin can only update their own
         if (user.role !== 'administrador') {
-            sql += ' AND created_by = $8';
+            sql += ' AND created_by = $10';
             values.push(user.id);
         }
 

@@ -13,13 +13,13 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
         let sql = `
             UPDATE hotels
-            SET name = $1, slug = $2, description = $3, price = $4, destination_id = $5, image_url = $6, stars = $7, features = $8, is_featured = $9, is_promotion = $10, type = $11, price_child = $12, price_infant = $13
-            WHERE id = $14
+            SET name = $1, slug = $2, description = $3, price = $4, destination_id = $5, image_url = $6, stars = $7, features = $8, is_featured = $9, is_promotion = $10, type = $11, price_child = $12, price_infant = $13, gallery = $14, tags = $15
+            WHERE id = $16
         `;
-        const values = [name, slug, description, price, destination_id, image_url, stars, features, is_featured, is_promotion, type || 'Hotel', price_child, price_infant, id];
+        const values = [name, slug, description, price, destination_id, image_url, stars, features, is_featured, is_promotion, type || 'Hotel', price_child, price_infant, body.gallery || [], body.tags || [], id];
 
         if (user.role !== 'administrador') {
-            sql += ' AND created_by = $15';
+            sql += ' AND created_by = $17';
             values.push(user.id);
         }
 

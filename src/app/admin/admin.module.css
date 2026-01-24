@@ -216,6 +216,25 @@
     font-size: 0.9rem;
 }
 
+.backButton {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 12px;
+    margin-top: 15px;
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    transition: all 0.2s;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.backButton:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
 /* Dashboard & CRUD Styles */
 .pageHeader {
     display: flex;

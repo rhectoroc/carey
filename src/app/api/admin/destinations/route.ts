@@ -45,11 +45,11 @@ export async function POST(request: Request) {
         }
 
         const sql = `
-            INSERT INTO destinations (name, slug, description, image_url, is_featured, is_promotion, created_by)
-            VALUES ($1, $2, $3, $4, $5, $6, $7)
+            INSERT INTO destinations (name, slug, description, image_url, is_featured, is_promotion, gallery, tags, created_by)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
             RETURNING *
         `;
-        const values = [name, slug, description, image_url, is_featured || false, is_promotion || false, user.id];
+        const values = [name, slug, description, image_url, is_featured || false, is_promotion || false, body.gallery || [], body.tags || [], user.id];
 
         const result = await query(sql, values);
         return NextResponse.json(result.rows[0], { status: 201 });

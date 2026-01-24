@@ -38,11 +38,11 @@ export async function POST(request: Request) {
         const { name, slug, description, price, destination_id, image_url, stars, features, is_featured, is_promotion, type, price_child, price_infant } = body;
 
         const sql = `
-            INSERT INTO hotels (name, slug, description, price, destination_id, image_url, stars, features, is_featured, is_promotion, type, price_child, price_infant, created_by)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+            INSERT INTO hotels (name, slug, description, price, destination_id, image_url, stars, features, is_featured, is_promotion, type, price_child, price_infant, gallery, tags, created_by)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
             RETURNING *
         `;
-        const values = [name, slug, description, price, destination_id, image_url, stars, features || [], is_featured || false, is_promotion || false, type || 'Hotel', price_child || 0, price_infant || 0, user.id];
+        const values = [name, slug, description, price, destination_id, image_url, stars, features || [], is_featured || false, is_promotion || false, type || 'Hotel', price_child || 0, price_infant || 0, body.gallery || [], body.tags || [], user.id];
 
         const result = await query(sql, values);
         return NextResponse.json(result.rows[0], { status: 201 });

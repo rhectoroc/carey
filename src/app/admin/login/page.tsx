@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import styles from '../admin.module.css';
 
 export default function AdminLogin() {
@@ -65,6 +66,9 @@ export default function AdminLogin() {
                     <button type="submit" className={styles.button} disabled={loading}>
                         {loading ? 'Signing in...' : 'Sign In'}
                     </button>
+                    <Link href="/" className={styles.backButton}>
+                        Back to Home
+                    </Link>
                 </form>
             </div>
         </div>
