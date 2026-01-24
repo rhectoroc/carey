@@ -61,20 +61,22 @@ export default function PromotionsSection() {
     if (items.length === 0) return null;
 
     return (
-        <section className={styles.section} style={{ background: '#fff0f0' }}> {/* Light red tint for promotions */}
-            <div className={styles.header}>
-                <h2 className={styles.title} style={{ color: '#e63946' }}>🔥 Ofertas y Promociones</h2>
-                <p className={styles.subtitle}>Aprovecha nuestros descuentos exclusivos por tiempo limitado.</p>
-            </div>
+        <section style={{ width: '100%', background: '#fff0f0' }}> {/* Background on full-width outer */}
+            <div className={styles.section}> {/* Layout constraints on inner */}
+                <div className={styles.header}>
+                    <h2 className={styles.title} style={{ color: '#e63946' }}>🔥 Ofertas y Promociones</h2>
+                    <p className={styles.subtitle}>Aprovecha nuestros descuentos exclusivos por tiempo limitado.</p>
+                </div>
 
-            <div className={styles.grid}>
-                {items.map(item => (
-                    <ServiceCard
-                        key={`${item.category}-${item.id}`}
-                        service={item}
-                        onClick={() => setSelectedItem(item)}
-                    />
-                ))}
+                <div className={styles.grid}>
+                    {items.map(item => (
+                        <ServiceCard
+                            key={`${item.category}-${item.id}`}
+                            service={item}
+                            onClick={() => setSelectedItem(item)}
+                        />
+                    ))}
+                </div>
             </div>
 
             {selectedItem && (

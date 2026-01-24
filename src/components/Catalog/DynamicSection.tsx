@@ -59,20 +59,22 @@ export default function DynamicSection({ title, subtitle, endpoint, type, classN
     if (items.length === 0) return null;
 
     return (
-        <section className={`${styles.section} ${className || ''}`}>
-            <div className={styles.header}>
-                <h2 className={styles.title}>{title}</h2>
-                <p className={styles.subtitle}>{subtitle}</p>
-            </div>
+        <section className={className} style={{ width: '100%' }}>
+            <div className={styles.section}>
+                <div className={styles.header}>
+                    <h2 className={styles.title}>{title}</h2>
+                    <p className={styles.subtitle}>{subtitle}</p>
+                </div>
 
-            <div className={styles.grid}>
-                {items.map(item => (
-                    <ServiceCard
-                        key={item.id}
-                        service={item}
-                        onClick={() => setSelectedItem(item)}
-                    />
-                ))}
+                <div className={styles.grid}>
+                    {items.map(item => (
+                        <ServiceCard
+                            key={item.id}
+                            service={item}
+                            onClick={() => setSelectedItem(item)}
+                        />
+                    ))}
+                </div>
             </div>
 
             {selectedItem && (
