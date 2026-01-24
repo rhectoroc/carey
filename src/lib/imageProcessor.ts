@@ -21,7 +21,7 @@ async function getStorageConfig() {
         }
         return {
             dir: localDir,
-            urlPrefix: '/uploads' // Files in public/uploads served statically
+            urlPrefix: '/api/uploads' // Use API route even locally for consistency & standalone support
         };
     }
 }

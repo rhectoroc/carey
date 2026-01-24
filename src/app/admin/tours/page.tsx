@@ -402,6 +402,7 @@ export default function ToursPage() {
                             rating: 5,
                             duration: currentTour.duration,
                             priceValidUntil: currentTour.price_valid_until,
+                            gallery: currentTour.gallery,
                             tags: currentTour.tags
                         }}
                     />

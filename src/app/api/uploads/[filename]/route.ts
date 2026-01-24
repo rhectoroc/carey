@@ -8,15 +8,15 @@ export async function GET(request: Request, { params }: { params: Promise<{ file
     // Safety check: prevent directory traversal
     const safeFilename = path.basename(filename);
 
-    // We assume this route is ONLY used when serving from /files
-    // If we are in local dev using public/uploads, this route might not be hit if we used the direct URL,
-    // OR we can make this route generic to look in both places if we wanted.
-    // But per imageProcessor.ts logic:
-    // Prod: /files -> returns URL /api/uploads/filename
-    // Dev:  public/uploads -> returns URL /uploads/filename (served statically by Next.js)
+    // Priority 1: /files (Production Volume)
+    let filePath = path.join('/files', safeFilename);
 
-    // So this route specifically services the /files directory
-    const filePath = path.join('/files', safeFilename);
+    try {
+        await fs.access(filePath);
+    } catch {
+        // Priority 2: public/uploads (Local/Fallback)
+        filePath = path.join(process.cwd(), 'public', 'uploads', safeFilename);
+    }
 
     try {
         const fileBuffer = await fs.readFile(filePath);

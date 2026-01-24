@@ -38,7 +38,19 @@ export default function ServiceCard({ service, onClick }: ServiceCardProps) {
     return (
         <div className={styles.card} onClick={onClick} style={{ cursor: onClick ? 'pointer' : 'default' }}>
             <div className={styles.imageContainer} style={{ position: 'relative' }}>
-                <img src={images[currentImageIndex]} alt={service.title} className={styles.image} />
+                {images[currentImageIndex]?.toLowerCase().match(/\.(mp4|webm|ogg|mov)$/) ? (
+                    <video
+                        src={images[currentImageIndex]}
+                        className={styles.image}
+                        muted
+                        autoPlay
+                        loop
+                        playsInline
+                        style={{ objectFit: 'cover' }}
+                    />
+                ) : (
+                    <img src={images[currentImageIndex]} alt={service.title} className={styles.image} />
+                )}
 
                 {images.length > 1 && (
                     <>
