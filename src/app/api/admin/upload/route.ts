@@ -4,9 +4,7 @@ import { getCurrentUser } from '@/lib/auth';
 
 export async function POST(request: Request) {
     try {
-        // Authenticate User
         const user = await getCurrentUser();
-        // Allow freelance/empleado/admin to upload
         if (!user) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
@@ -19,17 +17,20 @@ export async function POST(request: Request) {
         }
 
         const buffer = Buffer.from(await file.arrayBuffer());
-        let fileUrl = '';
+        const filename = file.name;
+        const mimeType = file.type;
 
-        if (file.type.startsWith('image/')) {
-            fileUrl = await processImage(buffer, file.name);
-        } else if (file.type.startsWith('video/')) {
-            fileUrl = await saveVideo(buffer, file.name);
+        let url = '';
+
+        if (mimeType.startsWith('image/')) {
+            url = await processImage(buffer, filename);
+        } else if (mimeType.startsWith('video/')) {
+            url = await saveVideo(buffer, filename);
         } else {
-            return NextResponse.json({ error: 'Unsupported file type' }, { status: 400 });
+            return NextResponse.json({ error: 'Invalid file type' }, { status: 400 });
         }
 
-        return NextResponse.json({ url: fileUrl, success: true });
+        return NextResponse.json({ url });
 
     } catch (error) {
         console.error('Upload error:', error);

@@ -2,21 +2,38 @@ import sharp from 'sharp';
 import path from 'path';
 import fs from 'fs/promises';
 
-export async function processImage(buffer: Buffer, filename: string): Promise<string> {
-    const uploadDir = path.join(process.cwd(), 'public', 'uploads');
-
-    // Ensure upload directory exists
+// Determine storage directory
+async function getStorageConfig() {
+    // Check if /files exists (Production / EasyPanel Volume)
     try {
-        await fs.access(uploadDir);
+        await fs.access('/files');
+        return {
+            dir: '/files',
+            urlPrefix: '/api/uploads' // Files in /files served via API route
+        };
     } catch {
-        await fs.mkdir(uploadDir, { recursive: true });
+        // Fallback to public/uploads (Local Development)
+        const localDir = path.join(process.cwd(), 'public', 'uploads');
+        try {
+            await fs.access(localDir);
+        } catch {
+            await fs.mkdir(localDir, { recursive: true });
+        }
+        return {
+            dir: localDir,
+            urlPrefix: '/uploads' // Files in public/uploads served statically
+        };
     }
+}
+
+export async function processImage(buffer: Buffer, filename: string): Promise<string> {
+    const config = await getStorageConfig();
 
     // Create a unique filename with .webp extension for optimization
     const timestamp = Date.now();
     const cleanName = path.parse(filename).name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
     const newFilename = `${cleanName}-${timestamp}.webp`;
-    const outputPath = path.join(uploadDir, newFilename);
+    const outputPath = path.join(config.dir, newFilename);
 
     // Process image: Resize, Convert to WebP, Optimize
     await sharp(buffer)
@@ -27,26 +44,21 @@ export async function processImage(buffer: Buffer, filename: string): Promise<st
         .webp({ quality: 80 }) // Good balance of size/quality
         .toFile(outputPath);
 
-    return `/uploads/${newFilename}`;
+    // Return the URL
+    return `${config.urlPrefix}/${newFilename}`;
 }
 
 export async function saveVideo(buffer: Buffer, filename: string): Promise<string> {
-    const uploadDir = path.join(process.cwd(), 'public', 'uploads');
-
-    // Ensure upload directory exists
-    try {
-        await fs.access(uploadDir);
-    } catch {
-        await fs.mkdir(uploadDir, { recursive: true });
-    }
+    const config = await getStorageConfig();
 
     const timestamp = Date.now();
     const cleanName = path.parse(filename).name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
     const ext = path.parse(filename).ext;
     const newFilename = `${cleanName}-${timestamp}${ext}`;
-    const outputPath = path.join(uploadDir, newFilename);
+    const outputPath = path.join(config.dir, newFilename);
 
     await fs.writeFile(outputPath, buffer);
 
-    return `/uploads/${newFilename}`;
+    return `${config.urlPrefix}/${newFilename}`;
 }
+

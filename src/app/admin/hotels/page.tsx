@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../admin.module.css';
 import { Plus, Edit, Trash2, X } from 'lucide-react';
+import ImageUpload from '@/components/Admin/ImageUpload';
 
 interface Hotel {
     id: number;
@@ -240,12 +241,10 @@ export default function HotelsPage() {
                                 />
                             </div>
                             <div className={styles.formGroup}>
-                                <label className={styles.label} style={{ color: '#333' }}>Image URL</label>
-                                <input
-                                    className={styles.input}
-                                    style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
+                                <label className={styles.label} style={{ color: '#333' }}>Image / Video</label>
+                                <ImageUpload
                                     value={currentHotel.image_url || ''}
-                                    onChange={(e) => setCurrentHotel({ ...currentHotel, image_url: e.target.value })}
+                                    onChange={(url) => setCurrentHotel({ ...currentHotel, image_url: url })}
                                 />
                             </div>
                             <div className={styles.formGroup} style={{ display: 'flex', gap: '20px' }}>
