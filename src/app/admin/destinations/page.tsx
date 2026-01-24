@@ -11,6 +11,7 @@ interface Destination {
     description: string;
     image_url: string;
     is_featured: boolean;
+    is_promotion: boolean;
 }
 
 export default function DestinationsPage() {
@@ -167,7 +168,7 @@ export default function DestinationsPage() {
                                     onChange={(e) => setCurrentDestination({ ...currentDestination, description: e.target.value })}
                                 />
                             </div>
-                            <div className={styles.formGroup}>
+                            <div className={styles.formGroup} style={{ display: 'flex', gap: '20px' }}>
                                 <label style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#333' }}>
                                     <input
                                         type="checkbox"
@@ -175,6 +176,14 @@ export default function DestinationsPage() {
                                         onChange={(e) => setCurrentDestination({ ...currentDestination, is_featured: e.target.checked })}
                                     />
                                     Featured
+                                </label>
+                                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#e63946' }}>
+                                    <input
+                                        type="checkbox"
+                                        checked={currentDestination.is_promotion || false}
+                                        onChange={(e) => setCurrentDestination({ ...currentDestination, is_promotion: e.target.checked })}
+                                    />
+                                    Es Promoción
                                 </label>
                             </div>
                             <div className={styles.modalFooter}>

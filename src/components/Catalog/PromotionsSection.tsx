@@ -1,0 +1,89 @@
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import ServiceCard from './ServiceCard';
+import ServiceModal from './ServiceModal';
+import styles from './CategoryGrid.module.css';
+
+export default function PromotionsSection() {
+    const [items, setItems] = useState<any[]>([]);
+    const [selectedItem, setSelectedItem] = useState<any>(null);
+
+    useEffect(() => {
+        const fetchPromotions = async () => {
+            try {
+                // Fetch all promotions in parallel
+                const [destRes, hotelRes, tourRes] = await Promise.all([
+                    fetch('/api/catalog/destinations?promotion=true'),
+                    fetch('/api/catalog/hotels?promotion=true'),
+                    fetch('/api/catalog/tours?promotion=true')
+                ]);
+
+                const destinations = destRes.ok ? await destRes.json() : [];
+                const hotels = hotelRes.ok ? await hotelRes.json() : [];
+                const tours = tourRes.ok ? await tourRes.json() : [];
+
+                const mappedDestinations = destinations.map((item: any) => mapToService(item, 'destination'));
+                const mappedHotels = hotels.map((item: any) => mapToService(item, 'hotel'));
+                const mappedTours = tours.map((item: any) => mapToService(item, 'tour'));
+
+                // Combine and shuffle or sort
+                let combined = [...mappedDestinations, ...mappedHotels, ...mappedTours];
+                // Optional: Randomize order so it's not always Dest -> Hotel -> Tour
+                combined = combined.sort(() => 0.5 - Math.random());
+
+                setItems(combined);
+            } catch (error) {
+                console.error('Failed to fetch promotions', error);
+            }
+        };
+
+        fetchPromotions();
+    }, []);
+
+    const mapToService = (item: any, type: string) => {
+        return {
+            id: item.id,
+            title: item.name,
+            category: type === 'hotel' ? 'Hotel' : type === 'tour' ? 'Tour' : 'Destination',
+            location: item.destination_name || (type === 'destination' ? item.name : ''),
+            price: item.price || 0,
+            originalPrice: item.price ? item.price * 1.2 : 0, // Mock original price for "Sale" effect?
+            rating: item.stars || 5,
+            image: item.image_url || 'https://via.placeholder.com/400x300?text=No+Image',
+            description: item.description,
+            features: item.features || item.included || [],
+            duration: item.duration || '',
+            images: [item.image_url]
+        };
+    };
+
+    if (items.length === 0) return null;
+
+    return (
+        <section className={styles.section} style={{ background: '#fff0f0' }}> {/* Light red tint for promotions */}
+            <div className={styles.header}>
+                <h2 className={styles.title} style={{ color: '#e63946' }}>🔥 Ofertas y Promociones</h2>
+                <p className={styles.subtitle}>Aprovecha nuestros descuentos exclusivos por tiempo limitado.</p>
+            </div>
+
+            <div className={styles.grid}>
+                {items.map(item => (
+                    <ServiceCard
+                        key={`${item.category}-${item.id}`}
+                        service={item}
+                        onClick={() => setSelectedItem(item)}
+                    />
+                ))}
+            </div>
+
+            {selectedItem && (
+                <ServiceModal
+                    isOpen={!!selectedItem}
+                    onClose={() => setSelectedItem(null)}
+                    service={selectedItem}
+                />
+            )}
+        </section>
+    );
+}

@@ -7,6 +7,7 @@ import Hero from "@/components/Home/Hero";
 import TravelSearch from "@/components/Home/TravelSearch";
 // import CategoryGrid from "@/components/Catalog/CategoryGrid"; // Replaced
 import DynamicSection from "@/components/Catalog/DynamicSection";
+import PromotionsSection from "@/components/Catalog/PromotionsSection";
 import UnforgettableMoments from "@/components/Home/UnforgettableMoments";
 import TravelPlanner from "@/components/Planner/TravelPlanner";
 

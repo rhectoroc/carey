@@ -38,18 +38,18 @@ export async function POST(request: Request) {
         if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
         const body = await request.json();
-        const { name, slug, description, image_url, is_featured } = body;
+        const { name, slug, description, image_url, is_featured, is_promotion } = body;
 
         if (!name || !slug) {
             return NextResponse.json({ error: 'Name and Slug are required' }, { status: 400 });
         }
 
         const sql = `
-            INSERT INTO destinations (name, slug, description, image_url, is_featured, created_by)
-            VALUES ($1, $2, $3, $4, $5, $6)
+            INSERT INTO destinations (name, slug, description, image_url, is_featured, is_promotion, created_by)
+            VALUES ($1, $2, $3, $4, $5, $6, $7)
             RETURNING *
         `;
-        const values = [name, slug, description, image_url, is_featured || false, user.id];
+        const values = [name, slug, description, image_url, is_featured || false, is_promotion || false, user.id];
 
         const result = await query(sql, values);
         return NextResponse.json(result.rows[0], { status: 201 });

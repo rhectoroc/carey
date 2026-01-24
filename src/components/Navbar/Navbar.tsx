@@ -37,6 +37,9 @@ export default function Navbar() {
                     <Globe size={18} style={{ marginRight: 5 }} />
                     {language.toUpperCase()}
                 </button>
+                <Link href="/admin/login" className={styles.iconBtn} title="Iniciar Sesión">
+                    <User size={24} />
+                </Link>
                 <button className={styles.mobileMenuBtn} onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
                     <Menu size={24} />
                 </button>

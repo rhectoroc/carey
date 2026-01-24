@@ -16,6 +16,7 @@ interface Hotel {
     stars: number;
     features: any; // JSONB
     is_featured: boolean;
+    is_promotion: boolean;
 }
 
 interface Destination {
@@ -247,7 +248,7 @@ export default function HotelsPage() {
                                     onChange={(e) => setCurrentHotel({ ...currentHotel, image_url: e.target.value })}
                                 />
                             </div>
-                            <div className={styles.formGroup}>
+                            <div className={styles.formGroup} style={{ display: 'flex', gap: '20px' }}>
                                 <label style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#333' }}>
                                     <input
                                         type="checkbox"
@@ -255,6 +256,14 @@ export default function HotelsPage() {
                                         onChange={(e) => setCurrentHotel({ ...currentHotel, is_featured: e.target.checked })}
                                     />
                                     Featured
+                                </label>
+                                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#e63946' }}>
+                                    <input
+                                        type="checkbox"
+                                        checked={currentHotel.is_promotion || false}
+                                        onChange={(e) => setCurrentHotel({ ...currentHotel, is_promotion: e.target.checked })}
+                                    />
+                                    Es Promoción
                                 </label>
                             </div>
                             <div className={styles.modalFooter}>

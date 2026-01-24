@@ -35,14 +35,14 @@ export async function POST(request: Request) {
         if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
         const body = await request.json();
-        const { name, slug, description, price, destination_id, image_url, stars, features, is_featured } = body;
+        const { name, slug, description, price, destination_id, image_url, stars, features, is_featured, is_promotion } = body;
 
         const sql = `
-            INSERT INTO hotels (name, slug, description, price, destination_id, image_url, stars, features, is_featured, created_by)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+            INSERT INTO hotels (name, slug, description, price, destination_id, image_url, stars, features, is_featured, is_promotion, created_by)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
             RETURNING *
         `;
-        const values = [name, slug, description, price, destination_id, image_url, stars, features || [], is_featured || false, user.id];
+        const values = [name, slug, description, price, destination_id, image_url, stars, features || [], is_featured || false, is_promotion || false, user.id];
 
         const result = await query(sql, values);
         return NextResponse.json(result.rows[0], { status: 201 });
