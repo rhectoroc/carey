@@ -518,3 +518,18 @@
     background-color: #cbd5e1;
     border-radius: 3px;
 }
+
+.spinner {
+    animation: spin 1s linear infinite;
+    color: var(--color-primary-teal);
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}

@@ -2,7 +2,7 @@
 
 import React, { useRef } from 'react';
 import { Upload, X, Loader2 } from 'lucide-react';
-import styles from './ImageUpload.module.css'; // Reusing styles
+import styles from '../../app/admin/admin.module.css'; // Reusing styles from common admin module
 
 interface ImageGalleryUploadProps {
     images: string[];
