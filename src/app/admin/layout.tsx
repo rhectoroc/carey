@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { LayoutDashboard, Map, Bed, Compass, LogOut, User } from 'lucide-react';
+import { LayoutDashboard, Map, Bed, Compass, LogOut, User, Car } from 'lucide-react';
 import styles from './admin.module.css';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -29,6 +29,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         { name: 'Hotels', href: '/admin/hotels', icon: Bed },
         { name: 'Destinations', href: '/admin/destinations', icon: Map },
         { name: 'Tours', href: '/admin/tours', icon: Compass },
+        { name: 'Traslados', href: '/admin/transfers', icon: Map }, // Using Map icon temporarily or find a better one
         { name: 'Users', href: '/admin/users', icon: User },
     ];
 

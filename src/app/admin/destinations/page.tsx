@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import styles from '../admin.module.css';
 import { Plus, Edit, Trash2, X } from 'lucide-react';
 import ImageUpload from '@/components/Admin/ImageUpload';
+import ServiceCard from '@/components/Catalog/ServiceCard';
 
 interface Destination {
     id: number;
@@ -121,7 +122,7 @@ export default function DestinationsPage() {
 
             {isModalOpen && (
                 <div className={styles.modalOverlay}>
-                    <div className={styles.modalContent}>
+                    <div className={`${styles.modalContent} ${styles.modalContentWithPreview}`}>
                         <div className={styles.modalHeader}>
                             <h2 className={styles.modalTitle}>
                                 {currentDestination.id ? 'Edit Destination' : 'Add Destination'}
@@ -130,68 +131,90 @@ export default function DestinationsPage() {
                                 <X size={24} />
                             </button>
                         </div>
-                        <form onSubmit={handleSave}>
-                            <div className={styles.formGroup}>
-                                <label className={styles.label} style={{ color: '#333' }}>Name</label>
-                                <input
-                                    className={styles.input}
-                                    style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
-                                    value={currentDestination.name || ''}
-                                    onChange={(e) => setCurrentDestination({ ...currentDestination, name: e.target.value })}
-                                    required
+
+                        <div className={styles.modalBodySplit}>
+                            {/* Form */}
+                            <div className={styles.modalForm}>
+                                <form onSubmit={handleSave}>
+                                    <div className={styles.formGroup}>
+                                        <label className={styles.label} style={{ color: '#333' }}>Name</label>
+                                        <input
+                                            className={styles.input}
+                                            style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
+                                            value={currentDestination.name || ''}
+                                            onChange={(e) => setCurrentDestination({ ...currentDestination, name: e.target.value })}
+                                            required
+                                        />
+                                    </div>
+                                    <div className={styles.formGroup}>
+                                        <label className={styles.label} style={{ color: '#333' }}>Slug</label>
+                                        <input
+                                            className={styles.input}
+                                            style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
+                                            value={currentDestination.slug || ''}
+                                            onChange={(e) => setCurrentDestination({ ...currentDestination, slug: e.target.value })}
+                                            required
+                                        />
+                                    </div>
+                                    <div className={styles.formGroup}>
+                                        <label className={styles.label} style={{ color: '#333' }}>Image / Video</label>
+                                        <ImageUpload
+                                            value={currentDestination.image_url || ''}
+                                            onChange={(url) => setCurrentDestination({ ...currentDestination, image_url: url })}
+                                        />
+                                    </div>
+                                    <div className={styles.formGroup}>
+                                        <label className={styles.label} style={{ color: '#333' }}>Description</label>
+                                        <textarea
+                                            className={styles.input}
+                                            style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333', minHeight: '100px' }}
+                                            value={currentDestination.description || ''}
+                                            onChange={(e) => setCurrentDestination({ ...currentDestination, description: e.target.value })}
+                                        />
+                                    </div>
+                                    <div className={styles.formGroup} style={{ display: 'flex', gap: '20px' }}>
+                                        <label style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#333' }}>
+                                            <input
+                                                type="checkbox"
+                                                checked={currentDestination.is_featured || false}
+                                                onChange={(e) => setCurrentDestination({ ...currentDestination, is_featured: e.target.checked })}
+                                            />
+                                            Featured
+                                        </label>
+                                        <label style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#e63946' }}>
+                                            <input
+                                                type="checkbox"
+                                                checked={currentDestination.is_promotion || false}
+                                                onChange={(e) => setCurrentDestination({ ...currentDestination, is_promotion: e.target.checked })}
+                                            />
+                                            Es Promoción
+                                        </label>
+                                    </div>
+                                    <div className={styles.modalFooter}>
+                                        <button type="button" className={styles.cancelButton} onClick={() => setIsModalOpen(false)}>Cancel</button>
+                                        <button type="submit" className={styles.saveButton} disabled={loading}>
+                                            {loading ? 'Saving...' : 'Save'}
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            {/* Preview */}
+                            <div className={styles.modalPreview}>
+                                <div className={styles.modalPreviewTitle}>Live Preview</div>
+                                <ServiceCard
+                                    service={{
+                                        id: 'preview',
+                                        title: currentDestination.name || 'Destino',
+                                        category: 'Circuit', // or customize map
+                                        price: 0, // Destinations often don't have a single price, or add one if needed
+                                        image: currentDestination.image_url || 'https://via.placeholder.com/400x300',
+                                        location: currentDestination.name || 'Venezuela',
+                                        rating: 5
+                                    }}
                                 />
                             </div>
-                            <div className={styles.formGroup}>
-                                <label className={styles.label} style={{ color: '#333' }}>Slug</label>
-                                <input
-                                    className={styles.input}
-                                    style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
-                                    value={currentDestination.slug || ''}
-                                    onChange={(e) => setCurrentDestination({ ...currentDestination, slug: e.target.value })}
-                                    required
-                                />
-                            </div>
-                            <div className={styles.formGroup}>
-                                <label className={styles.label} style={{ color: '#333' }}>Image / Video</label>
-                                <ImageUpload
-                                    value={currentDestination.image_url || ''}
-                                    onChange={(url) => setCurrentDestination({ ...currentDestination, image_url: url })}
-                                />
-                            </div>
-                            <div className={styles.formGroup}>
-                                <label className={styles.label} style={{ color: '#333' }}>Description</label>
-                                <textarea
-                                    className={styles.input}
-                                    style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333', minHeight: '100px' }}
-                                    value={currentDestination.description || ''}
-                                    onChange={(e) => setCurrentDestination({ ...currentDestination, description: e.target.value })}
-                                />
-                            </div>
-                            <div className={styles.formGroup} style={{ display: 'flex', gap: '20px' }}>
-                                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#333' }}>
-                                    <input
-                                        type="checkbox"
-                                        checked={currentDestination.is_featured || false}
-                                        onChange={(e) => setCurrentDestination({ ...currentDestination, is_featured: e.target.checked })}
-                                    />
-                                    Featured
-                                </label>
-                                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#e63946' }}>
-                                    <input
-                                        type="checkbox"
-                                        checked={currentDestination.is_promotion || false}
-                                        onChange={(e) => setCurrentDestination({ ...currentDestination, is_promotion: e.target.checked })}
-                                    />
-                                    Es Promoción
-                                </label>
-                            </div>
-                            <div className={styles.modalFooter}>
-                                <button type="button" className={styles.cancelButton} onClick={() => setIsModalOpen(false)}>Cancel</button>
-                                <button type="submit" className={styles.saveButton} disabled={loading}>
-                                    {loading ? 'Saving...' : 'Save'}
-                                </button>
-                            </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             )}

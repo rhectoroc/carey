@@ -46,6 +46,13 @@ export default function Home() {
                     type="tour"
                 />
 
+                <DynamicSection
+                    title="Traslados y Movilidad"
+                    subtitle="Viaja cómodo y seguro a tu destino."
+                    endpoint="/api/catalog/transfers"
+                    type="vehicle" // We might need to update DynamicSection to handle 'vehicle' or just map it
+                />
+
                 <UnforgettableMoments />
 
                 <TravelPlanner />

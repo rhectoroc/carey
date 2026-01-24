@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import styles from '../admin.module.css';
 import { Plus, Edit, Trash2, X } from 'lucide-react';
 import ImageUpload from '@/components/Admin/ImageUpload';
+import ServiceCard from '@/components/Catalog/ServiceCard';
 
 interface Hotel {
     id: number;
@@ -17,6 +18,8 @@ interface Hotel {
     stars: number;
     features: any; // JSONB
     is_featured: boolean;
+    is_promotion?: boolean;
+    type?: string;
     is_promotion: boolean;
 }
 
@@ -162,7 +165,7 @@ export default function HotelsPage() {
 
             {isModalOpen && (
                 <div className={styles.modalOverlay}>
-                    <div className={styles.modalContent}>
+                    <div className={`${styles.modalContent} ${styles.modalContentWithPreview}`}>
                         <div className={styles.modalHeader}>
                             <h2 className={styles.modalTitle}>
                                 {currentHotel.id ? 'Edit Hotel' : 'Add Hotel'}
@@ -171,105 +174,146 @@ export default function HotelsPage() {
                                 <X size={24} />
                             </button>
                         </div>
-                        <form onSubmit={handleSave}>
-                            <div className={styles.formGroup}>
-                                <label className={styles.label} style={{ color: '#333' }}>Name</label>
-                                <input
-                                    className={styles.input}
-                                    style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
-                                    value={currentHotel.name || ''}
-                                    onChange={(e) => setCurrentHotel({ ...currentHotel, name: e.target.value })}
-                                    required
+
+                        <div className={styles.modalBodySplit}>
+                            {/* Form Section */}
+                            <div className={styles.modalForm}>
+                                <form onSubmit={handleSave}>
+                                    <div className={styles.formGroup}>
+                                        <label className={styles.label} style={{ color: '#333' }}>Name</label>
+                                        <input
+                                            className={styles.input}
+                                            style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
+                                            value={currentHotel.name || ''}
+                                            onChange={(e) => setCurrentHotel({ ...currentHotel, name: e.target.value })}
+                                            required
+                                        />
+                                    </div>
+                                    <div className={styles.formGroup}>
+                                        <label className={styles.label} style={{ color: '#333' }}>Slug</label>
+                                        <input
+                                            className={styles.input}
+                                            style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
+                                            value={currentHotel.slug || ''}
+                                            onChange={(e) => setCurrentHotel({ ...currentHotel, slug: e.target.value })}
+                                            required
+                                        />
+                                    </div>
+                                    <div className={styles.formGroup}>
+                                        <label className={styles.label} style={{ color: '#333' }}>Type</label>
+                                        <select
+                                            className={styles.input}
+                                            style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
+                                            value={currentHotel.type || 'Hotel'}
+                                            onChange={(e) => setCurrentHotel({ ...currentHotel, type: e.target.value })}
+                                            required
+                                        >
+                                            <option value="Hotel">Hotel</option>
+                                            <option value="Posada">Posada</option>
+                                            <option value="Campamento">Campamento</option>
+                                        </select>
+                                    </div>
+                                    <div className={styles.formGroup}>
+                                        <label className={styles.label} style={{ color: '#333' }}>Destination</label>
+                                        <select
+                                            className={styles.input}
+                                            style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
+                                            value={currentHotel.destination_id || ''}
+                                            onChange={(e) => {
+                                                const destId = Number(e.target.value);
+                                                const dest = destinations.find(d => d.id === destId);
+                                                setCurrentHotel({ ...currentHotel, destination_id: destId, destination_name: dest?.name });
+                                            }}
+                                            required
+                                        >
+                                            <option value="">Select Destination</option>
+                                            {destinations.map(d => (
+                                                <option key={d.id} value={d.id}>{d.name}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div style={{ display: 'flex', gap: '10px' }}>
+                                        <div className={styles.formGroup} style={{ flex: 1 }}>
+                                            <label className={styles.label} style={{ color: '#333' }}>Price</label>
+                                            <input
+                                                type="number"
+                                                className={styles.input}
+                                                style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
+                                                value={currentHotel.price || ''}
+                                                onChange={(e) => setCurrentHotel({ ...currentHotel, price: Number(e.target.value) })}
+                                            />
+                                        </div>
+                                        <div className={styles.formGroup} style={{ flex: 1 }}>
+                                            <label className={styles.label} style={{ color: '#333' }}>Stars (1-5)</label>
+                                            <input
+                                                type="number"
+                                                min="1" max="5"
+                                                className={styles.input}
+                                                style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
+                                                value={currentHotel.stars || ''}
+                                                onChange={(e) => setCurrentHotel({ ...currentHotel, stars: Number(e.target.value) })}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className={styles.formGroup}>
+                                        <label className={styles.label} style={{ color: '#333' }}>Features (comma separated)</label>
+                                        <input
+                                            className={styles.input}
+                                            style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
+                                            value={featuresInput}
+                                            onChange={(e) => setFeaturesInput(e.target.value)}
+                                            placeholder="Wifi, Pool, Spa"
+                                        />
+                                    </div>
+
+                                    <div className={styles.formGroup}>
+                                        <label className={styles.label} style={{ color: '#333' }}>Image / Video</label>
+                                        <ImageUpload
+                                            value={currentHotel.image_url || ''}
+                                            onChange={(url) => setCurrentHotel({ ...currentHotel, image_url: url })}
+                                        />
+                                    </div>
+                                    <div className={styles.formGroup} style={{ display: 'flex', gap: '20px' }}>
+                                        <label style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#333' }}>
+                                            <input
+                                                type="checkbox"
+                                                checked={currentHotel.is_featured || false}
+                                                onChange={(e) => setCurrentHotel({ ...currentHotel, is_featured: e.target.checked })}
+                                            />
+                                            Featured
+                                        </label>
+                                        <label style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#e63946' }}>
+                                            <input
+                                                type="checkbox"
+                                                checked={currentHotel.is_promotion || false}
+                                                onChange={(e) => setCurrentHotel({ ...currentHotel, is_promotion: e.target.checked })}
+                                            />
+                                            Es Promoción
+                                        </label>
+                                    </div>
+                                    <div className={styles.modalFooter}>
+                                        <button type="button" className={styles.cancelButton} onClick={() => setIsModalOpen(false)}>Cancel</button>
+                                        <button type="submit" className={styles.saveButton} disabled={loading}>Save</button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            {/* Preview Section */}
+                            <div className={styles.modalPreview}>
+                                <div className={styles.modalPreviewTitle}>Live Preview</div>
+                                <ServiceCard
+                                    service={{
+                                        id: 'preview',
+                                        title: currentHotel.name || 'Hotel Name',
+                                        category: 'Hotel', // Hardcoded as this is Hotel Admin
+                                        price: currentHotel.price || 0,
+                                        image: currentHotel.image_url || 'https://via.placeholder.com/400x300',
+                                        location: currentHotel.destination_name || 'Location',
+                                        rating: currentHotel.stars || 0
+                                    }}
                                 />
                             </div>
-                            <div className={styles.formGroup}>
-                                <label className={styles.label} style={{ color: '#333' }}>Slug</label>
-                                <input
-                                    className={styles.input}
-                                    style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
-                                    value={currentHotel.slug || ''}
-                                    onChange={(e) => setCurrentHotel({ ...currentHotel, slug: e.target.value })}
-                                    required
-                                />
-                            </div>
-                            <div className={styles.formGroup}>
-                                <label className={styles.label} style={{ color: '#333' }}>Destination</label>
-                                <select
-                                    className={styles.input}
-                                    style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
-                                    value={currentHotel.destination_id || ''}
-                                    onChange={(e) => setCurrentHotel({ ...currentHotel, destination_id: Number(e.target.value) })}
-                                    required
-                                >
-                                    <option value="">Select Destination</option>
-                                    {destinations.map(d => (
-                                        <option key={d.id} value={d.id}>{d.name}</option>
-                                    ))}
-                                </select>
-                            </div>
-                            <div style={{ display: 'flex', gap: '10px' }}>
-                                <div className={styles.formGroup} style={{ flex: 1 }}>
-                                    <label className={styles.label} style={{ color: '#333' }}>Price</label>
-                                    <input
-                                        type="number"
-                                        className={styles.input}
-                                        style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
-                                        value={currentHotel.price || ''}
-                                        onChange={(e) => setCurrentHotel({ ...currentHotel, price: Number(e.target.value) })}
-                                    />
-                                </div>
-                                <div className={styles.formGroup} style={{ flex: 1 }}>
-                                    <label className={styles.label} style={{ color: '#333' }}>Stars (1-5)</label>
-                                    <input
-                                        type="number"
-                                        min="1" max="5"
-                                        className={styles.input}
-                                        style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
-                                        value={currentHotel.stars || ''}
-                                        onChange={(e) => setCurrentHotel({ ...currentHotel, stars: Number(e.target.value) })}
-                                    />
-                                </div>
-                            </div>
-                            <div className={styles.formGroup}>
-                                <label className={styles.label} style={{ color: '#333' }}>Features (comma separated)</label>
-                                <input
-                                    className={styles.input}
-                                    style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
-                                    value={featuresInput}
-                                    onChange={(e) => setFeaturesInput(e.target.value)}
-                                    placeholder="Wifi, Pool, Spa"
-                                />
-                            </div>
-                            <div className={styles.formGroup}>
-                                <label className={styles.label} style={{ color: '#333' }}>Image / Video</label>
-                                <ImageUpload
-                                    value={currentHotel.image_url || ''}
-                                    onChange={(url) => setCurrentHotel({ ...currentHotel, image_url: url })}
-                                />
-                            </div>
-                            <div className={styles.formGroup} style={{ display: 'flex', gap: '20px' }}>
-                                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#333' }}>
-                                    <input
-                                        type="checkbox"
-                                        checked={currentHotel.is_featured || false}
-                                        onChange={(e) => setCurrentHotel({ ...currentHotel, is_featured: e.target.checked })}
-                                    />
-                                    Featured
-                                </label>
-                                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#e63946' }}>
-                                    <input
-                                        type="checkbox"
-                                        checked={currentHotel.is_promotion || false}
-                                        onChange={(e) => setCurrentHotel({ ...currentHotel, is_promotion: e.target.checked })}
-                                    />
-                                    Es Promoción
-                                </label>
-                            </div>
-                            <div className={styles.modalFooter}>
-                                <button type="button" className={styles.cancelButton} onClick={() => setIsModalOpen(false)}>Cancel</button>
-                                <button type="submit" className={styles.saveButton} disabled={loading}>Save</button>
-                            </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             )}

@@ -4,20 +4,21 @@ import React, { useState, useEffect } from 'react';
 import styles from '../admin.module.css';
 import { Plus, Edit, Trash2, X } from 'lucide-react';
 import ImageUpload from '@/components/Admin/ImageUpload';
+import ServiceCard from '@/components/Catalog/ServiceCard';
 
-interface Tour {
+interface Transfer {
     id: number;
     name: string;
     slug: string;
-    description: string;
+    type: string; // terrestre, aereo, maritimo
+    description?: string;
     price: number;
-    duration: string;
+    capacity: number;
     destination_id: number;
     destination_name?: string;
-    image_url: string;
-    included: any; // JSONB
-    is_featured: boolean;
-    is_promotion: boolean;
+    image_url?: string;
+    is_featured?: boolean;
+    is_promotion?: boolean;
 }
 
 interface Destination {
@@ -25,100 +26,98 @@ interface Destination {
     name: string;
 }
 
-export default function ToursPage() {
-    const [tours, setTours] = useState<Tour[]>([]);
+export default function TransfersPage() {
+    const [transfers, setTransfers] = useState<Transfer[]>([]);
     const [destinations, setDestinations] = useState<Destination[]>([]);
+    const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [currentTour, setCurrentTour] = useState<Partial<Tour>>({});
-    const [loading, setLoading] = useState(false);
-    const [includedInput, setIncludedInput] = useState('');
+    const [currentTransfer, setCurrentTransfer] = useState<Partial<Transfer>>({});
 
     useEffect(() => {
-        fetchTours();
+        fetchTransfers();
         fetchDestinations();
     }, []);
 
-    const fetchTours = async () => {
-        const res = await fetch('/api/admin/tours');
-        if (res.ok) {
-            const data = await res.json();
-            setTours(data);
+    const fetchTransfers = async () => {
+        try {
+            const res = await fetch('/api/admin/transfers');
+            if (res.ok) {
+                const data = await res.json();
+                setTransfers(data);
+            }
+        } catch (error) {
+            console.error('Failed to fetch transfers', error);
+        } finally {
+            setLoading(false);
         }
     };
 
     const fetchDestinations = async () => {
-        const res = await fetch('/api/admin/destinations');
-        if (res.ok) {
-            const data = await res.json();
-            setDestinations(data);
+        try {
+            const res = await fetch('/api/admin/destinations');
+            if (res.ok) {
+                const data = await res.json();
+                setDestinations(data);
+            }
+        } catch (error) {
+            console.error('Failed to fetch destinations', error);
         }
     };
 
     const handleDelete = async (id: number) => {
-        if (confirm('Are you sure you want to delete this tour?')) {
-            const res = await fetch(`/api/admin/tours/${id}`, { method: 'DELETE' });
-            if (res.ok) {
-                fetchTours();
-            }
+        if (!confirm('Are you sure you want to delete this transfer?')) return;
+        try {
+            await fetch(`/api/admin/transfers/${id}`, { method: 'DELETE' });
+            fetchTransfers();
+        } catch (error) {
+            console.error('Error deleting transfer', error);
         }
+    };
+
+    const handleEdit = (transfer: Transfer) => {
+        setCurrentTransfer(transfer);
+        setIsModalOpen(true);
+    };
+
+    const handleCreate = () => {
+        setCurrentTransfer({ type: 'terrestre' });
+        setIsModalOpen(true);
     };
 
     const handleSave = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
 
-        const includedArray = includedInput.split(',').map(f => f.trim()).filter(f => f);
-
-        const payload = {
-            ...currentTour,
-            included: includedArray,
-            price: Number(currentTour.price),
-            destination_id: Number(currentTour.destination_id)
-        };
-
-        const method = currentTour.id ? 'PUT' : 'POST';
-        const url = currentTour.id
-            ? `/api/admin/tours/${currentTour.id}`
-            : '/api/admin/tours';
+        const method = currentTransfer.id ? 'PUT' : 'POST';
+        const url = currentTransfer.id ? `/api/admin/transfers/${currentTransfer.id}` : '/api/admin/transfers';
 
         try {
             const res = await fetch(url, {
                 method,
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload),
+                body: JSON.stringify(currentTransfer),
             });
 
             if (res.ok) {
                 setIsModalOpen(false);
-                fetchTours();
+                fetchTransfers();
             } else {
-                const err = await res.json();
-                alert('Failed to save: ' + (err.error || 'Unknown error'));
+                alert('Failed to save transfer');
             }
         } catch (error) {
-            console.error(error);
+            console.error('Error saving transfer', error);
         } finally {
             setLoading(false);
         }
     };
 
-    const openModal = (tour?: Tour) => {
-        if (tour) {
-            setCurrentTour(tour);
-            setIncludedInput(Array.isArray(tour.included) ? tour.included.join(', ') : '');
-        } else {
-            setCurrentTour({ is_featured: false });
-            setIncludedInput('');
-        }
-        setIsModalOpen(true);
-    };
-
     return (
-        <div>
+        <div className={styles.container}>
             <div className={styles.pageHeader}>
-                <h1 className={styles.pageTitle}>Tours</h1>
-                <button className={styles.actionButton} onClick={() => openModal()}>
-                    <Plus size={18} /> Add Tour
+                <h1 className={styles.pageTitle}>Traslados</h1>
+                <button className={styles.actionButton} onClick={handleCreate}>
+                    <Plus size={20} />
+                    Add Transfer
                 </button>
             </div>
 
@@ -127,30 +126,24 @@ export default function ToursPage() {
                     <thead>
                         <tr>
                             <th>Name</th>
+                            <th>Type</th>
                             <th>Destination</th>
                             <th>Price</th>
-                            <th>Duration</th>
+                            <th>Capacity</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {tours.map((tour) => (
-                            <tr key={tour.id}>
-                                <td>{tour.name}</td>
-                                <td>{tour.destination_name || '-'}</td>
-                                <td>${tour.price}</td>
-                                <td>{tour.duration}</td>
+                        {transfers.map((item) => (
+                            <tr key={item.id}>
+                                <td>{item.name}</td>
+                                <td>{item.type}</td>
+                                <td>{item.destination_name}</td>
+                                <td>${item.price}</td>
+                                <td>{item.capacity}pax</td>
                                 <td>
-                                    <Edit
-                                        className={styles.actionIcon}
-                                        size={18}
-                                        onClick={() => openModal(tour)}
-                                    />
-                                    <Trash2
-                                        className={styles.actionIcon}
-                                        size={18}
-                                        onClick={() => handleDelete(tour.id)}
-                                    />
+                                    <Edit size={18} className={styles.actionIcon} onClick={() => handleEdit(item)} />
+                                    <Trash2 size={18} className={styles.actionIcon} onClick={() => handleDelete(item.id)} />
                                 </td>
                             </tr>
                         ))}
@@ -163,7 +156,7 @@ export default function ToursPage() {
                     <div className={`${styles.modalContent} ${styles.modalContentWithPreview}`}>
                         <div className={styles.modalHeader}>
                             <h2 className={styles.modalTitle}>
-                                {currentTour.id ? 'Edit Tour' : 'Add Tour'}
+                                {currentTransfer.id ? 'Edit Transfer' : 'Add Transfer'}
                             </h2>
                             <button className={styles.closeButton} onClick={() => setIsModalOpen(false)}>
                                 <X size={24} />
@@ -171,7 +164,6 @@ export default function ToursPage() {
                         </div>
 
                         <div className={styles.modalBodySplit}>
-                            {/* Form */}
                             <div className={styles.modalForm}>
                                 <form onSubmit={handleSave}>
                                     <div className={styles.formGroup}>
@@ -179,8 +171,8 @@ export default function ToursPage() {
                                         <input
                                             className={styles.input}
                                             style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
-                                            value={currentTour.name || ''}
-                                            onChange={(e) => setCurrentTour({ ...currentTour, name: e.target.value })}
+                                            value={currentTransfer.name || ''}
+                                            onChange={(e) => setCurrentTransfer({ ...currentTransfer, name: e.target.value })}
                                             required
                                         />
                                     </div>
@@ -189,21 +181,35 @@ export default function ToursPage() {
                                         <input
                                             className={styles.input}
                                             style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
-                                            value={currentTour.slug || ''}
-                                            onChange={(e) => setCurrentTour({ ...currentTour, slug: e.target.value })}
+                                            value={currentTransfer.slug || ''}
+                                            onChange={(e) => setCurrentTransfer({ ...currentTransfer, slug: e.target.value })}
                                             required
                                         />
+                                    </div>
+                                    <div className={styles.formGroup}>
+                                        <label className={styles.label} style={{ color: '#333' }}>Type</label>
+                                        <select
+                                            className={styles.input}
+                                            style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
+                                            value={currentTransfer.type || 'terrestre'}
+                                            onChange={(e) => setCurrentTransfer({ ...currentTransfer, type: e.target.value })}
+                                            required
+                                        >
+                                            <option value="terrestre">Terrestre</option>
+                                            <option value="aereo">Aéreo</option>
+                                            <option value="maritimo">Marítimo</option>
+                                        </select>
                                     </div>
                                     <div className={styles.formGroup}>
                                         <label className={styles.label} style={{ color: '#333' }}>Destination</label>
                                         <select
                                             className={styles.input}
                                             style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
-                                            value={currentTour.destination_id || ''}
+                                            value={currentTransfer.destination_id || ''}
                                             onChange={(e) => {
                                                 const destId = Number(e.target.value);
                                                 const dest = destinations.find(d => d.id === destId);
-                                                setCurrentTour({ ...currentTour, destination_id: destId, destination_name: dest?.name });
+                                                setCurrentTransfer({ ...currentTransfer, destination_id: destId, destination_name: dest?.name });
                                             }}
                                             required
                                         >
@@ -213,15 +219,6 @@ export default function ToursPage() {
                                             ))}
                                         </select>
                                     </div>
-                                    <div className={styles.formGroup}>
-                                        <label className={styles.label} style={{ color: '#333' }}>Description</label>
-                                        <textarea
-                                            className={styles.input}
-                                            style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333', minHeight: '100px' }}
-                                            value={currentTour.description || ''}
-                                            onChange={(e) => setCurrentTour({ ...currentTour, description: e.target.value })}
-                                        />
-                                    </div>
                                     <div style={{ display: 'flex', gap: '10px' }}>
                                         <div className={styles.formGroup} style={{ flex: 1 }}>
                                             <label className={styles.label} style={{ color: '#333' }}>Price</label>
@@ -229,53 +226,51 @@ export default function ToursPage() {
                                                 type="number"
                                                 className={styles.input}
                                                 style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
-                                                value={currentTour.price || ''}
-                                                onChange={(e) => setCurrentTour({ ...currentTour, price: Number(e.target.value) })}
+                                                value={currentTransfer.price || ''}
+                                                onChange={(e) => setCurrentTransfer({ ...currentTransfer, price: Number(e.target.value) })}
                                             />
                                         </div>
                                         <div className={styles.formGroup} style={{ flex: 1 }}>
-                                            <label className={styles.label} style={{ color: '#333' }}>Duration</label>
+                                            <label className={styles.label} style={{ color: '#333' }}>Capacity (Pax)</label>
                                             <input
-                                                type="text"
+                                                type="number"
                                                 className={styles.input}
                                                 style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
-                                                value={currentTour.duration || ''}
-                                                onChange={(e) => setCurrentTour({ ...currentTour, duration: e.target.value })}
-                                                placeholder="e.g. 4 hours"
+                                                value={currentTransfer.capacity || ''}
+                                                onChange={(e) => setCurrentTransfer({ ...currentTransfer, capacity: Number(e.target.value) })}
                                             />
                                         </div>
                                     </div>
                                     <div className={styles.formGroup}>
-                                        <label className={styles.label} style={{ color: '#333' }}>Included (comma separated)</label>
-                                        <input
+                                        <label className={styles.label} style={{ color: '#333' }}>Description</label>
+                                        <textarea
                                             className={styles.input}
-                                            style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
-                                            value={includedInput}
-                                            onChange={(e) => setIncludedInput(e.target.value)}
-                                            placeholder="Lunch, Safety Gear, Guide"
+                                            style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333', minHeight: '100px' }}
+                                            value={currentTransfer.description || ''}
+                                            onChange={(e) => setCurrentTransfer({ ...currentTransfer, description: e.target.value })}
                                         />
                                     </div>
                                     <div className={styles.formGroup}>
                                         <label className={styles.label} style={{ color: '#333' }}>Image / Video</label>
                                         <ImageUpload
-                                            value={currentTour.image_url || ''}
-                                            onChange={(url) => setCurrentTour({ ...currentTour, image_url: url })}
+                                            value={currentTransfer.image_url || ''}
+                                            onChange={(url) => setCurrentTransfer({ ...currentTransfer, image_url: url })}
                                         />
                                     </div>
                                     <div className={styles.formGroup} style={{ display: 'flex', gap: '20px' }}>
                                         <label style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#333' }}>
                                             <input
                                                 type="checkbox"
-                                                checked={currentTour.is_featured || false}
-                                                onChange={(e) => setCurrentTour({ ...currentTour, is_featured: e.target.checked })}
+                                                checked={currentTransfer.is_featured || false}
+                                                onChange={(e) => setCurrentTransfer({ ...currentTransfer, is_featured: e.target.checked })}
                                             />
                                             Featured
                                         </label>
                                         <label style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#e63946' }}>
                                             <input
                                                 type="checkbox"
-                                                checked={currentTour.is_promotion || false}
-                                                onChange={(e) => setCurrentTour({ ...currentTour, is_promotion: e.target.checked })}
+                                                checked={currentTransfer.is_promotion || false}
+                                                onChange={(e) => setCurrentTransfer({ ...currentTransfer, is_promotion: e.target.checked })}
                                             />
                                             Es Promoción
                                         </label>
@@ -287,19 +282,18 @@ export default function ToursPage() {
                                 </form>
                             </div>
 
-                            {/* Preview */}
                             <div className={styles.modalPreview}>
                                 <div className={styles.modalPreviewTitle}>Live Preview</div>
                                 <ServiceCard
                                     service={{
                                         id: 'preview',
-                                        title: currentTour.name || 'Tour Name',
-                                        category: 'Tour',
-                                        price: currentTour.price || 0,
-                                        image: currentTour.image_url || 'https://via.placeholder.com/400x300',
-                                        location: currentTour.destination_name || 'Destination',
+                                        title: currentTransfer.name || 'Transfer Name',
+                                        category: 'Vehicle', // Mapped to Vehicle for now as it's closest
+                                        price: currentTransfer.price || 0,
+                                        image: currentTransfer.image_url || 'https://via.placeholder.com/400x300',
+                                        location: currentTransfer.destination_name || 'Destination',
                                         rating: 5,
-                                        duration: currentTour.duration
+                                        description: currentTransfer.description
                                     }}
                                 />
                             </div>

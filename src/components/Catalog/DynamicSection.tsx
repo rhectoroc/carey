@@ -9,7 +9,7 @@ interface DynamicSectionProps {
     title: string;
     subtitle: string;
     endpoint: string;
-    type: 'hotel' | 'tour' | 'destination';
+    type: 'hotel' | 'tour' | 'destination' | 'vehicle';
 }
 
 export default function DynamicSection({ title, subtitle, endpoint, type }: DynamicSectionProps) {
@@ -38,7 +38,7 @@ export default function DynamicSection({ title, subtitle, endpoint, type }: Dyna
         return {
             id: item.id,
             title: item.name,
-            category: type === 'hotel' ? 'Hotel' : type === 'tour' ? 'Tour' : 'Destination',
+            category: type === 'hotel' ? 'Hotel' : type === 'tour' ? 'Tour' : type === 'vehicle' ? 'Vehicle' : 'Destination',
             location: item.destination_name || (type === 'destination' ? item.name : ''),
             price: item.price || 0,
             rating: item.stars || 5,

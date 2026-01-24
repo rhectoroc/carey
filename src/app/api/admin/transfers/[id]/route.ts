@@ -9,17 +9,17 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
         const { id } = await params;
         const body = await request.json();
-        const { name, slug, description, price, destination_id, image_url, stars, features, is_featured, is_promotion, type } = body;
+        const { name, slug, type, description, price, capacity, destination_id, image_url, is_featured, is_promotion } = body;
 
         let sql = `
-            UPDATE hotels
-            SET name = $1, slug = $2, description = $3, price = $4, destination_id = $5, image_url = $6, stars = $7, features = $8, is_featured = $9, is_promotion = $10, type = $11
-            WHERE id = $12
+            UPDATE transfers
+            SET name = $1, slug = $2, type = $3, description = $4, price = $5, capacity = $6, destination_id = $7, image_url = $8, is_featured = $9, is_promotion = $10
+            WHERE id = $11
         `;
-        const values = [name, slug, description, price, destination_id, image_url, stars, features, is_featured, is_promotion, type || 'Hotel', id];
+        const values = [name, slug, type, description, price, capacity, destination_id, image_url, is_featured, is_promotion, id];
 
         if (user.role !== 'administrador') {
-            sql += ' AND created_by = $13';
+            sql += ' AND created_by = $12';
             values.push(user.id);
         }
 
@@ -28,13 +28,13 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
         const result = await query(sql, values);
 
         if (result.rowCount === 0) {
-            return NextResponse.json({ error: 'Hotel not found or permission denied' }, { status: 404 });
+            return NextResponse.json({ error: 'Transfer not found or permission denied' }, { status: 404 });
         }
 
         return NextResponse.json(result.rows[0]);
 
     } catch (error: any) {
-        console.error('Error updating hotel:', error);
+        console.error('Error updating transfer:', error);
         if (error.code === '23505') {
             return NextResponse.json({ error: 'Slug already exists' }, { status: 409 });
         }
@@ -48,7 +48,7 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
         if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
         const { id } = await params;
-        let sql = 'DELETE FROM hotels WHERE id = $1';
+        let sql = 'DELETE FROM transfers WHERE id = $1';
         const values = [id];
 
         if (user.role !== 'administrador') {
@@ -61,12 +61,13 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
         const result = await query(sql, values);
 
         if (result.rowCount === 0) {
-            return NextResponse.json({ error: 'Hotel not found or permission denied' }, { status: 404 });
+            return NextResponse.json({ error: 'Transfer not found or permission denied' }, { status: 404 });
         }
 
-        return NextResponse.json({ success: true, id });
-    } catch (error) {
-        console.error('Error deleting hotel:', error);
+        return NextResponse.json({ success: true });
+
+    } catch (error: any) {
+        console.error('Error deleting transfer:', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }

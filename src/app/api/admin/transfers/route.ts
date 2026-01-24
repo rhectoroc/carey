@@ -8,23 +8,23 @@ export async function GET() {
         if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
         let sql = `
-            SELECT h.*, d.name as destination_name 
-            FROM hotels h
-            LEFT JOIN destinations d ON h.destination_id = d.id
+            SELECT t.*, d.name as destination_name 
+            FROM transfers t
+            LEFT JOIN destinations d ON t.destination_id = d.id
         `;
         const params: any[] = [];
 
         if (user.role !== 'administrador') {
-            sql += ' WHERE h.created_by = $1';
+            sql += ' WHERE t.created_by = $1';
             params.push(user.id);
         }
 
-        sql += ' ORDER BY h.name ASC';
+        sql += ' ORDER BY t.name ASC';
 
         const result = await query(sql, params);
         return NextResponse.json(result.rows);
     } catch (error) {
-        console.error('Error fetching hotels:', error);
+        console.error('Error fetching transfers:', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }
@@ -35,20 +35,20 @@ export async function POST(request: Request) {
         if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
         const body = await request.json();
-        const { name, slug, description, price, destination_id, image_url, stars, features, is_featured, is_promotion, type } = body;
+        const { name, slug, type, description, price, capacity, destination_id, image_url, is_featured, is_promotion } = body;
 
         const sql = `
-            INSERT INTO hotels (name, slug, description, price, destination_id, image_url, stars, features, is_featured, is_promotion, type, created_by)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+            INSERT INTO transfers (name, slug, type, description, price, capacity, destination_id, image_url, is_featured, is_promotion, created_by)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
             RETURNING *
         `;
-        const values = [name, slug, description, price, destination_id, image_url, stars, features || [], is_featured || false, is_promotion || false, type || 'Hotel', user.id];
+        const values = [name, slug, type, description, price, capacity, destination_id, image_url, is_featured || false, is_promotion || false, user.id];
 
         const result = await query(sql, values);
         return NextResponse.json(result.rows[0], { status: 201 });
 
     } catch (error: any) {
-        console.error('Error creating hotel:', error);
+        console.error('Error creating transfer:', error);
         if (error.code === '23505') {
             return NextResponse.json({ error: 'Slug already exists' }, { status: 409 });
         }
