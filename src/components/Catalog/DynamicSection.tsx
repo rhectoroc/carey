@@ -49,6 +49,7 @@ export default function DynamicSection({ title, subtitle, endpoint, type }: Dyna
             duration: item.duration || '',
             priceValidUntil: item.price_valid_until,
             tags: item.tags || [],
+            gallery: item.gallery || [],
             images: [item.image_url],
             reviews: 0
         };

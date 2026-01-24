@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import styles from '../admin.module.css';
 import { Plus, Edit, Trash2, X, ArrowLeft, Tag } from 'lucide-react';
 import ImageUpload from '@/components/Admin/ImageUpload';
+import ImageGalleryUpload from '@/components/Admin/ImageGalleryUpload';
 import ServiceCard from '@/components/Catalog/ServiceCard';
 
 interface Tour {
@@ -19,6 +20,7 @@ interface Tour {
     destination_id: number;
     destination_name?: string;
     image_url: string;
+    gallery: string[]; // JSONB
     included: any; // JSONB
     tags: string[]; // JSONB
     is_featured: boolean;

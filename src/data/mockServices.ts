@@ -11,6 +11,8 @@ export interface Service {
     duration?: string;
     priceValidUntil?: string;
     tags?: string[];
+    gallery?: string[];
+    features?: string[];
 }
 
 export const mockServices: Service[] = [
