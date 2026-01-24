@@ -13,13 +13,13 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
         let sql = `
             UPDATE tours
-            SET name = $1, slug = $2, description = $3, price = $4, duration = $5, destination_id = $6, image_url = $7, included = $8, is_featured = $9, is_promotion = $10, price_valid_until = $11, price_child = $12, price_infant = $13, tags = $14, gallery = $15
-            WHERE id = $16
+            SET name = $1, slug = $2, description = $3, price = $4, duration = $5, destination_id = $6, image_url = $7, included = $8, is_featured = $9, is_promotion = $10, price_valid_until = $11, tags = $12, gallery = $13
+            WHERE id = $14
         `;
-        const values = [name, slug, description, price, duration, destination_id, image_url, JSON.stringify(included || []), is_featured, is_promotion, price_valid_until, price_child, price_infant, JSON.stringify(tags || []), JSON.stringify(gallery || []), id];
+        const values = [name, slug, description, price, duration, destination_id, image_url, JSON.stringify(included || []), is_featured, is_promotion, price_valid_until, JSON.stringify(tags || []), JSON.stringify(gallery || []), id];
 
         if (user.role !== 'administrador') {
-            sql += ' AND created_by = $17';
+            sql += ' AND created_by = $15';
             values.push(user.id);
         }
 
