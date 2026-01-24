@@ -12,11 +12,80 @@
     color: white;
     display: flex;
     flex-direction: column;
-    padding: 20px;
+    padding: 20px 0;
+    /* Remove horizontal padding to control link spacing better */
     box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
     position: fixed;
     height: 100vh;
-    transition: width 0.3s ease;
+    z-index: 100;
+}
+
+.sidebarBrand {
+    height: 60px;
+    /* Match header height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 20px;
+}
+
+.mainWrapper {
+    flex: 1;
+    margin-left: 250px;
+    /* Match sidebar width */
+    display: flex;
+    flex-direction: column;
+}
+
+.topHeader {
+    height: 60px;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+    position: sticky;
+    top: 0;
+    z-index: 90;
+}
+
+.headerLeft {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.headerLogoText {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--color-primary-teal);
+    letter-spacing: 0.5px;
+}
+
+.headerRight {
+    display: flex;
+    align-items: center;
+}
+
+.userInfo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.95rem;
+    color: #555;
+    background: #f8fafc;
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1px solid #eee;
+}
+
+.nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 0 15px;
 }
 
 .sidebarHeader {
@@ -52,12 +121,12 @@
     transform: translateX(5px);
 }
 
+/* Main Content - Updated for Full Screen Layout */
 .mainContent {
     flex: 1;
-    margin-left: 250px;
-    /* Sidebar width */
-    padding: 40px;
+    padding: 30px;
     overflow-y: auto;
+    background-color: #f0f4f8;
 }
 
 /* Login Page */

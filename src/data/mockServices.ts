@@ -10,6 +10,7 @@ export interface Service {
     destination?: 'Los Roques' | 'Canaima' | 'Isla de Margarita' | 'Mérida';
     duration?: string;
     priceValidUntil?: string;
+    tags?: string[];
 }
 
 export const mockServices: Service[] = [
