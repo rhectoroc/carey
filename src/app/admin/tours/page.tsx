@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import styles from '../admin.module.css';
 import { Plus, Edit, Trash2, X } from 'lucide-react';
 import ImageUpload from '@/components/Admin/ImageUpload';
+import ServiceCard from '@/components/Catalog/ServiceCard';
 
 interface Tour {
     id: number;
