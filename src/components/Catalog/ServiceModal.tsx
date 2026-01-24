@@ -45,7 +45,7 @@ export default function ServiceModal({ isOpen, onClose, service }: ServiceModalP
     if (!isOpen || !service) return null;
 
     const handleConsultar = () => {
-        const message = `Requiero más información acerca de ${service.title.toLowerCase()}`;
+        const message = `Requiero reservar el ${service.title}`;
         onClose();
         setTimeout(() => {
             openChatbot(message);

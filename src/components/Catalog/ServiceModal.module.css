@@ -187,6 +187,8 @@
 .priceItem {
     flex: 1;
     min-width: 100px;
+    display: flex;
+    flex-direction: column;
 }
 
 .priceLabel {
