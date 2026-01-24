@@ -15,17 +15,21 @@ export default function ImageGalleryUpload({ images, onChange, onSetMain, maxIma
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [uploading, setUploading] = React.useState(false);
 
+    const [status, setStatus] = React.useState<{ type: 'success' | 'error' | '', msg: string }>({ type: '', msg: '' });
+
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = e.target.files;
         if (!files || files.length === 0) return;
 
         if (images.length + files.length > maxImages) {
-            alert(`You can only upload up to ${maxImages} images.`);
+            setStatus({ type: 'error', msg: `Max permitted: ${maxImages} images/videos` });
             return;
         }
 
         setUploading(true);
+        setStatus({ type: '', msg: '' });
         const newImages: string[] = [];
+        let errors = 0;
 
         try {
             for (let i = 0; i < files.length; i++) {
@@ -43,14 +47,30 @@ export default function ImageGalleryUpload({ images, onChange, onSetMain, maxIma
                     newImages.push(data.url);
                 } else {
                     console.error('Failed to upload', file.name);
+                    errors++;
                 }
             }
-            onChange([...images, ...newImages]);
+
+            if (newImages.length > 0) {
+                onChange([...images, ...newImages]);
+                setStatus({ type: 'success', msg: `Uploaded ${newImages.length} files successfully.` });
+            }
+
+            if (errors > 0) {
+                setStatus(prev => ({ type: 'error', msg: `${errors} files failed to upload.` }));
+            }
+
         } catch (error) {
             console.error('Upload error', error);
+            setStatus({ type: 'error', msg: 'Network error during upload.' });
         } finally {
             setUploading(false);
             if (fileInputRef.current) fileInputRef.current.value = '';
+
+            // Clear success message after 3 seconds
+            setTimeout(() => {
+                setStatus(prev => prev.type === 'success' ? { type: '', msg: '' } : prev);
+            }, 3000);
         }
     };
 
@@ -155,9 +175,21 @@ export default function ImageGalleryUpload({ images, onChange, onSetMain, maxIma
                     </div>
                 )}
             </div>
-            <p style={{ fontSize: '0.8rem', color: '#888', marginTop: '5px' }}>
-                {images.length} / {maxImages} images
-            </p>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '5px' }}>
+                <p style={{ fontSize: '0.8rem', color: '#888', margin: 0 }}>
+                    {images.length} / {maxImages} media items
+                </p>
+                {status.msg && (
+                    <p style={{
+                        fontSize: '0.8rem',
+                        color: status.type === 'error' ? 'red' : 'green',
+                        margin: 0,
+                        fontWeight: 'bold'
+                    }}>
+                        {status.msg}
+                    </p>
+                )}
+            </div>
         </div>
     );
 }

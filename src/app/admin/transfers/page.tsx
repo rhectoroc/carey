@@ -85,6 +85,13 @@ export default function TransfersPage() {
         e.preventDefault();
         setLoading(true);
 
+        // Verification
+        if (!currentTransfer.name || !currentTransfer.destination_id) {
+            alert('Verification Failed: Name and Destination are required.');
+            setLoading(false);
+            return;
+        }
+
         const method = currentTransfer.id ? 'PUT' : 'POST';
         const url = currentTransfer.id ? `/api/admin/transfers/${currentTransfer.id}` : '/api/admin/transfers';
 
@@ -96,13 +103,17 @@ export default function TransfersPage() {
             });
 
             if (res.ok) {
+                const savedData = await res.json();
+                alert(`✅ Transfer "${savedData.name}" saved successfully!`);
                 setViewMode('list');
                 fetchTransfers();
             } else {
-                alert('Failed to save transfer');
+                const err = await res.json();
+                alert('❌ Failed to save transfer: ' + (err.error || 'Unknown'));
             }
         } catch (error) {
             console.error('Error saving transfer', error);
+            alert('❌ Network Error');
         } finally {
             setLoading(false);
         }

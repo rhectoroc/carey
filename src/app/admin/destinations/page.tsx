@@ -54,6 +54,13 @@ export default function DestinationsPage() {
         e.preventDefault();
         setLoading(true);
 
+        // Verification
+        if (!currentDestination.name) {
+            alert('Verification Failed: Name is required.');
+            setLoading(false);
+            return;
+        }
+
         const method = currentDestination.id ? 'PUT' : 'POST';
         const url = currentDestination.id
             ? `/api/admin/destinations/${currentDestination.id}`
@@ -67,13 +74,17 @@ export default function DestinationsPage() {
             });
 
             if (res.ok) {
+                const savedData = await res.json();
+                alert(`✅ Destination "${savedData.name}" saved successfully!`);
                 setViewMode('list');
                 fetchDestinations();
             } else {
-                alert('Failed to save');
+                const err = await res.json();
+                alert('❌ Failed to save: ' + (err.error || 'Unknown error'));
             }
         } catch (error) {
             console.error(error);
+            alert('❌ Network error.');
         } finally {
             setLoading(false);
         }

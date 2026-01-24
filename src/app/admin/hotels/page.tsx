@@ -78,15 +78,26 @@ export default function HotelsPage() {
         e.preventDefault();
         setLoading(true);
 
-        // Parse features
+        // --- VERIFICATION PROTOCOL ---
+        if (!currentHotel.name || !currentHotel.destination_id) {
+            alert('Verification Failed: Name and Destination are required.');
+            setLoading(false);
+            return;
+        }
+
         const featuresArray = featuresInput.split(',').map(f => f.trim()).filter(f => f);
+        const finalGallery = currentHotel.gallery || [];
+
+        // Log for debugging
+        console.log('Saving Hotel:', { name: currentHotel.name, galleryCount: finalGallery.length });
 
         const payload = {
             ...currentHotel,
             features: featuresArray,
             price: Number(currentHotel.price),
             stars: Number(currentHotel.stars),
-            destination_id: Number(currentHotel.destination_id)
+            destination_id: Number(currentHotel.destination_id),
+            gallery: finalGallery
         };
 
         const method = currentHotel.id ? 'PUT' : 'POST';
@@ -102,14 +113,19 @@ export default function HotelsPage() {
             });
 
             if (res.ok) {
+                const savedData = await res.json();
+                console.log('Save Success:', savedData);
+                alert(`✅ Hotel "${savedData.name}" saved successfully!`);
                 setViewMode('list');
                 fetchHotels();
             } else {
                 const err = await res.json();
-                alert('Failed to save: ' + (err.error || 'Unknown error'));
+                console.error('Save Error:', err);
+                alert('❌ Failed to save: ' + (err.error || 'Unknown error. Check console.'));
             }
         } catch (error) {
-            console.error(error);
+            console.error('Network/Server Error:', error);
+            alert('❌ Network error. Please try again.');
         } finally {
             setLoading(false);
         }

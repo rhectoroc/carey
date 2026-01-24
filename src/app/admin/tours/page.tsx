@@ -69,8 +69,12 @@ export default function ToursPage() {
         e.preventDefault();
         setLoading(true);
 
-        const method = currentTour.id ? 'PUT' : 'POST';
-        const url = currentTour.id ? `/api/admin/tours/${currentTour.id}` : '/api/admin/tours';
+        // Verification
+        if (!currentTour.name || !currentTour.destination_id) {
+            alert('Verification Failed: Name and Destination are required.');
+            setLoading(false);
+            return;
+        }
 
         const includedArray = includedInput.split(',').map(i => i.trim()).filter(i => i !== '');
 
@@ -82,13 +86,18 @@ export default function ToursPage() {
             });
 
             if (res.ok) {
+                const savedData = await res.json();
+                alert(`✅ Tour "${savedData.name}" saved successfully!`);
                 setViewMode('list');
                 fetchTours();
             } else {
-                console.error('Failed to save tour');
+                const err = await res.json();
+                console.error('Failed to save tour', err);
+                alert(`❌ Error saving tour: ${err.error || 'Unknown'}`);
             }
         } catch (error) {
             console.error(error);
+            alert('❌ Network Error');
         } finally {
             setLoading(false);
         }
