@@ -129,16 +129,11 @@ export default function ServiceCard({ service, onClick }: ServiceCardProps) {
 
                 {service.features && service.features.length > 0 && (
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', margin: '12px 0' }}>
-                        {service.features.slice(0, 4).map((feature, idx) => (
+                        {service.features.map((feature, idx) => (
                             <div key={idx} title={feature} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '28px', height: '28px', backgroundColor: '#f8fafc', borderRadius: '6px', color: 'var(--color-primary-teal)', border: '1px solid #e2e8f0' }}>
                                 {getFeatureIcon(feature)}
                             </div>
                         ))}
-                        {service.features.length > 4 && (
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '28px', height: '28px', backgroundColor: '#f8fafc', borderRadius: '6px', fontSize: '0.7rem', color: '#64748b', fontWeight: '600', border: '1px solid #e2e8f0' }}>
-                                +{service.features.length - 4}
-                            </div>
-                        )}
                     </div>
                 )}
 
