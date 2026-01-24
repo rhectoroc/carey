@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Upload, X, Image as ImageIcon, Film } from 'lucide-react';
-import styles from '../admin.module.css';
+import styles from '../../app/admin/admin.module.css';
 
 interface ImageUploadProps {
     value: string;
