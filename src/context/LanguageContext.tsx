@@ -21,6 +21,7 @@ const translations: Record<Language, Record<string, string>> = {
         "nav.destinations": "Destinos",
         "nav.contact": "Contacto",
         "chat.hello": "Hola, ¿en qué puedo ayudarte hoy?",
+        "home.moments": "Momentos Inolvidables",
     },
     en: {
         "home.welcome": "Welcome to Carey",
@@ -30,6 +31,7 @@ const translations: Record<Language, Record<string, string>> = {
         "nav.destinations": "Destinations",
         "nav.contact": "Contact",
         "chat.hello": "Hello, how can I help you today?",
+        "home.moments": "Unforgettable Moments",
     }
 };
 

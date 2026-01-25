@@ -1,8 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useLanguage } from '@/context/LanguageContext';
 import { X, Play } from 'lucide-react';
 import styles from './UnforgettableMoments.module.css';
 
@@ -10,6 +8,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 // Mock Data
 export default function UnforgettableMoments() {
+    const { t } = useLanguage();
     const [momentsList, setMomentsList] = useState<any[]>([]);
     const [selectedMoment, setSelectedMoment] = useState<any | null>(null);
     const sectionRef = useRef<HTMLElement>(null);
@@ -86,15 +85,20 @@ export default function UnforgettableMoments() {
                 );
             }
 
-        }, sectionRef);
+        }, sectionRef.current);
 
         return () => ctx.revert();
-    }, []);
+    }, [momentsList]);
 
     return (
         <section ref={sectionRef} className={styles.momentsSection}>
             <div className={styles.container}>
-                <h2 ref={titleRef} className={styles.sectionTitle}>Momentos Inolvidables</h2>
+                <h2 ref={titleRef} className={styles.sectionTitle}>{t('home.moments') || 'Momentos Inolvidables'}</h2>
+                {momentsList.length === 0 && (
+                    <div style={{ textAlign: 'center', padding: '2rem', color: '#666' }}>
+                        Cargando momentos increíbles...
+                    </div>
+                )}
                 <div className={styles.momentsGrid}>
                     {momentsList.map((moment, index) => (
                         <div

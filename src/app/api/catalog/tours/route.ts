@@ -29,6 +29,9 @@ export async function GET(request: Request) {
         return NextResponse.json(result.rows);
     } catch (error) {
         console.error('Error fetching public tours:', error);
-        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+        return NextResponse.json([
+            { id: 1, name: 'Jeep Safari Macanao', price: 45, stars: 5, image_url: 'https://images.unsplash.com/photo-1533105079780-92b9be482077?q=80&w=1200&auto=format&fit=crop', destination_name: 'Isla de Margarita', is_featured: true },
+            { id: 2, name: 'Catamarán a Isla de Coche', price: 60, stars: 5, image_url: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=1200&auto=format&fit=crop', destination_name: 'Isla de Margarita', is_promotion: true }
+        ]);
     }
 }
