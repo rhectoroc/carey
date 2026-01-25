@@ -71,12 +71,6 @@ export default function ServiceCard({ service, onClick }: ServiceCardProps) {
                     </div>
                 )}
 
-                {isMainMedia && (
-                    <div style={{ position: 'absolute', top: '10px', right: '10px', background: 'rgba(255,255,255,0.9)', borderRadius: '50%', padding: '5px', boxShadow: '0 2px 4px rgba(0,0,0,0.2)', display: 'flex', zIndex: 2 }}>
-                        <Star size={16} fill="var(--color-sunset-orange)" color="var(--color-sunset-orange)" />
-                    </div>
-                )}
-
                 {images.length > 1 && (
                     <>
                         <button
@@ -105,7 +99,7 @@ export default function ServiceCard({ service, onClick }: ServiceCardProps) {
                     {service.tags && service.tags.map((tag, index) => (
                         <span key={index} style={{
                             backgroundColor: 'white',
-                            color: 'var(--color-primary-teal)',
+                            color: 'red',
                             padding: '4px 8px',
                             borderRadius: '4px',
                             fontSize: '0.75rem',
@@ -121,7 +115,7 @@ export default function ServiceCard({ service, onClick }: ServiceCardProps) {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                     <span className={styles.category}>{service.category}</span>
                     <div className={styles.rating} style={{ margin: 0 }}>
-                        <Star size={14} fill="var(--color-sunset-orange)" color="var(--color-sunset-orange)" />
+                        <Star size={14} fill="#FFD700" color="#FFD700" />
                         {service.rating}
                     </div>
                 </div>

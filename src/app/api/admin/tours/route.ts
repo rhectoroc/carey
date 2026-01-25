@@ -35,14 +35,14 @@ export async function POST(request: Request) {
         if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
         const body = await request.json();
-        const { name, slug, description, price, duration, destination_id, image_url, included, is_featured, is_promotion, price_valid_until, price_child, price_infant, tags, gallery, type } = body;
+        const { name, slug, description, price, duration, destination_id, image_url, included, is_featured, is_promotion, price_valid_until, price_child, price_infant, tags, gallery, type, stars } = body;
 
         const sql = `
-            INSERT INTO tours (name, slug, description, price, duration, destination_id, image_url, included, is_featured, is_promotion, price_valid_until, price_child, price_infant, tags, gallery, created_by, type)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
+            INSERT INTO tours (name, slug, description, price, duration, destination_id, image_url, included, is_featured, is_promotion, price_valid_until, price_child, price_infant, tags, gallery, created_by, type, stars)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
             RETURNING *
         `;
-        const values = [name, slug, description, price, duration, destination_id, image_url, JSON.stringify(included || []), is_featured || false, is_promotion || false, price_valid_until, price_child || 0, price_infant || 0, JSON.stringify(tags || []), JSON.stringify(gallery || []), user.id, type || 'Aventura'];
+        const values = [name, slug, description, price, duration, destination_id, image_url, JSON.stringify(included || []), is_featured || false, is_promotion || false, price_valid_until, price_child || 0, price_infant || 0, JSON.stringify(tags || []), JSON.stringify(gallery || []), user.id, type || 'Aventura', stars || 5];
 
         const result = await query(sql, values);
         return NextResponse.json(result.rows[0], { status: 201 });

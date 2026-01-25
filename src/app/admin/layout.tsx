@@ -6,11 +6,13 @@ import { usePathname, useRouter } from 'next/navigation';
 import { LayoutDashboard, Map, Bed, Compass, LogOut, User, Car } from 'lucide-react';
 import styles from './admin.module.css';
 
+import { NotificationProvider } from '@/components/UI/NotificationProvider';
+
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
     const router = useRouter();
     const isLoginPage = pathname === '/admin/login';
-    const [user, setUser] = React.useState<{ username: string } | null>(null);
+    const [user, setUser] = React.useState<{ username: string, role: string } | null>(null);
 
     React.useEffect(() => {
         if (!isLoginPage) {
@@ -34,7 +36,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     };
 
     if (isLoginPage) {
-        return <>{children}</>;
+        return (
+            <NotificationProvider>
+                {children}
+            </NotificationProvider>
+        );
     }
 
     const navItems = [
@@ -43,56 +49,58 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         { name: 'Destinations', href: '/admin/destinations', icon: Map },
         { name: 'Tours', href: '/admin/tours', icon: Compass },
         { name: 'Traslados', href: '/admin/transfers', icon: Car },
-        { name: 'Users', href: '/admin/users', icon: User },
-    ];
+        { name: 'Users', href: '/admin/users', icon: User, adminOnly: true },
+    ].filter(item => !item.adminOnly || user?.role === 'administrador');
 
     return (
-        <div className={styles.adminParams}>
-            <aside className={styles.sidebar}>
-                <div className={styles.sidebarBrand}>
-                    {/* Placeholder for Logo if needed, or just keep nav */}
-                </div>
-                <nav className={styles.nav}>
-                    {navItems.map((item) => {
-                        const Icon = item.icon;
-                        const isActive = pathname.startsWith(item.href);
-                        return (
-                            <Link
-                                key={item.href}
-                                href={item.href}
-                                className={`${styles.navLink} ${isActive ? styles.activeLink : ''}`}
-                            >
-                                <Icon size={20} />
-                                {item.name}
-                            </Link>
-                        );
-                    })}
-                    <button
-                        onClick={handleLogout}
-                        className={styles.navLink}
-                        style={{ marginTop: 'auto', border: 'none', background: 'transparent', cursor: 'pointer', width: '100%' }}
-                    >
-                        <LogOut size={20} />
-                        Logout
-                    </button>
-                </nav>
-            </aside>
-            <div className={styles.mainWrapper}>
-                <header className={styles.topHeader}>
-                    <div className={styles.headerLeft}>
-                        <span className={styles.headerLogoText}>Carey Admin</span>
+        <NotificationProvider>
+            <div className={styles.adminParams}>
+                <aside className={styles.sidebar}>
+                    <div className={styles.sidebarBrand}>
+                        {/* Placeholder for Logo if needed, or just keep nav */}
                     </div>
-                    <div className={styles.headerRight}>
-                        <div className={styles.userInfo}>
-                            <User size={18} />
-                            <span>{user?.username || 'Loading...'}</span>
+                    <nav className={styles.nav}>
+                        {navItems.map((item) => {
+                            const Icon = item.icon;
+                            const isActive = pathname.startsWith(item.href);
+                            return (
+                                <Link
+                                    key={item.href}
+                                    href={item.href}
+                                    className={`${styles.navLink} ${isActive ? styles.activeLink : ''}`}
+                                >
+                                    <Icon size={20} />
+                                    {item.name}
+                                </Link>
+                            );
+                        })}
+                        <button
+                            onClick={handleLogout}
+                            className={styles.navLink}
+                            style={{ marginTop: 'auto', border: 'none', background: 'transparent', cursor: 'pointer', width: '100%' }}
+                        >
+                            <LogOut size={20} />
+                            Logout
+                        </button>
+                    </nav>
+                </aside>
+                <div className={styles.mainWrapper}>
+                    <header className={styles.topHeader}>
+                        <div className={styles.headerLeft}>
+                            <span className={styles.headerLogoText}>Carey Admin</span>
                         </div>
-                    </div>
-                </header>
-                <main className={styles.mainContent}>
-                    {children}
-                </main>
+                        <div className={styles.headerRight}>
+                            <div className={styles.userInfo}>
+                                <User size={18} />
+                                <span>{user?.username || 'Loading...'}</span>
+                            </div>
+                        </div>
+                    </header>
+                    <main className={styles.mainContent}>
+                        {children}
+                    </main>
+                </div>
             </div>
-        </div>
+        </NotificationProvider>
     );
 }

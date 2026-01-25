@@ -19,11 +19,22 @@ export default function UsersPage() {
     const [users, setUsers] = useState<UserData[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentUser, setCurrentUser] = useState<Partial<UserData>>({});
+    const [adminUser, setAdminUser] = useState<{ role: string } | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
     useEffect(() => {
-        fetchUsers();
+        fetch('/api/auth/me')
+            .then(res => res.json())
+            .then(data => {
+                setAdminUser(data);
+                if (data.role === 'administrador') {
+                    fetchUsers();
+                } else {
+                    setError('Acceso Denegado: No tienes permisos para gestionar usuarios.');
+                }
+            })
+            .catch(() => setError('Error de autenticación'));
     }, []);
 
     const fetchUsers = async () => {

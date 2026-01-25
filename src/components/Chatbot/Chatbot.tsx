@@ -4,10 +4,17 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, X, Send } from 'lucide-react';
 import { useChatbot } from '@/context/ChatbotContext';
+import { usePathname } from 'next/navigation';
 import styles from './Chatbot.module.css';
 
 export default function Chatbot() {
+    const pathname = usePathname();
     const { isOpen, openChatbot, closeChatbot, predefinedMessage, clearPredefinedMessage } = useChatbot();
+
+    // Do not show chatbot in admin routes
+    if (pathname?.startsWith('/admin')) {
+        return null;
+    }
     const [messages, setMessages] = useState<{ role: 'user' | 'bot', text: string }[]>([
         { role: 'bot', text: '¡Hola! Soy Carey, tu asistente virtual. ¿En qué puedo ayudarte?' }
     ]);

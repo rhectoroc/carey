@@ -108,6 +108,24 @@ export default function ServiceModal({ isOpen, onClose, service }: ServiceModalP
                             <MapPin size={18} />
                             {service.location}
                         </div>
+                        {service.tags && service.tags.length > 0 && (
+                            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '10px' }}>
+                                {service.tags.map((tag, index) => (
+                                    <span key={index} style={{
+                                        backgroundColor: '#fff',
+                                        color: 'red',
+                                        padding: '4px 10px',
+                                        borderRadius: '20px',
+                                        fontSize: '0.75rem',
+                                        fontWeight: 'bold',
+                                        boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+                                        border: '1px solid #fee2e2'
+                                    }}>
+                                        {tag}
+                                    </span>
+                                ))}
+                            </div>
+                        )}
                     </div>
 
                     <div className={styles.section}>

@@ -3,9 +3,12 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../admin.module.css';
 import { Plus, Edit, Trash2, X, ArrowLeft, Tag } from 'lucide-react';
+import { useNotification } from '@/components/UI/NotificationProvider';
 
 import ImageGalleryUpload from '@/components/Admin/ImageGalleryUpload';
 import ServiceCard from '@/components/Catalog/ServiceCard';
+import ServiceModal from '@/components/Catalog/ServiceModal';
+import { Service } from '@/data/mockServices';
 
 interface Hotel {
     id: number;
@@ -43,6 +46,8 @@ export default function HotelsPage() {
     const [loading, setLoading] = useState(false);
     const [featuresInput, setFeaturesInput] = useState(''); // Keep as comma-separated string for input
     const [tagInput, setTagInput] = useState('');
+    const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
+    const { showNotification } = useNotification();
 
     useEffect(() => {
         fetchHotels();
@@ -80,7 +85,7 @@ export default function HotelsPage() {
 
         // --- VERIFICATION PROTOCOL ---
         if (!currentHotel.name || !currentHotel.destination_id) {
-            alert('Verification Failed: Name and Destination are required.');
+            showNotification('error', 'Verificación fallida: Nombre y Destino son requeridos.');
             setLoading(false);
             return;
         }
@@ -114,18 +119,15 @@ export default function HotelsPage() {
 
             if (res.ok) {
                 const savedData = await res.json();
-                console.log('Save Success:', savedData);
-                alert(`✅ Hotel "${savedData.name}" saved successfully!`);
+                showNotification('success', `✅ Hotel "${savedData.name}" guardado exitosamente!`);
                 setViewMode('list');
                 fetchHotels();
             } else {
                 const err = await res.json();
-                console.error('Save Error:', err);
-                alert('❌ Failed to save: ' + (err.error || 'Unknown error. Check console.'));
+                showNotification('error', `❌ Error al guardar: ${err.error || 'Error desconocido'}`);
             }
         } catch (error) {
-            console.error('Network/Server Error:', error);
-            alert('❌ Network error. Please try again.');
+            showNotification('error', '❌ Error de red. Por favor intente nuevamente.');
         } finally {
             setLoading(false);
         }
@@ -192,7 +194,7 @@ export default function HotelsPage() {
                                     <td>{hotel.type || 'Hotel'}</td>
                                     <td>
                                         {hotel.tags && hotel.tags.map(t => (
-                                            <span key={t} style={{ background: '#e2e8f0', padding: '2px 6px', borderRadius: '4px', fontSize: '0.8rem', marginRight: '4px' }}>
+                                            <span key={t} style={{ background: '#e2e8f0', color: 'red', padding: '2px 6px', borderRadius: '4px', fontSize: '0.8rem', marginRight: '4px', fontWeight: 'bold' }}>
                                                 {t}
                                             </span>
                                         ))}
@@ -316,7 +318,7 @@ export default function HotelsPage() {
                             </div>
                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                                 {currentHotel.tags?.map(tag => (
-                                    <span key={tag} style={{ background: 'var(--color-primary-teal)', color: 'white', padding: '4px 10px', borderRadius: '15px', display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.85rem' }}>
+                                    <span key={tag} style={{ background: 'white', border: '1px solid red', color: 'red', padding: '4px 10px', borderRadius: '15px', display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.85rem', fontWeight: 'bold' }}>
                                         {tag}
                                         <X size={14} style={{ cursor: 'pointer' }} onClick={() => removeTag(tag)} />
                                     </span>
@@ -432,10 +434,39 @@ export default function HotelsPage() {
                             gallery: currentHotel.gallery,
                             features: featuresInput.split(',').filter(f => f.trim()),
                             tags: currentHotel.tags
-                        }}
+                        } as Service}
+                        onClick={() => setIsPreviewModalOpen(true)}
                     />
+                    <button
+                        type="button"
+                        onClick={() => setIsPreviewModalOpen(true)}
+                        className={styles.actionButton}
+                        style={{ marginTop: '20px', width: '100%', justifyContent: 'center' }}
+                    >
+                        Ver Vista Completa (Modal)
+                    </button>
                 </div>
             </div>
+
+            <ServiceModal
+                isOpen={isPreviewModalOpen}
+                onClose={() => setIsPreviewModalOpen(false)}
+                service={{
+                    id: 'preview',
+                    title: currentHotel.name || 'Hotel Name',
+                    category: currentHotel.type || 'Hotel',
+                    price: currentHotel.price || 0,
+                    image: currentHotel.image_url || 'https://via.placeholder.com/400x300',
+                    location: currentHotel.destination_name || 'Location',
+                    rating: currentHotel.stars || 0,
+                    gallery: currentHotel.gallery,
+                    features: featuresInput.split(',').filter(f => f.trim()),
+                    tags: currentHotel.tags,
+                    description: currentHotel.description,
+                    price_child: currentHotel.price_child,
+                    price_infant: currentHotel.price_infant
+                } as Service}
+            />
         </div>
     );
 }

@@ -3,9 +3,12 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../admin.module.css';
 import { Plus, Edit, Trash2, X, ArrowLeft, Tag } from 'lucide-react';
+import { useNotification } from '@/components/UI/NotificationProvider';
 
 import ImageGalleryUpload from '@/components/Admin/ImageGalleryUpload';
 import ServiceCard from '@/components/Catalog/ServiceCard';
+import ServiceModal from '@/components/Catalog/ServiceModal';
+import { Service } from '@/data/mockServices';
 
 interface Tour {
     id: number;
@@ -26,6 +29,7 @@ interface Tour {
     is_featured: boolean;
     is_promotion: boolean;
     type: string;
+    stars: number;
 }
 
 interface Destination {
@@ -44,6 +48,8 @@ export default function ToursPage() {
     const [loading, setLoading] = useState(false);
     const [includedInput, setIncludedInput] = useState('');
     const [tagInput, setTagInput] = useState('');
+    const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
+    const { showNotification } = useNotification();
 
     useEffect(() => {
         fetchTours();
@@ -72,7 +78,7 @@ export default function ToursPage() {
 
         // Verification
         if (!currentTour.name || !currentTour.destination_id) {
-            alert('Verification Failed: Name and Destination are required.');
+            showNotification('error', 'Verificación fallida: Nombre y Destino son requeridos.');
             setLoading(false);
             return;
         }
@@ -86,22 +92,25 @@ export default function ToursPage() {
             const res = await fetch(url, {
                 method,
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ...currentTour, included: includedArray }),
+                body: JSON.stringify({
+                    ...currentTour,
+                    included: includedArray,
+                    stars: Number(currentTour.stars || 5),
+                    price: Number(currentTour.price || 0)
+                }),
             });
 
             if (res.ok) {
                 const savedData = await res.json();
-                alert(`✅ Tour "${savedData.name}" saved successfully!`);
+                showNotification('success', `✅ Tour "${savedData.name}" guardado exitosamente!`);
                 setViewMode('list');
                 fetchTours();
             } else {
                 const err = await res.json();
-                console.error('Failed to save tour', err);
-                alert(`❌ Error saving tour: ${err.error || 'Unknown'}`);
+                showNotification('error', `❌ Error al guardar: ${err.error || 'Error desconocido'}`);
             }
         } catch (error) {
-            console.error(error);
-            alert('❌ Network Error');
+            showNotification('error', '❌ Error de red. Por favor intente nuevamente.');
         } finally {
             setLoading(false);
         }
@@ -121,7 +130,7 @@ export default function ToursPage() {
     };
 
     const startCreate = () => {
-        setCurrentTour({ is_featured: false, tags: [], type: 'Aventura' });
+        setCurrentTour({ is_featured: false, tags: [], type: 'Aventura', stars: 5 });
         setIncludedInput('');
         setTagInput('');
         setViewMode('create');
@@ -167,6 +176,7 @@ export default function ToursPage() {
                                 <th>Destination</th>
                                 <th>Type</th>
                                 <th>Price</th>
+                                <th>Stars</th>
                                 <th>Duration</th>
                                 <th>Tags</th>
                                 <th>Actions</th>
@@ -179,10 +189,11 @@ export default function ToursPage() {
                                     <td>{tour.destination_name || '-'}</td>
                                     <td>{tour.type || 'Aventura'}</td>
                                     <td>${tour.price}</td>
+                                    <td>{tour.stars} ★</td>
                                     <td>{tour.duration}</td>
                                     <td>
                                         {tour.tags && tour.tags.map(t => (
-                                            <span key={t} style={{ background: '#e2e8f0', padding: '2px 6px', borderRadius: '4px', fontSize: '0.8rem', marginRight: '4px' }}>
+                                            <span key={t} style={{ background: '#e2e8f0', color: 'red', padding: '2px 6px', borderRadius: '4px', fontSize: '0.8rem', marginRight: '4px', fontWeight: 'bold' }}>
                                                 {t}
                                             </span>
                                         ))}
@@ -310,7 +321,7 @@ export default function ToursPage() {
                             </div>
                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                                 {currentTour.tags?.map(tag => (
-                                    <span key={tag} style={{ background: 'var(--color-primary-teal)', color: 'white', padding: '4px 10px', borderRadius: '15px', display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.85rem' }}>
+                                    <span key={tag} style={{ background: 'white', border: '1px solid red', color: 'red', padding: '4px 10px', borderRadius: '15px', display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.85rem', fontWeight: 'bold' }}>
                                         {tag}
                                         <X size={14} style={{ cursor: 'pointer' }} onClick={() => removeTag(tag)} />
                                     </span>
@@ -373,6 +384,17 @@ export default function ToursPage() {
                                     required
                                 />
                             </div>
+                            <div className={styles.formGroup} style={{ flex: 1 }}>
+                                <label className={styles.label} style={{ color: '#333' }}>Stars (1-5)</label>
+                                <input
+                                    type="number"
+                                    min="1" max="5"
+                                    className={styles.input}
+                                    style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
+                                    value={currentTour.stars || ''}
+                                    onChange={(e) => setCurrentTour({ ...currentTour, stars: Number(e.target.value) })}
+                                />
+                            </div>
                         </div>
 
 
@@ -420,13 +442,22 @@ export default function ToursPage() {
                             price: currentTour.price || 0,
                             image: currentTour.image_url || 'https://via.placeholder.com/400x300',
                             location: currentTour.destination_name || 'Destination',
-                            rating: 5,
+                            rating: currentTour.stars || 5,
                             duration: currentTour.duration,
                             priceValidUntil: currentTour.price_valid_until,
                             gallery: currentTour.gallery,
                             tags: currentTour.tags
-                        }}
+                        } as Service}
+                        onClick={() => setIsPreviewModalOpen(true)}
                     />
+                    <button
+                        type="button"
+                        onClick={() => setIsPreviewModalOpen(true)}
+                        className={styles.actionButton}
+                        style={{ marginTop: '20px', width: '100%', justifyContent: 'center' }}
+                    >
+                        Ver Vista Completa (Modal)
+                    </button>
                     <div style={{ marginTop: '20px', fontSize: '0.9rem', color: '#666', width: '100%' }}>
                         <strong>Included:</strong>
                         <ul style={{ paddingLeft: '20px', marginTop: '5px' }}>
@@ -436,7 +467,29 @@ export default function ToursPage() {
                         </ul>
                     </div>
                 </div>
-            </div>
+            </div >
+
+            <ServiceModal
+                isOpen={isPreviewModalOpen}
+                onClose={() => setIsPreviewModalOpen(false)}
+                service={{
+                    id: 'preview',
+                    title: currentTour.name || 'Tour Name',
+                    category: currentTour.type || 'Full Day',
+                    price: currentTour.price || 0,
+                    image: currentTour.image_url || 'https://via.placeholder.com/400x300',
+                    location: currentTour.destination_name || 'Destination',
+                    rating: currentTour.stars || 5,
+                    duration: currentTour.duration,
+                    priceValidUntil: currentTour.price_valid_until,
+                    gallery: currentTour.gallery,
+                    tags: currentTour.tags,
+                    description: currentTour.description,
+                    features: includedInput.split(',').filter(i => i.trim()),
+                    price_child: currentTour.price_child,
+                    price_infant: currentTour.price_infant
+                } as Service}
+            />
         </div>
     );
 }

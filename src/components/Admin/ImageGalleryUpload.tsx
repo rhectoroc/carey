@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useRef } from 'react';
-import { Upload, X, Loader2, Star } from 'lucide-react';
-import styles from '../../app/admin/admin.module.css'; // Reusing styles from common admin module
+import React, { useRef, useState, useCallback } from 'react';
+import { Upload, X, Loader2, Star, Image as ImageIcon } from 'lucide-react';
+import styles from '../../app/admin/admin.module.css';
+import { useNotification } from '@/components/UI/NotificationProvider';
 
 interface ImageGalleryUploadProps {
     images: string[];
@@ -13,21 +14,19 @@ interface ImageGalleryUploadProps {
 
 export default function ImageGalleryUpload({ images, onChange, onSetMain, maxImages = 6 }: ImageGalleryUploadProps) {
     const fileInputRef = useRef<HTMLInputElement>(null);
-    const [uploading, setUploading] = React.useState(false);
+    const [uploading, setUploading] = useState(false);
+    const [dragActive, setDragActive] = useState(false);
+    const { showNotification } = useNotification();
 
-    const [status, setStatus] = React.useState<{ type: 'success' | 'error' | '', msg: string }>({ type: '', msg: '' });
-
-    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const files = e.target.files;
-        if (!files || files.length === 0) return;
+    const handleFiles = useCallback(async (files: FileList) => {
+        if (files.length === 0) return;
 
         if (images.length + files.length > maxImages) {
-            setStatus({ type: 'error', msg: `Max permitted: ${maxImages} images/videos` });
+            showNotification('error', `Límite superado: Máximo ${maxImages} archivos permitidos.`);
             return;
         }
 
         setUploading(true);
-        setStatus({ type: '', msg: '' });
         const newImages: string[] = [];
         let errors = 0;
 
@@ -46,31 +45,47 @@ export default function ImageGalleryUpload({ images, onChange, onSetMain, maxIma
                     const data = await res.json();
                     newImages.push(data.url);
                 } else {
-                    console.error('Failed to upload', file.name);
                     errors++;
                 }
             }
 
             if (newImages.length > 0) {
                 onChange([...images, ...newImages]);
-                setStatus({ type: 'success', msg: `Uploaded ${newImages.length} files successfully.` });
+                showNotification('success', 'La carga de los archivos fue satisfactoria');
             }
 
             if (errors > 0) {
-                setStatus(prev => ({ type: 'error', msg: `${errors} files failed to upload.` }));
+                showNotification('error', `${errors} archivos no pudieron subirse.`);
             }
 
         } catch (error) {
-            console.error('Upload error', error);
-            setStatus({ type: 'error', msg: 'Network error during upload.' });
+            showNotification('error', 'Error de red durante la subida.');
         } finally {
             setUploading(false);
             if (fileInputRef.current) fileInputRef.current.value = '';
+        }
+    }, [images, maxImages, onChange, showNotification]);
 
-            // Clear success message after 3 seconds
-            setTimeout(() => {
-                setStatus(prev => prev.type === 'success' ? { type: '', msg: '' } : prev);
-            }, 3000);
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) handleFiles(e.target.files);
+    };
+
+    const handleDrag = (e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.type === "dragenter" || e.type === "dragover") {
+            setDragActive(true);
+        } else if (e.type === "dragleave") {
+            setDragActive(false);
+        }
+    };
+
+    const handleDrop = (e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setDragActive(false);
+        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+            handleFiles(e.dataTransfer.files);
         }
     };
 
@@ -78,6 +93,7 @@ export default function ImageGalleryUpload({ images, onChange, onSetMain, maxIma
         const newImages = [...images];
         newImages.splice(index, 1);
         onChange(newImages);
+        showNotification('info', 'Archivo eliminado de la galería.');
     };
 
     return (
@@ -91,105 +107,71 @@ export default function ImageGalleryUpload({ images, onChange, onSetMain, maxIma
                 multiple
             />
 
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+            <div
+                className={`${styles.dropZone} ${dragActive ? styles.dropZoneActive : ''}`}
+                onDragEnter={handleDrag}
+                onDragOver={handleDrag}
+                onDragLeave={handleDrag}
+                onDrop={handleDrop}
+                onClick={() => fileInputRef.current?.click()}
+            >
+                {uploading ? (
+                    <div className={styles.uploadStatus}>
+                        <Loader2 className={styles.spinner} size={32} />
+                        <p>Subiendo archivos...</p>
+                    </div>
+                ) : (
+                    <div className={styles.uploadPrompt}>
+                        <div className={styles.iconCircle}>
+                            <Upload size={24} />
+                        </div>
+                        <p className={styles.primaryText}>Haga clic o arrastre sus archivos aquí</p>
+                        <p className={styles.secondaryText}>PNG, JPG o Video (Máx {maxImages} archivos)</p>
+                    </div>
+                )}
+            </div>
+
+            <div className={styles.galleryGrid} style={{ marginTop: '20px' }}>
                 {images.map((img, idx) => {
                     const isVideo = img.toLowerCase().match(/\.(mp4|webm|ogg|mov)$/);
                     return (
-                        <div key={idx} style={{ position: 'relative', width: '100px', height: '100px', borderRadius: '8px', overflow: 'hidden', border: '1px solid #ddd', background: '#000' }}>
+                        <div key={idx} className={styles.thumbnailContainer}>
                             {isVideo ? (
-                                <video src={img} style={{ width: '100%', height: '100%', objectFit: 'cover' }} muted />
+                                <video src={img} className={styles.thumbnail} muted />
                             ) : (
-                                <img src={img} alt={`Gallery ${idx}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                <img src={img} alt={`Gallery ${idx}`} className={styles.thumbnail} />
                             )}
-                            <div style={{ position: 'absolute', top: '4px', right: '4px', display: 'flex', gap: '4px' }}>
+                            <div className={styles.thumbnailActions}>
                                 {onSetMain && !isVideo && (
                                     <button
                                         type="button"
-                                        onClick={() => onSetMain(img)}
-                                        title="Set as Main Image"
-                                        style={{
-                                            background: 'rgba(255, 255, 255, 0.9)',
-                                            color: '#e63946',
-                                            border: 'none',
-                                            borderRadius: '50%',
-                                            width: '20px',
-                                            height: '20px',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            cursor: 'pointer',
-                                            boxShadow: '0 1px 2px rgba(0,0,0,0.2)'
-                                        }}
+                                        onClick={(e) => { e.stopPropagation(); onSetMain(img); }}
+                                        className={styles.mainAction}
                                     >
                                         <Star size={12} fill="currentColor" />
                                     </button>
                                 )}
                                 <button
                                     type="button"
-                                    onClick={() => removeImage(idx)}
-                                    title="Remove Image"
-                                    style={{
-                                        background: 'rgba(0,0,0,0.5)',
-                                        color: 'white',
-                                        border: 'none',
-                                        borderRadius: '50%',
-                                        width: '20px',
-                                        height: '20px',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        cursor: 'pointer'
-                                    }}
+                                    onClick={(e) => { e.stopPropagation(); removeImage(idx); }}
+                                    className={styles.deleteAction}
                                 >
                                     <X size={12} />
                                 </button>
                             </div>
-                            {isVideo && (
-                                <div style={{ position: 'absolute', bottom: '4px', left: '4px', background: 'rgba(0,0,0,0.6)', color: 'white', padding: '2px 4px', borderRadius: '4px', fontSize: '0.6rem' }}>
-                                    VIDEO
-                                </div>
-                            )}
+                            {isVideo && <span className={styles.videoBadge}>VIDEO</span>}
                         </div>
                     );
                 })}
+            </div>
 
-                {images.length < maxImages && (
-                    <div
-                        onClick={() => fileInputRef.current?.click()}
-                        style={{
-                            width: '100px',
-                            height: '100px',
-                            border: '2px dashed #cbd5e1',
-                            borderRadius: '8px',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            cursor: 'pointer',
-                            color: '#64748b',
-                            backgroundColor: '#f8fafc'
-                        }}
-                    >
-                        {uploading ? <Loader2 className={styles.spinner} size={24} /> : <Upload size={24} />}
-                        <span style={{ fontSize: '0.7rem', marginTop: '4px' }}>Add Media</span>
-                    </div>
-                )}
+            <div className={styles.uploadFooter}>
+                <p>{images.length} de {maxImages} archivos</p>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '5px' }}>
-                <p style={{ fontSize: '0.8rem', color: '#888', margin: 0 }}>
-                    {images.length} / {maxImages} media items
-                </p>
-                {status.msg && (
-                    <p style={{
-                        fontSize: '0.8rem',
-                        color: status.type === 'error' ? 'red' : 'green',
-                        margin: 0,
-                        fontWeight: 'bold'
-                    }}>
-                        {status.msg}
-                    </p>
-                )}
-            </div>
+
+            <style jsx>{`
+                .uploadContainer { width: 100%; }
+            `}</style>
         </div>
     );
 }
