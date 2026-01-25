@@ -51,12 +51,13 @@ export default function PromotionsSection() {
     }, []);
 
     useEffect(() => {
-        if (!sectionRef.current || !titleRef.current || !subtitleRef.current) return;
+        const scope = sectionRef.current;
+        if (!scope || !titleRef.current || !subtitleRef.current) return;
 
         const ctx = gsap.context(() => {
             const tl = gsap.timeline({
                 scrollTrigger: {
-                    trigger: sectionRef.current,
+                    trigger: scope,
                     start: "top 85%",
                     toggleActions: "play none none reverse"
                 }
@@ -71,7 +72,7 @@ export default function PromotionsSection() {
                     { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
                     "-=0.5"
                 );
-        }, sectionRef.current);
+        }, scope);
 
         return () => ctx.revert();
     }, [items]);

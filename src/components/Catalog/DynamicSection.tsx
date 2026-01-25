@@ -50,10 +50,11 @@ export default function DynamicSection({ title, subtitle, endpoint, type, classN
     }, [endpoint, type]);
 
     useEffect(() => {
-        if (!bgRef.current || !bgImage) return;
+        const scope = bgRef.current;
+        if (!scope || !bgImage) return;
 
         const ctx = gsap.context(() => {
-            gsap.to(bgRef.current, {
+            gsap.to(scope, {
                 yPercent: 30,
                 ease: "none",
                 scrollTrigger: {
@@ -63,13 +64,14 @@ export default function DynamicSection({ title, subtitle, endpoint, type, classN
                     scrub: true
                 }
             });
-        });
+        }, scope);
 
         return () => ctx.revert();
     }, [bgImage, items]); // Re-run when items load to ensure correct height
 
     useEffect(() => {
-        if (variant !== 'luxuryFlow' || !shapesRef.current) return;
+        const scope = containerRef.current;
+        if (variant !== 'luxuryFlow' || !shapesRef.current || !scope) return;
 
         const ctx = gsap.context(() => {
             const shapes = shapesRef.current?.children;
@@ -107,19 +109,20 @@ export default function DynamicSection({ title, subtitle, endpoint, type, classN
                 yPercent: -10,
                 ease: "none",
                 scrollTrigger: {
-                    trigger: containerRef.current,
+                    trigger: scope,
                     start: "top bottom",
                     end: "bottom top",
                     scrub: true
                 }
             });
-        });
+        }, scope);
 
         return () => ctx.revert();
     }, [variant, items]);
 
     useEffect(() => {
-        if (!headerRef.current || !titleRef.current || !subtitleRef.current) return;
+        const scope = containerRef.current;
+        if (!headerRef.current || !titleRef.current || !subtitleRef.current || !scope) return;
 
         const ctx = gsap.context(() => {
             const tl = gsap.timeline({
@@ -139,7 +142,7 @@ export default function DynamicSection({ title, subtitle, endpoint, type, classN
                     { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
                     "-=0.5" // Start slightly before title finished
                 );
-        }, containerRef.current);
+        }, scope);
 
         return () => ctx.revert();
     }, [items]); // Re-run when items are loaded to ensure correct positioning
