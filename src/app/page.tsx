@@ -34,30 +34,33 @@ export default function Home() {
                     type="destination"
                     className={styles.popularDestinations}
                     subtitleVariant="rolling"
+                    cardVariant="popIn"
                 />
 
                 <DynamicSection
                     title="Hoteles Exclusivos"
-                    subtitle="Descansa en los mejores alojamientos."
+                    subtitle="Hospédate en los mejores hoteles y posadas del país."
                     endpoint="/api/catalog/hotels"
                     type="hotel"
                     className={styles.exclusiveHotels}
-                    variant="luxuryFlow"
+                    cardVariant="sideSlide"
                 />
 
                 <DynamicSection
                     title="Tours & Aventuras"
-                    subtitle="Vive experiencias inolvidables."
+                    subtitle="Experiencias únicas diseñadas para ti."
                     endpoint="/api/catalog/tours"
                     type="tour"
                     className={styles.toursAdventures}
+                    cardVariant="flip"
                 />
 
                 <DynamicSection
                     title="Traslados y Movilidad"
                     subtitle="Viaja cómodo y seguro a tu destino."
                     endpoint="/api/catalog/transfers"
-                    type="vehicle" // We might need to update DynamicSection to handle 'vehicle' or just map it
+                    type="vehicle"
+                    cardVariant="slideUp"
                 />
 
                 <UnforgettableMoments />

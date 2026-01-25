@@ -81,6 +81,27 @@ export default function PromotionsSection() {
                 );
             }
 
+            // Animate Cards (Flip effect for Promotions)
+            const cards = scope.querySelectorAll('.card-anim-target');
+            if (cards.length > 0) {
+                gsap.fromTo(cards,
+                    { opacity: 0, rotationY: 45, y: 30 },
+                    {
+                        opacity: 1,
+                        rotationY: 0,
+                        y: 0,
+                        duration: 1,
+                        stagger: 0.15,
+                        ease: "power2.out",
+                        scrollTrigger: {
+                            trigger: scope.querySelector(`.${styles.grid}`),
+                            start: "top 85%",
+                            toggleActions: "play none none reverse"
+                        }
+                    }
+                );
+            }
+
             ScrollTrigger.refresh();
         }, scope);
 

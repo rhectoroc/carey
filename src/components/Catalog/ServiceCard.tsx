@@ -51,7 +51,7 @@ export default function ServiceCard({ service, onClick }: ServiceCardProps) {
     const isMainMedia = images[currentImageIndex] === service.image;
 
     return (
-        <div className={styles.card} onClick={onClick} style={{ cursor: onClick ? 'pointer' : 'default' }}>
+        <div className={`${styles.card} card-anim-target`} onClick={onClick} style={{ cursor: onClick ? 'pointer' : 'default', opacity: 0 }}>
             <div className={styles.imageContainer} style={{ position: 'relative' }}>
                 {images[currentImageIndex]?.toLowerCase().match(/\.(mp4|webm|ogg|mov)$/) ? (
                     <video

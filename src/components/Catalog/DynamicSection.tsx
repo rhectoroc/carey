@@ -21,9 +21,10 @@ interface DynamicSectionProps {
     bgImage?: string;
     variant?: 'luxuryFlow' | 'default';
     subtitleVariant?: 'rolling' | 'staggered';
+    cardVariant?: 'slideUp' | 'popIn' | 'sideSlide' | 'flip';
 }
 
-export default function DynamicSection({ title, subtitle, endpoint, type, className, sectionId, bgImage, variant, subtitleVariant = 'staggered' }: DynamicSectionProps) {
+export default function DynamicSection({ title, subtitle, endpoint, type, className, sectionId, bgImage, variant, subtitleVariant = 'staggered', cardVariant = 'slideUp' }: DynamicSectionProps) {
     const [items, setItems] = useState<any[]>([]);
     const [selectedItem, setSelectedItem] = useState<any>(null);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -172,6 +173,42 @@ export default function DynamicSection({ title, subtitle, endpoint, type, classN
                         "-=0.7"
                     );
                 }
+            }
+
+            // Animate Cards
+            const cards = scope.querySelectorAll('.card-anim-target');
+            if (cards.length > 0) {
+                let cardConfig: gsap.TweenVars = { opacity: 1, duration: 0.8, stagger: 0.1, ease: "power2.out" };
+                let initialVars: gsap.TweenVars = { opacity: 0 };
+
+                switch (cardVariant) {
+                    case 'popIn':
+                        initialVars = { ...initialVars, scale: 0.8 };
+                        cardConfig = { ...cardConfig, scale: 1, ease: "back.out(1.7)" };
+                        break;
+                    case 'sideSlide':
+                        initialVars = { ...initialVars, x: 50 };
+                        cardConfig = { ...cardConfig, x: 0 };
+                        break;
+                    case 'flip':
+                        initialVars = { ...initialVars, rotationY: 90, transformOrigin: "50% 50%" };
+                        cardConfig = { ...cardConfig, rotationY: 0, ease: "power2.out" };
+                        break;
+                    case 'slideUp':
+                    default:
+                        initialVars = { ...initialVars, y: 50 };
+                        cardConfig = { ...cardConfig, y: 0, ease: "back.out(1.2)" };
+                        break;
+                }
+
+                gsap.fromTo(cards, initialVars, {
+                    ...cardConfig,
+                    scrollTrigger: {
+                        trigger: scope.querySelector(`.${styles.grid}`),
+                        start: "top 85%",
+                        toggleActions: "play none none reverse"
+                    }
+                });
             }
 
             ScrollTrigger.refresh();
