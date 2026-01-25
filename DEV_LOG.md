@@ -11,3 +11,8 @@
 - **Refinamiento de Datos y UX:** Inclusión del campo "Duración" en el modal de detalles de servicios. Automatización de la generación de Slugs en los formularios de administración, eliminando la necesidad de entrada manual y previniendo errores de formato en las URLs. (Estado: Completado)
 - **Conectividad Chatbot y Reservas:** Personalización de mensajes predeterminados del botón "Reservar Ahora" según la categoría (Tour, Hotel, Traslado). Integración síncrona que abre el asistente virtual y envía el mensaje de interés automáticamente. (Estado: Completado)
 - **Automatización de Marketing:** Implementación de insignias automáticas ("OFERTA 🔥" y "DESTACADO ⭐") en tarjetas y modales basadas en los estados `is_promotion` e `is_featured`. Actualización de previsualizaciones administrativas para reflejar estos cambios en tiempo real. (Estado: Completado)
+
+### 2026-01-25
+- **Sincronización de Esquema:** Resolución de error de columna inexistente mediante la adición de la columna `stars` a la tabla `tours`. Actualización de `schema.sql`, `seeds.sql` y guiones de configuración. (Estado: Completado)
+- **Mejora de Búsqueda de Destinos:** El buscador de destinos ahora muestra sugerencias automáticamente al ganar el foco (on focus), permitiendo ver destinos existentes sin necesidad de escribir. (Estado: Completado)
+- **Integración de Chatbot con n8n:** Conexión exitosa del chatbot frontal con el workflow de n8n. Implementación de estado de carga ("pensando...") y manejo de sesiones dinámicas. (Estado: Completado)

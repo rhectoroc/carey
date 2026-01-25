@@ -19,6 +19,7 @@ export default function Chatbot() {
         { role: 'bot', text: '¡Hola! Soy Carey, tu asistente virtual. ¿En qué puedo ayudarte?' }
     ]);
     const [input, setInput] = useState('');
+    const [isThinking, setIsThinking] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     const toggleChat = () => {
@@ -51,14 +52,30 @@ export default function Chatbot() {
 
         setMessages(prev => [...prev, { role: 'user', text }]);
         setInput('');
+        setIsThinking(true);
 
-        // Placeholder for n8n webhook integration
-        // const response = await fetch('YOUR_N8N_WEBHOOK_URL', { method: 'POST', body: JSON.stringify({ message: text }) });
+        try {
+            const response = await fetch('https://adrielssystems-n8n-new.1m85g5.easypanel.host/webhook/c190dcf0-ee0b-47bc-800f-954b7511c582/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'sendMessage',
+                    chatInput: text,
+                    sessionId: 'carey-session-' + (pathname || 'home').replace(/\//g, '-')
+                })
+            });
 
-        // Simulating response
-        setTimeout(() => {
-            setMessages(prev => [...prev, { role: 'bot', text: 'Gracias por tu mensaje. Estoy procesando tu solicitud con el equipo de Carey.' }]);
-        }, 1000);
+            const data = await response.json();
+            // n8n Chat node usually returns answer in 'output' or 'text'
+            const botText = data.output || data.text || data.response || 'Lo siento, hubo un problema al procesar tu solicitud.';
+
+            setMessages(prev => [...prev, { role: 'bot', text: botText }]);
+        } catch (error) {
+            console.error('Chatbot Error:', error);
+            setMessages(prev => [...prev, { role: 'bot', text: 'Lo siento, perdimos la conexión con mi servidor central. Por favor intenta más tarde.' }]);
+        } finally {
+            setIsThinking(false);
+        }
     };
 
     const sendMessage = () => sendMessageWithText(input);
@@ -101,6 +118,13 @@ export default function Chatbot() {
                                     {m.text}
                                 </div>
                             ))}
+                            {isThinking && (
+                                <div className={`${styles.message} ${styles.bot} ${styles.thinking}`}>
+                                    <span className={styles.dot}>.</span>
+                                    <span className={styles.dot}>.</span>
+                                    <span className={styles.dot}>.</span>
+                                </div>
+                            )}
                             <div ref={messagesEndRef} />
                         </div>
                         <div className={styles.inputArea}>
