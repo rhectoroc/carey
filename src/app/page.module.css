@@ -18,40 +18,31 @@
 }
 
 .exclusiveHotels {
-    background: linear-gradient(135deg, var(--color-caribe-blue) 0%, #0099cc 100%);
+    background: linear-gradient(-45deg, #F24822, #E75345, #ff6b4a, #dc3522);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
     color: white;
     position: relative;
     overflow: hidden;
 }
 
-.exclusiveHotels::before {
-    content: '';
-    position: absolute;
-    top: -100%;
-    left: -100%;
-    right: -100%;
-    bottom: -100%;
-    background-image: repeating-linear-gradient(45deg,
-            rgba(242, 72, 34, 0.05) 0px,
-            rgba(242, 72, 34, 0.05) 20px,
-            rgba(231, 83, 69, 0.05) 20px,
-            rgba(231, 83, 69, 0.05) 40px,
-            transparent 40px,
-            transparent 100px);
-    background-size: 200px 200px;
-    animation: slideDiagonals 60s linear infinite;
-    z-index: 0;
-    pointer-events: none;
-}
-
-@keyframes slideDiagonals {
+@keyframes gradientBG {
     0% {
-        transform: translate(0, 0);
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
     }
 
     100% {
-        transform: translate(200px, 200px);
+        background-position: 0% 50%;
     }
+}
+
+.exclusiveHotels h2,
+.exclusiveHotels p {
+    color: white !important;
 }
 
 .exclusiveHotels>div {
