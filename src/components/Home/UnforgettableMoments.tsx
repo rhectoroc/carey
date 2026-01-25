@@ -1,5 +1,8 @@
 "use client";
 
+import { useState, useRef, useEffect } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useLanguage } from '@/context/LanguageContext';
 import { X, Play } from 'lucide-react';
 import styles from './UnforgettableMoments.module.css';
