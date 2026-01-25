@@ -17,6 +17,7 @@ interface Destination {
     tags: string[];
     is_featured: boolean;
     is_promotion: boolean;
+    type: string;
 }
 
 export default function DestinationsPage() {
@@ -91,7 +92,7 @@ export default function DestinationsPage() {
     };
 
     const startCreate = () => {
-        setCurrentDestination({ is_featured: false, tags: [], gallery: [] });
+        setCurrentDestination({ is_featured: false, tags: [], gallery: [], type: 'Ciudad' });
         setTagInput('');
         setViewMode('create');
     };
@@ -132,6 +133,7 @@ export default function DestinationsPage() {
                             <tr>
                                 <th>Name</th>
                                 <th>Slug</th>
+                                <th>Type</th>
                                 <th>Featured</th>
                                 <th>Tags</th>
                                 <th>Actions</th>
@@ -142,6 +144,7 @@ export default function DestinationsPage() {
                                 <tr key={dest.id}>
                                     <td>{dest.name}</td>
                                     <td>{dest.slug}</td>
+                                    <td>{dest.type || 'Ciudad'}</td>
                                     <td>{dest.is_featured ? 'Yes' : 'No'}</td>
                                     <td>
                                         {dest.tags && dest.tags.map(t => (
@@ -210,6 +213,22 @@ export default function DestinationsPage() {
                                 onChange={(e) => setCurrentDestination({ ...currentDestination, slug: e.target.value })}
                                 required
                             />
+                        </div>
+                        <div className={styles.formGroup}>
+                            <label className={styles.label} style={{ color: '#333' }}>Type</label>
+                            <select
+                                className={styles.input}
+                                style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
+                                value={currentDestination.type || 'Ciudad'}
+                                onChange={(e) => setCurrentDestination({ ...currentDestination, type: e.target.value })}
+                                required
+                            >
+                                <option value="Ciudad">Ciudad</option>
+                                <option value="Isla">Isla</option>
+                                <option value="Parque Nacional">Parque Nacional</option>
+                                <option value="Playa">Playa</option>
+                                <option value="Montaña">Montaña</option>
+                            </select>
                         </div>
                         <div className={styles.formGroup}>
                             <label className={styles.label} style={{ color: '#333' }}>Description</label>
@@ -290,7 +309,7 @@ export default function DestinationsPage() {
                         service={{
                             id: 'preview',
                             title: currentDestination.name || 'Destino',
-                            category: 'Circuit', // or customize map
+                            category: currentDestination.type || 'Ciudad',
                             price: 0, // Destinations often don't have a single price, or add one if needed
                             image: currentDestination.image_url || 'https://via.placeholder.com/400x300',
                             location: currentDestination.name || 'Venezuela',

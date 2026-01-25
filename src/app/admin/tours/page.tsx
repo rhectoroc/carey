@@ -25,6 +25,8 @@ interface Tour {
     tags: string[]; // JSONB
     is_featured: boolean;
     is_promotion: boolean;
+    type: string;
+    duration_days: number;
 }
 
 interface Destination {
@@ -120,7 +122,7 @@ export default function ToursPage() {
     };
 
     const startCreate = () => {
-        setCurrentTour({ is_featured: false, tags: [] });
+        setCurrentTour({ is_featured: false, tags: [], type: 'Full Day', duration_days: 1 });
         setIncludedInput('');
         setTagInput('');
         setViewMode('create');
@@ -164,6 +166,7 @@ export default function ToursPage() {
                             <tr>
                                 <th>Name</th>
                                 <th>Destination</th>
+                                <th>Type</th>
                                 <th>Price</th>
                                 <th>Duration</th>
                                 <th>Tags</th>
@@ -175,8 +178,9 @@ export default function ToursPage() {
                                 <tr key={tour.id}>
                                     <td>{tour.name}</td>
                                     <td>{tour.destination_name || '-'}</td>
+                                    <td>{tour.type || 'Full Day'}</td>
                                     <td>${tour.price}</td>
-                                    <td>{tour.duration}</td>
+                                    <td>{tour.duration} ({tour.duration_days} days)</td>
                                     <td>
                                         {tour.tags && tour.tags.map(t => (
                                             <span key={t} style={{ background: '#e2e8f0', padding: '2px 6px', borderRadius: '4px', fontSize: '0.8rem', marginRight: '4px' }}>
@@ -237,24 +241,41 @@ export default function ToursPage() {
                                 required
                             />
                         </div>
-                        <div className={styles.formGroup}>
-                            <label className={styles.label} style={{ color: '#333' }}>Destination</label>
-                            <select
-                                className={styles.input}
-                                style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
-                                value={currentTour.destination_id || ''}
-                                onChange={(e) => {
-                                    const destId = Number(e.target.value);
-                                    const dest = destinations.find(d => d.id === destId);
-                                    setCurrentTour({ ...currentTour, destination_id: destId, destination_name: dest?.name });
-                                }}
-                                required
-                            >
-                                <option value="">Select Destination</option>
-                                {destinations.map(d => (
-                                    <option key={d.id} value={d.id}>{d.name}</option>
-                                ))}
-                            </select>
+                        <div style={{ display: 'flex', gap: '10px' }}>
+                            <div className={styles.formGroup} style={{ flex: 1 }}>
+                                <label className={styles.label} style={{ color: '#333' }}>Destination</label>
+                                <select
+                                    className={styles.input}
+                                    style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
+                                    value={currentTour.destination_id || ''}
+                                    onChange={(e) => {
+                                        const destId = Number(e.target.value);
+                                        const dest = destinations.find(d => d.id === destId);
+                                        setCurrentTour({ ...currentTour, destination_id: destId, destination_name: dest?.name });
+                                    }}
+                                    required
+                                >
+                                    <option value="">Select Destination</option>
+                                    {destinations.map(d => (
+                                        <option key={d.id} value={d.id}>{d.name}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className={styles.formGroup} style={{ flex: 1 }}>
+                                <label className={styles.label} style={{ color: '#333' }}>Type</label>
+                                <select
+                                    className={styles.input}
+                                    style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
+                                    value={currentTour.type || 'Full Day'}
+                                    onChange={(e) => setCurrentTour({ ...currentTour, type: e.target.value })}
+                                    required
+                                >
+                                    <option value="Full Day">Full Day</option>
+                                    <option value="Medio Dia">Medio Dia</option>
+                                    <option value="Multidia">Multidia</option>
+                                    <option value="Nocturno">Nocturno</option>
+                                </select>
+                            </div>
                         </div>
                         <div className={styles.formGroup}>
                             <label className={styles.label} style={{ color: '#333' }}>Description</label>
@@ -342,13 +363,25 @@ export default function ToursPage() {
                                 />
                             </div>
                             <div className={styles.formGroup} style={{ flex: 1 }}>
-                                <label className={styles.label} style={{ color: '#333' }}>Duration</label>
+                                <label className={styles.label} style={{ color: '#333' }}>Duration (Text)</label>
                                 <input
                                     type="text"
                                     className={styles.input}
                                     style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
                                     value={currentTour.duration || ''}
                                     onChange={(e) => setCurrentTour({ ...currentTour, duration: e.target.value })}
+                                    placeholder="e.g. 3 Days / 2 Nights"
+                                    required
+                                />
+                            </div>
+                            <div className={styles.formGroup} style={{ flex: 1 }}>
+                                <label className={styles.label} style={{ color: '#333' }}>Duration (Days)</label>
+                                <input
+                                    type="number"
+                                    className={styles.input}
+                                    style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
+                                    value={currentTour.duration_days || ''}
+                                    onChange={(e) => setCurrentTour({ ...currentTour, duration_days: Number(e.target.value) })}
                                     required
                                 />
                             </div>
@@ -395,7 +428,7 @@ export default function ToursPage() {
                         service={{
                             id: 'preview',
                             title: currentTour.name || 'Tour Name',
-                            category: 'Tour',
+                            category: currentTour.type || 'Full Day',
                             price: currentTour.price || 0,
                             image: currentTour.image_url || 'https://via.placeholder.com/400x300',
                             location: currentTour.destination_name || 'Destination',
