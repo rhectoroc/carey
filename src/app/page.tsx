@@ -41,6 +41,7 @@ export default function Home() {
                     endpoint="/api/catalog/hotels"
                     type="hotel"
                     className={styles.exclusiveHotels}
+                    bgImage="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=1920&auto=format&fit=crop"
                 />
 
                 <DynamicSection

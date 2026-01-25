@@ -1,9 +1,15 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ServiceCard from './ServiceCard';
 import ServiceModal from './ServiceModal'; // Reusing existing modal if compatible
 import styles from './CategoryGrid.module.css'; // Reusing grid styles
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+if (typeof window !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger);
+}
 
 interface DynamicSectionProps {
     title: string;
@@ -11,11 +17,15 @@ interface DynamicSectionProps {
     endpoint: string;
     type: 'hotel' | 'tour' | 'destination' | 'vehicle';
     className?: string;
+    sectionId?: string;
+    bgImage?: string;
 }
 
-export default function DynamicSection({ title, subtitle, endpoint, type, className }: DynamicSectionProps) {
+export default function DynamicSection({ title, subtitle, endpoint, type, className, sectionId, bgImage }: DynamicSectionProps) {
     const [items, setItems] = useState<any[]>([]);
     const [selectedItem, setSelectedItem] = useState<any>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const bgRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -33,6 +43,25 @@ export default function DynamicSection({ title, subtitle, endpoint, type, classN
 
         fetchData();
     }, [endpoint, type]);
+
+    useEffect(() => {
+        if (!bgRef.current || !bgImage) return;
+
+        const ctx = gsap.context(() => {
+            gsap.to(bgRef.current, {
+                yPercent: 30,
+                ease: "none",
+                scrollTrigger: {
+                    trigger: containerRef.current,
+                    start: "top bottom",
+                    end: "bottom top",
+                    scrub: true
+                }
+            });
+        });
+
+        return () => ctx.revert();
+    }, [bgImage, items]); // Re-run when items load to ensure correct height
 
     const mapToService = (item: any, type: string) => {
         // Map API data to ServiceCard interface
@@ -62,8 +91,32 @@ export default function DynamicSection({ title, subtitle, endpoint, type, classN
     if (items.length === 0) return null;
 
     return (
-        <section className={className} style={{ width: '100%' }}>
-            <div className={styles.section}>
+        <section
+            id={sectionId}
+            ref={containerRef}
+            className={`${className} ${bgImage ? styles.withBg : ''}`}
+            style={{ width: '100%', position: 'relative', overflow: 'hidden' }}
+        >
+            {bgImage && (
+                <div
+                    ref={bgRef}
+                    className={styles.sectionBg}
+                    style={{
+                        backgroundImage: `url(${bgImage})`,
+                        position: 'absolute',
+                        top: '-30%',
+                        left: 0,
+                        width: '100%',
+                        height: '160%',
+                        zIndex: 0,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        opacity: 0.15,
+                        pointerEvents: 'none'
+                    }}
+                />
+            )}
+            <div className={styles.section} style={{ position: 'relative', zIndex: 1 }}>
                 <div className={styles.header}>
                     <h2 className={styles.title}>{title}</h2>
                     <p className={styles.subtitle}>{subtitle}</p>
