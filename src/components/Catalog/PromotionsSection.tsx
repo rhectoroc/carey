@@ -1,13 +1,22 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ServiceCard from './ServiceCard';
 import ServiceModal from './ServiceModal';
 import styles from './CategoryGrid.module.css';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+if (typeof window !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger);
+}
 
 export default function PromotionsSection() {
     const [items, setItems] = useState<any[]>([]);
     const [selectedItem, setSelectedItem] = useState<any>(null);
+    const sectionRef = useRef<HTMLElement>(null);
+    const titleRef = useRef<HTMLHeadingElement>(null);
+    const subtitleRef = useRef<HTMLParagraphElement>(null);
 
     useEffect(() => {
         const fetchPromotions = async () => {
@@ -41,6 +50,32 @@ export default function PromotionsSection() {
         fetchPromotions();
     }, []);
 
+    useEffect(() => {
+        if (!sectionRef.current || !titleRef.current || !subtitleRef.current) return;
+
+        const ctx = gsap.context(() => {
+            const tl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: sectionRef.current,
+                    start: "top 85%",
+                    toggleActions: "play none none reverse"
+                }
+            });
+
+            tl.fromTo(titleRef.current,
+                { y: 30, opacity: 0 },
+                { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" }
+            )
+                .fromTo(subtitleRef.current,
+                    { y: 20, opacity: 0 },
+                    { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
+                    "-=0.5"
+                );
+        }, sectionRef.current);
+
+        return () => ctx.revert();
+    }, [items]);
+
     const mapToService = (item: any, type: string) => {
         return {
             id: item.id,
@@ -67,11 +102,11 @@ export default function PromotionsSection() {
     if (items.length === 0) return null;
 
     return (
-        <section style={{ width: '100%', background: '#fff0f0' }}> {/* Background on full-width outer */}
+        <section ref={sectionRef} style={{ width: '100%', background: '#fff0f0' }}> {/* Background on full-width outer */}
             <div className={styles.section}> {/* Layout constraints on inner */}
                 <div className={styles.header}>
-                    <h2 className={styles.title} style={{ color: '#e63946' }}>🔥 Ofertas y Promociones</h2>
-                    <p className={styles.subtitle}>Aprovecha nuestros descuentos exclusivos por tiempo limitado.</p>
+                    <h2 ref={titleRef} className={styles.title} style={{ color: '#e63946' }}>🔥 Ofertas y Promociones</h2>
+                    <p ref={subtitleRef} className={styles.subtitle}>Aprovecha nuestros descuentos exclusivos por tiempo limitado.</p>
                 </div>
 
                 <div className={styles.grid}>

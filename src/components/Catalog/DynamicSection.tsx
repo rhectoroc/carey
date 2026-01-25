@@ -28,6 +28,9 @@ export default function DynamicSection({ title, subtitle, endpoint, type, classN
     const containerRef = useRef<HTMLDivElement>(null);
     const bgRef = useRef<HTMLDivElement>(null);
     const shapesRef = useRef<HTMLDivElement>(null);
+    const headerRef = useRef<HTMLDivElement>(null);
+    const titleRef = useRef<HTMLHeadingElement>(null);
+    const subtitleRef = useRef<HTMLParagraphElement>(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -115,6 +118,32 @@ export default function DynamicSection({ title, subtitle, endpoint, type, classN
         return () => ctx.revert();
     }, [variant, items]);
 
+    useEffect(() => {
+        if (!headerRef.current || !titleRef.current || !subtitleRef.current) return;
+
+        const ctx = gsap.context(() => {
+            const tl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: headerRef.current,
+                    start: "top 85%",
+                    toggleActions: "play none none reverse"
+                }
+            });
+
+            tl.fromTo(titleRef.current,
+                { y: 30, opacity: 0 },
+                { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" }
+            )
+                .fromTo(subtitleRef.current,
+                    { y: 20, opacity: 0 },
+                    { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
+                    "-=0.5" // Start slightly before title finished
+                );
+        }, containerRef.current);
+
+        return () => ctx.revert();
+    }, [items]); // Re-run when items are loaded to ensure correct positioning
+
     const mapToService = (item: any, type: string) => {
         // Map API data to ServiceCard interface
         return {
@@ -192,9 +221,9 @@ export default function DynamicSection({ title, subtitle, endpoint, type, classN
             )}
 
             <div className={styles.section} style={{ position: 'relative', zIndex: 1 }}>
-                <div className={styles.header}>
-                    <h2 className={styles.title}>{title}</h2>
-                    <p className={styles.subtitle}>{subtitle}</p>
+                <div className={styles.header} ref={headerRef}>
+                    <h2 className={styles.title} ref={titleRef}>{title}</h2>
+                    <p className={styles.subtitle} ref={subtitleRef}>{subtitle}</p>
                 </div>
 
                 <div className={styles.grid}>

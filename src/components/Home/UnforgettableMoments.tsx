@@ -75,14 +75,16 @@ export default function UnforgettableMoments() {
             // Animate Title
             if (titleRef.current) {
                 gsap.fromTo(titleRef.current,
-                    { y: -50, opacity: 0 },
+                    { y: 30, opacity: 0 },
                     {
                         y: 0,
                         opacity: 1,
-                        duration: 1,
+                        duration: 0.8,
+                        ease: "power3.out",
                         scrollTrigger: {
                             trigger: sectionRef.current,
-                            start: "top 80%"
+                            start: "top 85%",
+                            toggleActions: "play none none reverse"
                         }
                     }
                 );

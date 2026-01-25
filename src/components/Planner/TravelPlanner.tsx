@@ -1,15 +1,51 @@
 "use client";
 
+import React, { useEffect, useRef } from 'react';
 import { useChatbot } from '@/context/ChatbotContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { Plane, CalendarCheck, FileQuestion } from 'lucide-react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+if (typeof window !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger);
+}
 
 export default function TravelPlanner() {
     const { t } = useLanguage();
     const { openChatbot } = useChatbot();
+    const sectionRef = useRef<HTMLElement>(null);
+    const titleRef = useRef<HTMLHeadingElement>(null);
+    const descRef = useRef<HTMLParagraphElement>(null);
+
+    useEffect(() => {
+        if (!sectionRef.current || !titleRef.current || !descRef.current) return;
+
+        const ctx = gsap.context(() => {
+            const tl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: sectionRef.current,
+                    start: "top 85%",
+                    toggleActions: "play none none reverse"
+                }
+            });
+
+            tl.fromTo(titleRef.current,
+                { y: 30, opacity: 0 },
+                { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" }
+            )
+                .fromTo(descRef.current,
+                    { y: 20, opacity: 0 },
+                    { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
+                    "-=0.5"
+                );
+        }, sectionRef.current);
+
+        return () => ctx.revert();
+    }, []);
 
     return (
-        <section style={{
+        <section ref={sectionRef} style={{
             background: 'linear-gradient(135deg, var(--color-caribe-blue) 0%, #0099cc 100%)',
             padding: '5rem 5%',
             color: 'white',
@@ -28,8 +64,8 @@ export default function TravelPlanner() {
             }} />
 
             <div style={{ maxWidth: '1200px', margin: '0 auto', position: 'relative', zIndex: 1, textAlign: 'center' }}>
-                <h2 style={{ fontSize: '3rem', marginBottom: '1.5rem' }}>Asesoría Integral de Viajes</h2>
-                <p style={{ fontSize: '1.2rem', marginBottom: '3rem', maxWidth: '700px', marginLeft: 'auto', marginRight: 'auto', opacity: 0.9 }}>
+                <h2 ref={titleRef} style={{ fontSize: '3rem', marginBottom: '1.5rem' }}>Asesoría Integral de Viajes</h2>
+                <p ref={descRef} style={{ fontSize: '1.2rem', marginBottom: '3rem', maxWidth: '700px', marginLeft: 'auto', marginRight: 'auto', opacity: 0.9 }}>
                     Diseñamos tu viaje a la medida. Desde la logística hasta los pequeños detalles, deja que nuestros expertos se encarguen de todo.
                 </p>
 
