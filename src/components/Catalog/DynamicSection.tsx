@@ -165,12 +165,13 @@ export default function DynamicSection({ title, subtitle, endpoint, type, classN
                         zIndex: 0,
                         pointerEvents: 'none',
                         overflow: 'hidden',
-                        opacity: 0.4
+                        opacity: 0.8
                     }}
                 >
-                    <div style={{ position: 'absolute', width: '400px', height: '400px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(31,109,140,0.15) 0%, rgba(31,109,140,0) 70%)', top: '-10%', left: '10%', filter: 'blur(60px)' }}></div>
-                    <div style={{ position: 'absolute', width: '350px', height: '350px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(242,72,34,0.1) 0%, rgba(242,72,34,0) 70%)', bottom: '10%', right: '5%', filter: 'blur(50px)' }}></div>
-                    <div style={{ position: 'absolute', width: '500px', height: '500px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(31,109,140,0.1) 0%, rgba(31,109,140,0) 70%)', top: '30%', right: '20%', filter: 'blur(80px)' }}></div>
+                    {/* Intensified blobs */}
+                    <div style={{ position: 'absolute', width: '600px', height: '600px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(31,109,140,0.5) 0%, rgba(31,109,140,0) 70%)', top: '-10%', left: '-5%', filter: 'blur(60px)' }}></div>
+                    <div style={{ position: 'absolute', width: '500px', height: '500px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(242,72,34,0.4) 0%, rgba(242,72,34,0) 70%)', bottom: '10%', right: '-5%', filter: 'blur(50px)' }}></div>
+                    <div style={{ position: 'absolute', width: '700px', height: '700px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(31,109,140,0.4) 0%, rgba(31,109,140,0) 70%)', top: '20%', right: '15%', filter: 'blur(80px)' }}></div>
                 </div>
             )}
 
