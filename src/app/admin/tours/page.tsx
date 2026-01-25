@@ -26,7 +26,6 @@ interface Tour {
     is_featured: boolean;
     is_promotion: boolean;
     type: string;
-    duration_days: number;
 }
 
 interface Destination {
@@ -122,7 +121,7 @@ export default function ToursPage() {
     };
 
     const startCreate = () => {
-        setCurrentTour({ is_featured: false, tags: [], type: 'Full Day', duration_days: 1 });
+        setCurrentTour({ is_featured: false, tags: [], type: 'Aventura' });
         setIncludedInput('');
         setTagInput('');
         setViewMode('create');
@@ -178,9 +177,9 @@ export default function ToursPage() {
                                 <tr key={tour.id}>
                                     <td>{tour.name}</td>
                                     <td>{tour.destination_name || '-'}</td>
-                                    <td>{tour.type || 'Full Day'}</td>
+                                    <td>{tour.type || 'Aventura'}</td>
                                     <td>${tour.price}</td>
-                                    <td>{tour.duration} ({tour.duration_days} days)</td>
+                                    <td>{tour.duration}</td>
                                     <td>
                                         {tour.tags && tour.tags.map(t => (
                                             <span key={t} style={{ background: '#e2e8f0', padding: '2px 6px', borderRadius: '4px', fontSize: '0.8rem', marginRight: '4px' }}>
@@ -266,14 +265,14 @@ export default function ToursPage() {
                                 <select
                                     className={styles.input}
                                     style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
-                                    value={currentTour.type || 'Full Day'}
+                                    value={currentTour.type || 'Aventura'}
                                     onChange={(e) => setCurrentTour({ ...currentTour, type: e.target.value })}
                                     required
                                 >
-                                    <option value="Full Day">Full Day</option>
-                                    <option value="Medio Dia">Medio Dia</option>
-                                    <option value="Multidia">Multidia</option>
-                                    <option value="Nocturno">Nocturno</option>
+                                    <option value="Aventura">Aventura</option>
+                                    <option value="Navegacion">Navegacion</option>
+                                    <option value="Playa">Playa</option>
+                                    <option value="Montaña">Montaña</option>
                                 </select>
                             </div>
                         </div>
@@ -370,18 +369,7 @@ export default function ToursPage() {
                                     style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
                                     value={currentTour.duration || ''}
                                     onChange={(e) => setCurrentTour({ ...currentTour, duration: e.target.value })}
-                                    placeholder="e.g. 3 Days / 2 Nights"
-                                    required
-                                />
-                            </div>
-                            <div className={styles.formGroup} style={{ flex: 1 }}>
-                                <label className={styles.label} style={{ color: '#333' }}>Duration (Days)</label>
-                                <input
-                                    type="number"
-                                    className={styles.input}
-                                    style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
-                                    value={currentTour.duration_days || ''}
-                                    onChange={(e) => setCurrentTour({ ...currentTour, duration_days: Number(e.target.value) })}
+                                    placeholder="e.g. 1 día / 8 horas"
                                     required
                                 />
                             </div>

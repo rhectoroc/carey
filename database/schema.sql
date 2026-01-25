@@ -76,9 +76,8 @@ CREATE TABLE IF NOT EXISTS tours (
     slug VARCHAR(255) UNIQUE NOT NULL,
     description TEXT,
     destination_id INTEGER REFERENCES destinations(id),
-    type VARCHAR(100), -- 'Full Day', 'Aventura', etc.
+    type VARCHAR(100), -- 'Aventura', 'Navegación', 'Playa', 'Montaña', 'Cultural', 'Ecoturismo'
     duration VARCHAR(100),
-    duration_days INTEGER DEFAULT 1,
     price NUMERIC(10, 2),
     price_child NUMERIC(10, 2) DEFAULT 0,
     price_infant NUMERIC(10, 2) DEFAULT 0,
