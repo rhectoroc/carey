@@ -44,7 +44,6 @@ export default function Hero() {
                 muted
                 playsInline
                 className={styles.videoBg}
-                poster="/hero-poster.jpg" // You should add a placeholder image in public
             >
                 <source src="/hero-video.mp4" type="video/mp4" />
             </video>
