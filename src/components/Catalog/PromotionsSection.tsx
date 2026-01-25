@@ -54,8 +54,10 @@ export default function PromotionsSection() {
         const scope = sectionRef.current;
         if (!scope || !titleRef.current || !subtitleRef.current) return;
 
-        console.log("Initializing PromotionsSection animations");
         const ctx = gsap.context(() => {
+            const titleWords = titleRef.current?.querySelectorAll('.word');
+            const subtitleWords = subtitleRef.current?.querySelectorAll('.word');
+
             const tl = gsap.timeline({
                 scrollTrigger: {
                     trigger: scope,
@@ -64,15 +66,20 @@ export default function PromotionsSection() {
                 }
             });
 
-            tl.fromTo(titleRef.current,
-                { y: 50, opacity: 0 },
-                { y: 0, opacity: 1, duration: 1.2, ease: "power4.out" }
-            )
-                .fromTo(subtitleRef.current,
+            if (titleWords) {
+                tl.fromTo(titleWords,
+                    { y: 50, opacity: 0 },
+                    { y: 0, opacity: 1, duration: 1, stagger: 0.1, ease: "expo.out" }
+                );
+            }
+
+            if (subtitleWords) {
+                tl.fromTo(subtitleWords,
                     { y: 30, opacity: 0 },
-                    { y: 0, opacity: 1, duration: 1, ease: "power4.out" },
+                    { y: 0, opacity: 1, duration: 0.8, stagger: 0.02, ease: "expo.out" },
                     "-=0.7"
                 );
+            }
 
             ScrollTrigger.refresh();
         }, scope);
@@ -109,8 +116,16 @@ export default function PromotionsSection() {
         <section ref={sectionRef} style={{ width: '100%', background: '#fff0f0' }}> {/* Background on full-width outer */}
             <div className={styles.section}> {/* Layout constraints on inner */}
                 <div className={styles.header}>
-                    <h2 ref={titleRef} className={styles.title} style={{ color: '#e63946' }}>🔥 Ofertas y Promociones</h2>
-                    <p ref={subtitleRef} className={styles.subtitle}>Aprovecha nuestros descuentos exclusivos por tiempo limitado.</p>
+                    <h2 ref={titleRef} className={styles.title} style={{ color: '#e63946', overflow: 'hidden' }}>
+                        {"🔥 Ofertas y Promociones".split(' ').map((word, i) => (
+                            <span key={i} className="word" style={{ display: 'inline-block', marginRight: '0.25em' }}>{word}</span>
+                        ))}
+                    </h2>
+                    <p ref={subtitleRef} className={styles.subtitle} style={{ overflow: 'hidden' }}>
+                        {"Aprovecha nuestros descuentos exclusivos por tiempo limitado.".split(' ').map((word, i) => (
+                            <span key={i} className="word" style={{ display: 'inline-block', marginRight: '0.2em' }}>{word}</span>
+                        ))}
+                    </p>
                 </div>
 
                 <div className={styles.grid}>

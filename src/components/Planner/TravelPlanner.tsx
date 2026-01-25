@@ -22,8 +22,10 @@ export default function TravelPlanner() {
         const scope = sectionRef.current;
         if (!scope || !titleRef.current || !descRef.current) return;
 
-        console.log("Initializing TravelPlanner animations");
         const ctx = gsap.context(() => {
+            const titleWords = titleRef.current?.querySelectorAll('.word');
+            const descWords = descRef.current?.querySelectorAll('.word');
+
             const tl = gsap.timeline({
                 scrollTrigger: {
                     trigger: scope,
@@ -32,15 +34,20 @@ export default function TravelPlanner() {
                 }
             });
 
-            tl.fromTo(titleRef.current,
-                { y: 50, opacity: 0 },
-                { y: 0, opacity: 1, duration: 1.2, ease: "power4.out" }
-            )
-                .fromTo(descRef.current,
-                    { y: 30, opacity: 0 },
-                    { y: 0, opacity: 1, duration: 1, ease: "power4.out" },
-                    "-=0.7"
+            if (titleWords) {
+                tl.fromTo(titleWords,
+                    { y: 50, opacity: 0 },
+                    { y: 0, opacity: 1, duration: 1, stagger: 0.1, ease: "expo.out" }
                 );
+            }
+
+            if (descWords) {
+                tl.fromTo(descWords,
+                    { y: 30, opacity: 0 },
+                    { y: 0, opacity: 1, duration: 0.8, stagger: 0.02, ease: "expo.out" },
+                    "-=0.6"
+                );
+            }
 
             ScrollTrigger.refresh();
         }, scope);
@@ -68,9 +75,15 @@ export default function TravelPlanner() {
             }} />
 
             <div style={{ maxWidth: '1200px', margin: '0 auto', position: 'relative', zIndex: 1, textAlign: 'center' }}>
-                <h2 ref={titleRef} style={{ fontSize: '3rem', marginBottom: '1.5rem' }}>Asesoría Integral de Viajes</h2>
-                <p ref={descRef} style={{ fontSize: '1.2rem', marginBottom: '3rem', maxWidth: '700px', marginLeft: 'auto', marginRight: 'auto', opacity: 0.9 }}>
-                    Diseñamos tu viaje a la medida. Desde la logística hasta los pequeños detalles, deja que nuestros expertos se encarguen de todo.
+                <h2 ref={titleRef} style={{ fontSize: '3rem', marginBottom: '1.5rem', overflow: 'hidden' }}>
+                    {"Asesoría Integral de Viajes".split(' ').map((word, i) => (
+                        <span key={i} className="word" style={{ display: 'inline-block', marginRight: '0.25em' }}>{word}</span>
+                    ))}
+                </h2>
+                <p ref={descRef} style={{ fontSize: '1.2rem', marginBottom: '3rem', maxWidth: '700px', marginLeft: 'auto', marginRight: 'auto', opacity: 0.9, overflow: 'hidden' }}>
+                    {"Diseñamos tu viaje a la medida. Desde la logística hasta los pequeños detalles, deja que nuestros expertos se encarguen de todo.".split(' ').map((word, i) => (
+                        <span key={i} className="word" style={{ display: 'inline-block', marginRight: '0.2em' }}>{word}</span>
+                    ))}
                 </p>
 
                 <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', flexWrap: 'wrap', marginBottom: '3rem' }}>

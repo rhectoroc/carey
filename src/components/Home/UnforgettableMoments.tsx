@@ -17,7 +17,7 @@ export default function UnforgettableMoments() {
     const [momentsList, setMomentsList] = useState<any[]>([]);
     const [selectedMoment, setSelectedMoment] = useState<any | null>(null);
     const sectionRef = useRef<HTMLElement>(null);
-    const titleRef = useRef<HTMLHeadingElement>(null);
+    const titleContainerRef = useRef<HTMLHeadingElement>(null);
     const itemsRef = useRef<(HTMLDivElement | null)[]>([]);
     const videoThumbnailsRef = useRef<(HTMLVideoElement | null)[]>([]);
 
@@ -30,7 +30,6 @@ export default function UnforgettableMoments() {
 
     useEffect(() => {
         if (momentsList.length === 0 || !sectionRef.current) return;
-        console.log("Initializing UnforgettableMoments animations");
         const ctx = gsap.context(() => {
             // Animate items sliding in
             itemsRef.current.forEach((item, index) => {
@@ -76,14 +75,16 @@ export default function UnforgettableMoments() {
             });
 
             // Animate Title
-            if (titleRef.current) {
-                gsap.fromTo(titleRef.current,
-                    { y: 50, opacity: 0 },
+            if (titleContainerRef.current) {
+                const words = titleContainerRef.current.querySelectorAll('.word');
+                gsap.fromTo(words,
+                    { y: 60, opacity: 0 },
                     {
                         y: 0,
                         opacity: 1,
                         duration: 1.2,
-                        ease: "power4.out",
+                        stagger: 0.1,
+                        ease: "expo.out",
                         scrollTrigger: {
                             trigger: sectionRef.current,
                             start: "top 85%",
@@ -101,7 +102,13 @@ export default function UnforgettableMoments() {
     return (
         <section ref={sectionRef} className={styles.momentsSection}>
             <div className={styles.container}>
-                <h2 ref={titleRef} className={styles.sectionTitle}>{t('home.moments') || 'Momentos Inolvidables'}</h2>
+                <h2 ref={titleContainerRef} className={styles.sectionTitle} style={{ overflow: 'hidden' }}>
+                    {(t('home.moments') || 'Momentos Inolvidables').split(' ').map((word, i) => (
+                        <span key={i} className="word" style={{ display: 'inline-block', marginRight: '0.25em' }}>
+                            {word}
+                        </span>
+                    ))}
+                </h2>
                 {momentsList.length === 0 && (
                     <div style={{ textAlign: 'center', padding: '2rem', color: '#666' }}>
                         Cargando momentos increíbles...

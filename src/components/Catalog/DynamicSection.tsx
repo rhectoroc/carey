@@ -124,8 +124,10 @@ export default function DynamicSection({ title, subtitle, endpoint, type, classN
         const scope = containerRef.current;
         if (!headerRef.current || !titleRef.current || !subtitleRef.current || !scope) return;
 
-        console.log(`Initializing DynamicSection animations for: ${title}`);
         const ctx = gsap.context(() => {
+            const titleWords = titleRef.current?.querySelectorAll('.word');
+            const subtitleWords = subtitleRef.current?.querySelectorAll('.word');
+
             const tl = gsap.timeline({
                 scrollTrigger: {
                     trigger: headerRef.current,
@@ -134,15 +136,20 @@ export default function DynamicSection({ title, subtitle, endpoint, type, classN
                 }
             });
 
-            tl.fromTo(titleRef.current,
-                { y: 50, opacity: 0 },
-                { y: 0, opacity: 1, duration: 1.2, ease: "power4.out" }
-            )
-                .fromTo(subtitleRef.current,
-                    { y: 30, opacity: 0 },
-                    { y: 0, opacity: 1, duration: 1, ease: "power4.out" },
-                    "-=0.7" // Start slightly before title finished
+            if (titleWords) {
+                tl.fromTo(titleWords,
+                    { y: 50, opacity: 0 },
+                    { y: 0, opacity: 1, duration: 1, stagger: 0.1, ease: "expo.out" }
                 );
+            }
+
+            if (subtitleWords) {
+                tl.fromTo(subtitleWords,
+                    { y: 30, opacity: 0 },
+                    { y: 0, opacity: 1, duration: 0.8, stagger: 0.02, ease: "expo.out" },
+                    "-=0.7"
+                );
+            }
 
             ScrollTrigger.refresh();
         }, scope);
@@ -228,8 +235,16 @@ export default function DynamicSection({ title, subtitle, endpoint, type, classN
 
             <div className={styles.section} style={{ position: 'relative', zIndex: 1 }}>
                 <div className={styles.header} ref={headerRef}>
-                    <h2 className={styles.title} ref={titleRef}>{title}</h2>
-                    <p className={styles.subtitle} ref={subtitleRef}>{subtitle}</p>
+                    <h2 className={styles.title} ref={titleRef} style={{ overflow: 'hidden' }}>
+                        {title.split(' ').map((word, i) => (
+                            <span key={i} className="word" style={{ display: 'inline-block', marginRight: '0.25em' }}>{word}</span>
+                        ))}
+                    </h2>
+                    <p className={styles.subtitle} ref={subtitleRef} style={{ overflow: 'hidden' }}>
+                        {subtitle.split(' ').map((word, i) => (
+                            <span key={i} className="word" style={{ display: 'inline-block', marginRight: '0.2em' }}>{word}</span>
+                        ))}
+                    </p>
                 </div>
 
                 <div className={styles.grid}>

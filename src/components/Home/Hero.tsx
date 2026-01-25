@@ -9,10 +9,9 @@ import styles from './Hero.module.css';
 export default function Hero() {
     const { t } = useLanguage();
     const subtitleRef = useRef<HTMLParagraphElement>(null);
-    const brandTitleRef = useRef<HTMLSpanElement>(null);
+    const brandTitleContainerRef = useRef<HTMLHeadingElement>(null);
 
     useEffect(() => {
-        console.log("Initializing Hero animations");
         const ctx = gsap.context(() => {
             if (subtitleRef.current) {
                 const fullText = "Servicios Turísticos Integrales";
@@ -37,10 +36,18 @@ export default function Hero() {
                 );
             }
 
-            if (brandTitleRef.current) {
-                gsap.fromTo(brandTitleRef.current,
-                    { y: 50, opacity: 0 },
-                    { y: 0, opacity: 1, duration: 1, ease: "power4.out", delay: 0.5 }
+            if (brandTitleContainerRef.current) {
+                const words = brandTitleContainerRef.current.querySelectorAll('.brand-word');
+                gsap.fromTo(words,
+                    { y: 100, opacity: 0 },
+                    {
+                        y: 0,
+                        opacity: 1,
+                        duration: 1.2,
+                        stagger: 0.15,
+                        ease: "expo.out",
+                        delay: 0.5
+                    }
                 );
             }
         });
@@ -63,8 +70,11 @@ export default function Hero() {
             <div className={styles.overlay}></div>
 
             <div className={styles.content}>
-                <h1 className={styles.title}>
-                    <span ref={brandTitleRef} className={styles.brandTitle}>Carey Tour & Travel</span> <br />
+                <h1 ref={brandTitleContainerRef} className={styles.title} style={{ overflow: 'hidden' }}>
+                    <span className={`${styles.brandTitle} brand-word`} style={{ display: 'inline-block' }}>Carey</span>{' '}
+                    <span className={`${styles.brandTitle} brand-word`} style={{ display: 'inline-block' }}>Tour</span>{' '}
+                    <span className={`${styles.brandTitle} brand-word`} style={{ display: 'inline-block' }}>&</span>{' '}
+                    <span className={`${styles.brandTitle} brand-word`} style={{ display: 'inline-block' }}>Travel</span> <br />
                     <span className={styles.venezuela}>Venezuela</span>
                 </h1>
                 <p ref={subtitleRef} className={styles.subtitle}>
