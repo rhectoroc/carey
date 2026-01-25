@@ -88,6 +88,7 @@ CREATE TABLE IF NOT EXISTS tours (
     tags JSONB DEFAULT '[]',
     is_featured BOOLEAN DEFAULT FALSE,
     is_promotion BOOLEAN DEFAULT FALSE,
+    stars INTEGER DEFAULT 5,
     created_by INTEGER REFERENCES auth_user(id),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );

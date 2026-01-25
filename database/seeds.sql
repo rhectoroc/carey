@@ -18,11 +18,11 @@ INSERT INTO hotels (name, slug, destination_id, stars, price, rating, type) VALU
 ('Hotel Humboldt', 'hotel-humboldt', (SELECT id FROM destinations WHERE slug='caracas'), 5, 200.00, 4.7, 'Hotel');
 
 -- 3. Tours
-INSERT INTO tours (name, slug, destination_id, type, duration, price) VALUES 
-('Full Day Isla de Coche', 'full-day-coche', (SELECT id FROM destinations WHERE slug='isla-margarita'), 'Playa', '8 horas', 45.00),
-('Jeep Safari 4x4', 'jeep-safari-margarita', (SELECT id FROM destinations WHERE slug='isla-margarita'), 'Aventura', '6 horas', 60.00),
-('Expedición Salto Ángel', 'expedicion-salto-angel', (SELECT id FROM destinations WHERE slug='canaima'), 'Aventura', '3 días', 500.00),
-('Catamarán a Noronky', 'catamaran-noronky', (SELECT id FROM destinations WHERE slug='los-roques'), 'Navegación', '7 horas', 90.00);
+INSERT INTO tours (name, slug, destination_id, type, duration, price, stars) VALUES 
+('Full Day Isla de Coche', 'full-day-coche', (SELECT id FROM destinations WHERE slug='isla-margarita'), 'Playa', '8 horas', 45.00, 5),
+('Jeep Safari 4x4', 'jeep-safari-margarita', (SELECT id FROM destinations WHERE slug='isla-margarita'), 'Aventura', '6 horas', 60.00, 4),
+('Expedición Salto Ángel', 'expedicion-salto-angel', (SELECT id FROM destinations WHERE slug='canaima'), 'Aventura', '3 días', 500.00, 5),
+('Catamarán a Noronky', 'catamaran-noronky', (SELECT id FROM destinations WHERE slug='los-roques'), 'Navegación', '7 horas', 90.00, 5);
 
 -- 4. Vuelos (Rutas Frecuentes)
 INSERT INTO flights (airline, from_code, to_code, price, class) VALUES 

@@ -70,6 +70,7 @@ async function setup() {
                 type VARCHAR(100), -- 'Beach', 'Adventure', etc.
                 duration_days INTEGER,
                 price DECIMAL(10,2),
+                stars INTEGER DEFAULT 5,
                 description TEXT
             );
         `);
@@ -120,11 +121,11 @@ async function setup() {
 
             // Tours
             await careyClient.query(`
-                INSERT INTO tours (title, destination_id, type, duration_days, price) VALUES 
-                ('Full Day Coche', ${margarita}, 'Beach', 1, 50.00),
-                ('Jeep Safari Margarita', ${margarita}, 'Adventure', 1, 60.00),
-                ('Salto Angel Expedition', ${canaima}, 'Adventure', 3, 450.00),
-                ('Los Roques Catamaran', ${roques}, 'Sailing', 1, 100.00)
+                INSERT INTO tours (title, destination_id, type, duration_days, price, stars) VALUES 
+                ('Full Day Coche', ${margarita}, 'Beach', 1, 50.00, 5),
+                ('Jeep Safari Margarita', ${margarita}, 'Adventure', 1, 60.00, 4),
+                ('Salto Angel Expedition', ${canaima}, 'Adventure', 3, 450.00, 5),
+                ('Los Roques Catamaran', ${roques}, 'Sailing', 1, 100.00, 5)
             `);
 
             // Flights
