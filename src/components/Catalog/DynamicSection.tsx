@@ -45,7 +45,7 @@ export default function DynamicSection({ title, subtitle, endpoint, type, classN
             price_child: item.price_child,
             price_infant: item.price_infant,
             rating: item.stars || 5,
-            image: item.image_url || 'https://via.placeholder.com/400x300?text=No+Image', // Fallback
+            image: item.image_url, // No fallback placeholder
             description: item.description,
             features: item.features || item.included || [],
             // Add other mock fields if required by ServiceModal

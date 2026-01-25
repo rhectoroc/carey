@@ -38,10 +38,6 @@ async function getResults(params: { [key: string]: string | string[] | undefined
             console.log(`DB Query Tours found: ${res.rows.length}`); // DEBUG
             return { type, data: res.rows };
         }
-        else if (type === 'flights') {
-            // Mock flights search based on origin/dest
-            return { type, data: [] }; // Initial placeholder
-        }
     } catch (e) {
         console.error("DB Error in getResults:", e);
         return { type, data: [] };

@@ -63,8 +63,12 @@ export default function ServiceCard({ service, onClick }: ServiceCardProps) {
                         playsInline
                         style={{ objectFit: 'cover' }}
                     />
-                ) : (
+                ) : images[currentImageIndex] ? (
                     <img src={images[currentImageIndex]} alt={service.title} className={styles.image} />
+                ) : (
+                    <div className={styles.imagePlaceholder} style={{ background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <span style={{ color: '#94a3b8', fontSize: '0.8rem' }}>Sin imagen disponible</span>
+                    </div>
                 )}
 
                 {isMainMedia && (
