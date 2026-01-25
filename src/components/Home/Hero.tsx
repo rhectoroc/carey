@@ -9,6 +9,7 @@ import styles from './Hero.module.css';
 export default function Hero() {
     const { t } = useLanguage();
     const subtitleRef = useRef<HTMLParagraphElement>(null);
+    const brandTitleRef = useRef<HTMLSpanElement>(null);
 
     useEffect(() => {
         if (subtitleRef.current) {
@@ -33,6 +34,13 @@ export default function Hero() {
                 { opacity: 1, duration: 0.5, delay: 0.8 }
             );
         }
+
+        if (brandTitleRef.current) {
+            gsap.fromTo(brandTitleRef.current,
+                { y: 50, opacity: 0 },
+                { y: 0, opacity: 1, duration: 1, ease: "power4.out", delay: 0.5 }
+            );
+        }
     }, []);
 
     return (
@@ -52,7 +60,7 @@ export default function Hero() {
 
             <div className={styles.content}>
                 <h1 className={styles.title}>
-                    <span className={styles.brandTitle}>Carey Tour & Travel</span> <br />
+                    <span ref={brandTitleRef} className={styles.brandTitle}>Carey Tour & Travel</span> <br />
                     <span className={styles.venezuela}>Venezuela</span>
                 </h1>
                 <p ref={subtitleRef} className={styles.subtitle}>

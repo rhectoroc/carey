@@ -64,13 +64,13 @@ export default function PromotionsSection() {
             });
 
             tl.fromTo(titleRef.current,
-                { y: 30, opacity: 0 },
-                { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" }
+                { y: 50, opacity: 0 },
+                { y: 0, opacity: 1, duration: 1.2, ease: "power4.out" }
             )
                 .fromTo(subtitleRef.current,
-                    { y: 20, opacity: 0 },
-                    { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
-                    "-=0.5"
+                    { y: 30, opacity: 0 },
+                    { y: 0, opacity: 1, duration: 1, ease: "power4.out" },
+                    "-=0.7"
                 );
         }, scope);
 

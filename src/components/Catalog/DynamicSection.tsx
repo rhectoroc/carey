@@ -134,13 +134,13 @@ export default function DynamicSection({ title, subtitle, endpoint, type, classN
             });
 
             tl.fromTo(titleRef.current,
-                { y: 30, opacity: 0 },
-                { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" }
+                { y: 50, opacity: 0 },
+                { y: 0, opacity: 1, duration: 1.2, ease: "power4.out" }
             )
                 .fromTo(subtitleRef.current,
-                    { y: 20, opacity: 0 },
-                    { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
-                    "-=0.5" // Start slightly before title finished
+                    { y: 30, opacity: 0 },
+                    { y: 0, opacity: 1, duration: 1, ease: "power4.out" },
+                    "-=0.7" // Start slightly before title finished
                 );
         }, scope);
 
