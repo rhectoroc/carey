@@ -27,7 +27,7 @@ export default function UnforgettableMoments() {
     }, []);
 
     useEffect(() => {
-        if (momentsList.length === 0) return;
+        if (momentsList.length === 0 || !sectionRef.current) return;
         const ctx = gsap.context(() => {
             // Animate items sliding in
             itemsRef.current.forEach((item, index) => {
