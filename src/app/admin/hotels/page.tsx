@@ -427,7 +427,9 @@ export default function HotelsPage() {
                             rating: currentHotel.stars || 0,
                             gallery: currentHotel.gallery,
                             features: featuresInput.split(',').filter(f => f.trim()),
-                            tags: currentHotel.tags
+                            tags: currentHotel.tags,
+                            is_featured: currentHotel.is_featured,
+                            is_promotion: currentHotel.is_promotion
                         } as Service}
                         onClick={() => setIsPreviewModalOpen(true)}
                     />
@@ -458,7 +460,9 @@ export default function HotelsPage() {
                     tags: currentHotel.tags,
                     description: currentHotel.description,
                     price_child: currentHotel.price_child,
-                    price_infant: currentHotel.price_infant
+                    price_infant: currentHotel.price_infant,
+                    is_featured: currentHotel.is_featured,
+                    is_promotion: currentHotel.is_promotion
                 } as Service}
             />
         </div>

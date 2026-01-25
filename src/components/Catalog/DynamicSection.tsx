@@ -53,6 +53,8 @@ export default function DynamicSection({ title, subtitle, endpoint, type, classN
             priceValidUntil: item.price_valid_until,
             tags: item.tags || [],
             gallery: item.gallery || [],
+            is_featured: item.is_featured,
+            is_promotion: item.is_promotion,
             reviews: 0
         };
     };

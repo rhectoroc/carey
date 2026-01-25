@@ -16,6 +16,7 @@ export interface Service {
     gallery?: string[];
     features?: string[];
     is_featured?: boolean;
+    is_promotion?: boolean;
 }
 
 export const mockServices: Service[] = [

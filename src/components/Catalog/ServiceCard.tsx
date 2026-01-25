@@ -110,6 +110,43 @@ export default function ServiceCard({ service, onClick }: ServiceCardProps) {
                         </span>
                     ))}
                 </div>
+
+                <div style={{ position: 'absolute', top: '10px', right: '10px', display: 'flex', flexDirection: 'column', gap: '5px', alignItems: 'flex-end' }}>
+                    {service.is_promotion && (
+                        <span style={{
+                            backgroundColor: '#e63946',
+                            color: 'white',
+                            padding: '4px 10px',
+                            borderRadius: '4px',
+                            fontSize: '0.7rem',
+                            fontWeight: 'bold',
+                            textTransform: 'uppercase',
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '3px'
+                        }}>
+                            Oferta 🔥
+                        </span>
+                    )}
+                    {service.is_featured && (
+                        <span style={{
+                            backgroundColor: '#FFD700',
+                            color: '#000',
+                            padding: '4px 10px',
+                            borderRadius: '4px',
+                            fontSize: '0.7rem',
+                            fontWeight: 'bold',
+                            textTransform: 'uppercase',
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '3px'
+                        }}>
+                            Destacado ⭐
+                        </span>
+                    )}
+                </div>
             </div>
             <div className={styles.content}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>

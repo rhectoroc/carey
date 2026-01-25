@@ -59,6 +59,8 @@ export default function PromotionsSection() {
             priceValidUntil: item.price_valid_until,
             tags: item.tags || [],
             gallery: item.gallery || [],
+            is_featured: item.is_featured,
+            is_promotion: item.is_promotion !== undefined ? item.is_promotion : true,
         };
     };
 

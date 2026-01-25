@@ -439,8 +439,9 @@ export default function ToursPage() {
                             rating: currentTour.stars || 5,
                             duration: currentTour.duration,
                             priceValidUntil: currentTour.price_valid_until,
-                            gallery: currentTour.gallery,
-                            tags: currentTour.tags
+                            tags: currentTour.tags,
+                            is_featured: currentTour.is_featured,
+                            is_promotion: currentTour.is_promotion
                         } as Service}
                         onClick={() => setIsPreviewModalOpen(true)}
                     />
@@ -481,7 +482,9 @@ export default function ToursPage() {
                     description: currentTour.description,
                     features: includedInput.split(',').filter(i => i.trim()),
                     price_child: currentTour.price_child,
-                    price_infant: currentTour.price_infant
+                    price_infant: currentTour.price_infant,
+                    is_featured: currentTour.is_featured,
+                    is_promotion: currentTour.is_promotion
                 } as Service}
             />
         </div>

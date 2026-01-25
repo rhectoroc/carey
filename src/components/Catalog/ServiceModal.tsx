@@ -127,9 +127,35 @@ export default function ServiceModal({ isOpen, onClose, service }: ServiceModalP
                                 {service.duration}
                             </div>
                         )}
-                        {service.tags && service.tags.length > 0 && (
+                        {((service.tags && service.tags.length > 0) || service.is_promotion || service.is_featured) && (
                             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '10px' }}>
-                                {service.tags.map((tag, index) => (
+                                {service.is_promotion && (
+                                    <span style={{
+                                        backgroundColor: '#e63946',
+                                        color: 'white',
+                                        padding: '4px 10px',
+                                        borderRadius: '20px',
+                                        fontSize: '0.75rem',
+                                        fontWeight: 'bold',
+                                        boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+                                    }}>
+                                        OFERTA 🔥
+                                    </span>
+                                )}
+                                {service.is_featured && (
+                                    <span style={{
+                                        backgroundColor: '#FFD700',
+                                        color: '#000',
+                                        padding: '4px 10px',
+                                        borderRadius: '20px',
+                                        fontSize: '0.75rem',
+                                        fontWeight: 'bold',
+                                        boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+                                    }}>
+                                        DESTACADO ⭐
+                                    </span>
+                                )}
+                                {service.tags?.map((tag, index) => (
                                     <span key={index} style={{
                                         backgroundColor: '#fff',
                                         color: 'red',
