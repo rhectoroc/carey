@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useMemo } from 'react';
 import { Service } from '@/data/mockServices';
-import { X, MapPin, ChevronLeft, ChevronRight, Info } from 'lucide-react';
+import { X, MapPin, ChevronLeft, ChevronRight, Info, Clock } from 'lucide-react';
 import { useChatbot } from '@/context/ChatbotContext';
 import { getFeatureIcon } from './ServiceCard';
 import styles from './ServiceModal.module.css';
@@ -45,7 +45,20 @@ export default function ServiceModal({ isOpen, onClose, service }: ServiceModalP
     if (!isOpen || !service) return null;
 
     const handleConsultar = () => {
-        const message = `Requiero reservar el ${service.title}`;
+        const title = service.title;
+        const category = service.category.toLowerCase();
+        let actionMessage = `reservar el ${service.title}`;
+
+        if (category.includes('tour') || category.includes('excursión')) {
+            actionMessage = `reservar el tour: ${title}`;
+        } else if (category.includes('hotel') || category.includes('posada') || category.includes('estancia')) {
+            actionMessage = `reservar una estancia en el ${title}`;
+        } else if (category.includes('traslado') || category.includes('transfer') || category.includes('vehículo')) {
+            actionMessage = `solicitar el servicio de traslado: ${title}`;
+        }
+
+        const message = `¡Hola Carey! 👋 Me gustaría recibir más información y ${actionMessage} en ${service.location}. ¿Podrían ayudarme con el proceso?`;
+
         onClose();
         setTimeout(() => {
             openChatbot(message);
@@ -108,6 +121,12 @@ export default function ServiceModal({ isOpen, onClose, service }: ServiceModalP
                             <MapPin size={18} />
                             {service.location}
                         </div>
+                        {service.duration && (
+                            <div className={styles.location} style={{ marginTop: '5px', color: 'var(--color-primary-teal)', fontWeight: '500' }}>
+                                <Clock size={16} />
+                                {service.duration}
+                            </div>
+                        )}
                         {service.tags && service.tags.length > 0 && (
                             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '10px' }}>
                                 {service.tags.map((tag, index) => (

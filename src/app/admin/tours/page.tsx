@@ -9,6 +9,7 @@ import ImageGalleryUpload from '@/components/Admin/ImageGalleryUpload';
 import ServiceCard from '@/components/Catalog/ServiceCard';
 import ServiceModal from '@/components/Catalog/ServiceModal';
 import { Service } from '@/data/mockServices';
+import { slugify } from '@/lib/slugify';
 
 interface Tour {
     id: number;
@@ -84,6 +85,7 @@ export default function ToursPage() {
         }
 
         const includedArray = includedInput.split(',').map(i => i.trim()).filter(i => i !== '');
+        const autoSlug = slugify(currentTour.name || '');
 
         const method = currentTour.id ? 'PUT' : 'POST';
         const url = currentTour.id ? `/api/admin/tours/${currentTour.id}` : '/api/admin/tours';
@@ -94,6 +96,7 @@ export default function ToursPage() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     ...currentTour,
+                    slug: autoSlug,
                     included: includedArray,
                     stars: Number(currentTour.stars || 5),
                     price: Number(currentTour.price || 0)
@@ -241,16 +244,7 @@ export default function ToursPage() {
                                 required
                             />
                         </div>
-                        <div className={styles.formGroup}>
-                            <label className={styles.label} style={{ color: '#333' }}>Slug</label>
-                            <input
-                                className={styles.input}
-                                style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
-                                value={currentTour.slug || ''}
-                                onChange={(e) => setCurrentTour({ ...currentTour, slug: e.target.value })}
-                                required
-                            />
-                        </div>
+                        {/* Slug removed - handled automatically */}
                         <div style={{ display: 'flex', gap: '10px' }}>
                             <div className={styles.formGroup} style={{ flex: 1 }}>
                                 <label className={styles.label} style={{ color: '#333' }}>Destination</label>

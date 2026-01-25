@@ -9,6 +9,7 @@ import ImageGalleryUpload from '@/components/Admin/ImageGalleryUpload';
 import ServiceCard from '@/components/Catalog/ServiceCard';
 import ServiceModal from '@/components/Catalog/ServiceModal';
 import { Service } from '@/data/mockServices';
+import { slugify } from '@/lib/slugify';
 
 interface Hotel {
     id: number;
@@ -92,12 +93,14 @@ export default function HotelsPage() {
 
         const featuresArray = featuresInput.split(',').map(f => f.trim()).filter(f => f);
         const finalGallery = currentHotel.gallery || [];
+        const autoSlug = slugify(currentHotel.name || '');
 
         // Log for debugging
-        console.log('Saving Hotel:', { name: currentHotel.name, galleryCount: finalGallery.length });
+        console.log('Saving Hotel:', { name: currentHotel.name, slug: autoSlug, galleryCount: finalGallery.length });
 
         const payload = {
             ...currentHotel,
+            slug: autoSlug,
             features: featuresArray,
             price: Number(currentHotel.price),
             stars: Number(currentHotel.stars),
@@ -250,16 +253,7 @@ export default function HotelsPage() {
                                 required
                             />
                         </div>
-                        <div className={styles.formGroup}>
-                            <label className={styles.label} style={{ color: '#333' }}>Slug</label>
-                            <input
-                                className={styles.input}
-                                style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
-                                value={currentHotel.slug || ''}
-                                onChange={(e) => setCurrentHotel({ ...currentHotel, slug: e.target.value })}
-                                required
-                            />
-                        </div>
+                        {/* Slug removed - handled automatically */}
                         <div className={styles.formGroup}>
                             <label className={styles.label} style={{ color: '#333' }}>Type</label>
                             <select
