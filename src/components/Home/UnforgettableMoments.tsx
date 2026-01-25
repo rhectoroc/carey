@@ -7,7 +7,9 @@ import { useLanguage } from '@/context/LanguageContext';
 import { X, Play } from 'lucide-react';
 import styles from './UnforgettableMoments.module.css';
 
-gsap.registerPlugin(ScrollTrigger);
+if (typeof window !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger);
+}
 
 // Mock Data
 export default function UnforgettableMoments() {
@@ -28,6 +30,7 @@ export default function UnforgettableMoments() {
 
     useEffect(() => {
         if (momentsList.length === 0 || !sectionRef.current) return;
+        console.log("Initializing UnforgettableMoments animations");
         const ctx = gsap.context(() => {
             // Animate items sliding in
             itemsRef.current.forEach((item, index) => {

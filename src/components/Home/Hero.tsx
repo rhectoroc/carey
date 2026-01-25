@@ -12,35 +12,39 @@ export default function Hero() {
     const brandTitleRef = useRef<HTMLSpanElement>(null);
 
     useEffect(() => {
-        if (subtitleRef.current) {
-            const fullText = "Servicios Turísticos Integrales";
-            subtitleRef.current.innerText = "";
+        console.log("Initializing Hero animations");
+        const ctx = gsap.context(() => {
+            if (subtitleRef.current) {
+                const fullText = "Servicios Turísticos Integrales";
+                subtitleRef.current.innerText = "";
 
-            const obj = { val: 0 };
-            gsap.to(obj, {
-                val: fullText.length,
-                duration: 3,
-                delay: 0.8,
-                ease: "none",
-                onUpdate: () => {
-                    if (subtitleRef.current) {
-                        subtitleRef.current.innerText = fullText.slice(0, Math.round(obj.val));
+                const obj = { val: 0 };
+                gsap.to(obj, {
+                    val: fullText.length,
+                    duration: 3,
+                    delay: 0.8,
+                    ease: "none",
+                    onUpdate: () => {
+                        if (subtitleRef.current) {
+                            subtitleRef.current.innerText = fullText.slice(0, Math.round(obj.val));
+                        }
                     }
-                }
-            });
+                });
 
-            gsap.fromTo(subtitleRef.current,
-                { opacity: 0 },
-                { opacity: 1, duration: 0.5, delay: 0.8 }
-            );
-        }
+                gsap.fromTo(subtitleRef.current,
+                    { opacity: 0 },
+                    { opacity: 1, duration: 0.5, delay: 0.8 }
+                );
+            }
 
-        if (brandTitleRef.current) {
-            gsap.fromTo(brandTitleRef.current,
-                { y: 50, opacity: 0 },
-                { y: 0, opacity: 1, duration: 1, ease: "power4.out", delay: 0.5 }
-            );
-        }
+            if (brandTitleRef.current) {
+                gsap.fromTo(brandTitleRef.current,
+                    { y: 50, opacity: 0 },
+                    { y: 0, opacity: 1, duration: 1, ease: "power4.out", delay: 0.5 }
+                );
+            }
+        });
+        return () => ctx.revert();
     }, []);
 
     return (

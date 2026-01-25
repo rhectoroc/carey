@@ -54,6 +54,7 @@ export default function PromotionsSection() {
         const scope = sectionRef.current;
         if (!scope || !titleRef.current || !subtitleRef.current) return;
 
+        console.log("Initializing PromotionsSection animations");
         const ctx = gsap.context(() => {
             const tl = gsap.timeline({
                 scrollTrigger: {
@@ -72,6 +73,8 @@ export default function PromotionsSection() {
                     { y: 0, opacity: 1, duration: 1, ease: "power4.out" },
                     "-=0.7"
                 );
+
+            ScrollTrigger.refresh();
         }, scope);
 
         return () => ctx.revert();

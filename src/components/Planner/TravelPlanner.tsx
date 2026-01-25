@@ -22,6 +22,7 @@ export default function TravelPlanner() {
         const scope = sectionRef.current;
         if (!scope || !titleRef.current || !descRef.current) return;
 
+        console.log("Initializing TravelPlanner animations");
         const ctx = gsap.context(() => {
             const tl = gsap.timeline({
                 scrollTrigger: {
@@ -40,6 +41,8 @@ export default function TravelPlanner() {
                     { y: 0, opacity: 1, duration: 1, ease: "power4.out" },
                     "-=0.7"
                 );
+
+            ScrollTrigger.refresh();
         }, scope);
 
         return () => ctx.revert();

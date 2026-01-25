@@ -124,6 +124,7 @@ export default function DynamicSection({ title, subtitle, endpoint, type, classN
         const scope = containerRef.current;
         if (!headerRef.current || !titleRef.current || !subtitleRef.current || !scope) return;
 
+        console.log(`Initializing DynamicSection animations for: ${title}`);
         const ctx = gsap.context(() => {
             const tl = gsap.timeline({
                 scrollTrigger: {
@@ -142,6 +143,8 @@ export default function DynamicSection({ title, subtitle, endpoint, type, classN
                     { y: 0, opacity: 1, duration: 1, ease: "power4.out" },
                     "-=0.7" // Start slightly before title finished
                 );
+
+            ScrollTrigger.refresh();
         }, scope);
 
         return () => ctx.revert();
