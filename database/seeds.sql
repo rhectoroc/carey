@@ -30,3 +30,9 @@ INSERT INTO flights (airline, from_code, to_code, price, class) VALUES
 ('Laser', 'CCS', 'PMV', 60.00, 'Economy'),
 ('Conviasa', 'CCS', 'LRV', 120.00, 'Economy'),
 ('Rutaca', 'CCS', 'LSP', 80.00, 'Economy');
+
+-- 5. Momentos Inolvidables
+INSERT INTO unforgettable_moments (title, location, description, video_url, thumbnail_url) VALUES 
+('Life''s Beach Tours', 'Jeep Safari', 'Full Day Jeep Safari Tour Naturaleza 4x4', '/videos/lifebeach.mp4', 'https://images.unsplash.com/photo-1582650625119-3a31f8fa2699?q=80&w=1920&auto=format&fit=crop'),
+('Atardecer en Macanao', 'Peninsula de Macanao', 'Siente la inmensidad del desierto y la calidez de un atardecer inolvidable en las dunas de Falcón.', '/videos/macanao.mp4', 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?q=80&w=1920&auto=format&fit=crop'),
+('Aventura en Cubagua', 'Isla de Cubagua', 'Disfruta de la belleza natural de la isla de Cubagua.', '/videos/cubagua.mp4', 'https://images.unsplash.com/photo-1589785834890-48e02d4f3b25?q=80&w=1920&auto=format&fit=crop');

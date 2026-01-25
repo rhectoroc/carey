@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { LayoutDashboard, Map, Bed, Compass, LogOut, User, Car } from 'lucide-react';
+import { LayoutDashboard, Map, Bed, Compass, LogOut, User, Car, Camera } from 'lucide-react';
 import styles from './admin.module.css';
 
 import { NotificationProvider } from '@/components/UI/NotificationProvider';
@@ -49,6 +49,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         { name: 'Destinations', href: '/admin/destinations', icon: Map },
         { name: 'Tours', href: '/admin/tours', icon: Compass },
         { name: 'Traslados', href: '/admin/transfers', icon: Car },
+        { name: 'Momentos', href: '/admin/moments', icon: Camera },
         { name: 'Users', href: '/admin/users', icon: User, adminOnly: true },
     ].filter(item => !item.adminOnly || user?.role === 'administrador');
 

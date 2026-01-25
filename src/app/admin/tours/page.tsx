@@ -393,12 +393,13 @@ export default function ToursPage() {
 
 
                         <div className={styles.formGroup}>
-                            <label className={styles.label} style={{ color: '#333' }}>Gallery (Max 6 images + 1 video)</label>
+                            <label className={styles.label} style={{ color: '#333' }}>Galería (Máx 6 imágenes + 1 video)</label>
                             <ImageGalleryUpload
                                 images={currentTour.gallery || []}
                                 onChange={(newGallery) => setCurrentTour({ ...currentTour, gallery: newGallery })}
                                 onSetMain={(url) => setCurrentTour({ ...currentTour, image_url: url })}
-                                maxImages={7}
+                                maxImages={6}
+                                maxVideos={1}
                             />
                         </div>
                         <div className={styles.formGroup} style={{ display: 'flex', gap: '20px' }}>

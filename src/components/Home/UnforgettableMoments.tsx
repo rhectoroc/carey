@@ -9,49 +9,23 @@ import styles from './UnforgettableMoments.module.css';
 gsap.registerPlugin(ScrollTrigger);
 
 // Mock Data
-const moments = [
-    {
-        id: 1,
-        title: "Life's Beach Tours",
-        location: "Jeep Safari",
-        description: "Full Day Jeep Safari Tour Naturaleza 4x4",
-        video: "/videos/lifebeach.mp4", // Placeholder
-        thumbnail: "https://images.unsplash.com/photo-1582650625119-3a31f8fa2699?q=80&w=1920&auto=format&fit=crop", // Sailing
-    },
-    {
-        id: 2,
-        title: "Atardecer en Macanao",
-        location: "Peninsula de Macanao",
-        description: "Siente la inmensidad del desierto y la calidez de un atardecer inolvidable en las dunas de Falcón.",
-        video: "/videos/macanao.mp4",
-        thumbnail: "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?q=80&w=1920&auto=format&fit=crop", // Dunes
-    },
-    {
-        id: 3,
-        title: "Aventura en Cubagua",
-        location: "Isla de Cubagua",
-        description: "Disfruta de la belleza natural de la isla de Cubagua.",
-        video: "/videos/cubagua.mp4",
-        thumbnail: "https://images.unsplash.com/photo-1589785834890-48e02d4f3b25?q=80&w=1920&auto=format&fit=crop", // Mountain
-    },
-    {
-        id: 4,
-        title: "Buceo en Mochima",
-        location: "Parque Nacional Mochima",
-        description: "Sumérgete en la biodiversidad marina de nuestras costas. Un encuentro cercano con la naturaleza.",
-        video: "/videos/mochima-diving.mp4",
-        thumbnail: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=1920&auto=format&fit=crop", // Diving
-    }
-];
-
 export default function UnforgettableMoments() {
-    const [selectedMoment, setSelectedMoment] = useState<typeof moments[0] | null>(null);
+    const [momentsList, setMomentsList] = useState<any[]>([]);
+    const [selectedMoment, setSelectedMoment] = useState<any | null>(null);
     const sectionRef = useRef<HTMLElement>(null);
     const titleRef = useRef<HTMLHeadingElement>(null);
     const itemsRef = useRef<(HTMLDivElement | null)[]>([]);
     const videoThumbnailsRef = useRef<(HTMLVideoElement | null)[]>([]);
 
     useEffect(() => {
+        fetch('/api/moments')
+            .then(res => res.json())
+            .then(data => setMomentsList(data))
+            .catch(err => console.error("Error loading moments:", err));
+    }, []);
+
+    useEffect(() => {
+        if (momentsList.length === 0) return;
         const ctx = gsap.context(() => {
             // Animate items sliding in
             itemsRef.current.forEach((item, index) => {
@@ -122,7 +96,7 @@ export default function UnforgettableMoments() {
             <div className={styles.container}>
                 <h2 ref={titleRef} className={styles.sectionTitle}>Momentos Inolvidables</h2>
                 <div className={styles.momentsGrid}>
-                    {moments.map((moment, index) => (
+                    {momentsList.map((moment, index) => (
                         <div
                             key={moment.id}
                             ref={el => { itemsRef.current[index] = el }}
@@ -132,7 +106,7 @@ export default function UnforgettableMoments() {
                             <div className={styles.imageWrapper}>
                                 <video
                                     ref={el => { videoThumbnailsRef.current[index] = el }}
-                                    src={moment.video}
+                                    src={moment.video_url}
                                     className={styles.thumbnail}
                                     muted
                                     loop
@@ -160,7 +134,7 @@ export default function UnforgettableMoments() {
 
                         <div className={styles.videoContainer}>
                             <video
-                                src={selectedMoment.video}
+                                src={selectedMoment.video_url}
                                 controls
                                 autoPlay
                                 loop

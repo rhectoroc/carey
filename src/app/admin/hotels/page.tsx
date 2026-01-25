@@ -379,12 +379,13 @@ export default function HotelsPage() {
 
 
                         <div className={styles.formGroup}>
-                            <label className={styles.label} style={{ color: '#333' }}>Gallery (Max 6 images + 1 video)</label>
+                            <label className={styles.label} style={{ color: '#333' }}>Galería (Máx 6 imágenes + 1 video)</label>
                             <ImageGalleryUpload
                                 images={currentHotel.gallery || []}
                                 onChange={(newGallery) => setCurrentHotel({ ...currentHotel, gallery: newGallery })}
                                 onSetMain={(url) => setCurrentHotel({ ...currentHotel, image_url: url })}
-                                maxImages={7}
+                                maxImages={6}
+                                maxVideos={1}
                             />
                         </div>
 

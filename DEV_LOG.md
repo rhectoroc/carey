@@ -16,3 +16,5 @@
 - **Sincronización de Esquema:** Resolución de error de columna inexistente mediante la adición de la columna `stars` a la tabla `tours`. Actualización de `schema.sql`, `seeds.sql` y guiones de configuración. (Estado: Completado)
 - **Mejora de Búsqueda de Destinos:** El buscador de destinos ahora muestra sugerencias automáticamente al ganar el foco (on focus), permitiendo ver destinos existentes sin necesidad de escribir. (Estado: Completado)
 - **Integración de Chatbot con n8n:** Conexión exitosa del chatbot frontal con el workflow de n8n. Implementación de estado de carga ("pensando...") y manejo de sesiones dinámicas. (Estado: Completado)
+- **Gestión de Momentos Inolvidables:** Creación del sistema CRUD completo para la sección "Momentos Inolvidables". Incluye tabla en base de datos, APIs administrativas y públicas, y panel de gestión en el administrador.
+- **Control de Videos en Catálogo:** Flexibilización de la restricción de videos; ahora se permite exactamente un (1) video por Tour u Hotel, manteniendo el control de activos pero permitiendo contenido multimedia.

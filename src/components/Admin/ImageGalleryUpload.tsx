@@ -10,9 +10,10 @@ interface ImageGalleryUploadProps {
     onChange: (images: string[]) => void;
     onSetMain?: (url: string) => void;
     maxImages?: number;
+    maxVideos?: number; // 0 for none, -1 for unlimited
 }
 
-export default function ImageGalleryUpload({ images, onChange, onSetMain, maxImages = 6 }: ImageGalleryUploadProps) {
+export default function ImageGalleryUpload({ images, onChange, onSetMain, maxImages = 6, maxVideos = 0 }: ImageGalleryUploadProps) {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [uploading, setUploading] = useState(false);
     const [dragActive, setDragActive] = useState(false);
@@ -21,9 +22,33 @@ export default function ImageGalleryUpload({ images, onChange, onSetMain, maxIma
     const handleFiles = useCallback(async (files: FileList) => {
         if (files.length === 0) return;
 
-        if (images.length + files.length > maxImages) {
-            showNotification('error', `Límite superado: Máximo ${maxImages} archivos permitidos.`);
+        const isVideo = (file: File) => file.type.startsWith('video/');
+        const isImage = (file: File) => file.type.startsWith('image/');
+
+        const currentVideos = images.filter(img => img.toLowerCase().match(/\.(mp4|webm|ogg|mov)$/)).length;
+        const currentImages = images.length - currentVideos;
+
+        let incomingVideos = 0;
+        let incomingImages = 0;
+
+        for (let i = 0; i < files.length; i++) {
+            if (isVideo(files[i])) incomingVideos++;
+            else if (isImage(files[i])) incomingImages++;
+        }
+
+        // Validate Limits
+        if (maxImages !== -1 && currentImages + incomingImages > maxImages) {
+            showNotification('error', `Límite superado: Máximo ${maxImages} imágenes permitidas.`);
             return;
+        }
+
+        if (maxVideos !== -1 && currentVideos + incomingVideos > maxVideos) {
+            showNotification('error', `Límite superado: Máximo ${maxVideos} video(s) permitidos.`);
+            return;
+        }
+
+        if (maxImages + maxVideos !== -1 && images.length + files.length > maxImages + maxVideos && maxImages !== -1 && maxVideos !== -1) {
+            // Fallback total limit if both are defined
         }
 
         setUploading(true);
@@ -103,7 +128,7 @@ export default function ImageGalleryUpload({ images, onChange, onSetMain, maxIma
                 ref={fileInputRef}
                 onChange={handleFileChange}
                 style={{ display: 'none' }}
-                accept="image/*,video/*"
+                accept={`${maxImages !== 0 ? 'image/*,' : ''}${maxVideos !== 0 ? 'video/*' : ''}`}
                 multiple
             />
 
@@ -126,7 +151,11 @@ export default function ImageGalleryUpload({ images, onChange, onSetMain, maxIma
                             <Upload size={24} />
                         </div>
                         <p className={styles.primaryText}>Haga clic o arrastre sus archivos aquí</p>
-                        <p className={styles.secondaryText}>PNG, JPG o Video (Máx {maxImages} archivos)</p>
+                        <p className={styles.secondaryText}>
+                            {maxImages > 0 && maxVideos > 0 && `Máx ${maxImages} imágenes y ${maxVideos} video`}
+                            {maxImages > 0 && maxVideos === 0 && `Solo imágenes (Máx ${maxImages})`}
+                            {maxImages === 0 && maxVideos > 0 && `Solo video (Máx ${maxVideos})`}
+                        </p>
                     </div>
                 )}
             </div>
@@ -166,7 +195,11 @@ export default function ImageGalleryUpload({ images, onChange, onSetMain, maxIma
             </div>
 
             <div className={styles.uploadFooter}>
-                <p>{images.length} de {maxImages} archivos</p>
+                <p>
+                    {maxImages > 0 && `${images.filter(img => !img.toLowerCase().match(/\.(mp4|webm|ogg|mov)$/)).length}/${maxImages} imágenes`}
+                    {maxImages > 0 && maxVideos > 0 && ' | '}
+                    {maxVideos > 0 && `${images.filter(img => img.toLowerCase().match(/\.(mp4|webm|ogg|mov)$/)).length}/${maxVideos} videos`}
+                </p>
             </div>
 
             <style jsx>{`
