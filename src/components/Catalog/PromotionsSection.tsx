@@ -52,7 +52,7 @@ export default function PromotionsSection() {
             price_infant: item.price_infant,
             originalPrice: item.price ? item.price * 1.2 : 0, // Mock original price for "Sale" effect?
             rating: item.stars || 5,
-            image: item.image_url || 'https://via.placeholder.com/400x300?text=No+Image',
+            image: item.image_url,
             description: item.description,
             features: item.features || item.included || [],
             duration: item.duration || '',

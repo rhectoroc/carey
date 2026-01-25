@@ -13,18 +13,15 @@ async function getResults(params: { [key: string]: string | string[] | undefined
     const type = (params.type as string) || 'hotels';
     const location = (params.location as string) || '';
 
-    console.log('Search Params (Server):', { type, location }); // DEBUG
-
     try {
         if (type === 'hotels') {
             const sql = `
                 SELECT h.*, d.name as destination_name 
                 FROM hotels h
                 JOIN destinations d ON h.destination_id = d.id
-                WHERE d.name ILIKE $1
+                WHERE d.name ILIKE $1 OR h.name ILIKE $1
             `;
             const res = await query(sql, [`%${location}%`]);
-            console.log(`DB Query Hotels found: ${res.rows.length}`); // DEBUG
             return { type, data: res.rows };
         }
         else if (type === 'tours') {
@@ -32,10 +29,9 @@ async function getResults(params: { [key: string]: string | string[] | undefined
                 SELECT t.*, d.name as destination_name
                 FROM tours t
                 JOIN destinations d ON t.destination_id = d.id
-                WHERE d.name ILIKE $1
+                WHERE d.name ILIKE $1 OR t.name ILIKE $1
             `;
             const res = await query(sql, [`%${location}%`]);
-            console.log(`DB Query Tours found: ${res.rows.length}`); // DEBUG
             return { type, data: res.rows };
         }
     } catch (e) {
@@ -51,17 +47,19 @@ import ResultCard from '@/components/Search/ResultCard';
 export default async function SearchPage({ searchParams }: SearchParamsProps) {
     // Await the searchParams promise (Required for Next.js 15+)
     const resolvedParams = await searchParams;
-    const { type, location } = resolvedParams;
 
     // Pass resolved params to helper
-    const { data: results } = await getResults(resolvedParams);
+    const { data: results, type: searchType } = await getResults(resolvedParams);
+
+    const displayLocation = (Array.isArray(resolvedParams.location) ? resolvedParams.location[0] : resolvedParams.location) || 'Todo el país';
+    const displayType = (Array.isArray(resolvedParams.type) ? resolvedParams.type[0] : resolvedParams.type) || 'hotels';
 
     return (
         <main className={styles.container}>
             <SearchHeader
-                location={(Array.isArray(location) ? location[0] : location) || 'Todo'}
+                location={displayLocation}
                 count={results.length}
-                type={(Array.isArray(type) ? type[0] : type) || 'hotels'}
+                type={displayType}
             />
 
             <div className={styles.resultsGrid}>
@@ -72,7 +70,7 @@ export default async function SearchPage({ searchParams }: SearchParamsProps) {
                     </div>
                 ) : (
                     results.map((item: any) => (
-                        <ResultCard key={item.id} item={item} type={(Array.isArray(type) ? type[0] : type) || 'hotels'} />
+                        <ResultCard key={item.id} item={item} type={displayType} />
                     ))
                 )}
             </div>

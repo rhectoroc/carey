@@ -10,13 +10,11 @@ interface ResultCardProps {
 }
 
 export default function ResultCard({ item, type }: ResultCardProps) {
-    // Mocking an image array since DB only has one string currently
-    // We will use the db image + some placeholders for the carousel effect
+    // Use only DB images
     const images = [
         item.image_url || null,
-        "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=800&q=80",
-        "https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?auto=format&fit=crop&w=800&q=80"
-    ].filter(Boolean); // Filter out nulls
+        ...(Array.isArray(item.gallery) ? item.gallery : [])
+    ].filter(Boolean); // Filter out nulls/empty
 
     const [currentSlide, setCurrentSlide] = useState(0);
 
