@@ -5,18 +5,28 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const q = searchParams.get('q');
 
-    if (!q || q.length < 2) {
-        return NextResponse.json([]);
-    }
-
     try {
-        const sql = `
-            SELECT id, name, type, country 
-            FROM destinations 
-            WHERE name ILIKE $1 
-            LIMIT 10
-        `;
-        const values = [`%${q}%`];
+        let sql: string;
+        let values: any[];
+
+        if (!q || q.length < 1) {
+            sql = `
+                SELECT id, name, type, country 
+                FROM destinations 
+                ORDER BY name ASC 
+                LIMIT 20
+            `;
+            values = [];
+        } else {
+            sql = `
+                SELECT id, name, type, country 
+                FROM destinations 
+                WHERE name ILIKE $1 
+                ORDER BY name ASC 
+                LIMIT 10
+            `;
+            values = [`%${q}%`];
+        }
 
         const result = await query(sql, values);
         return NextResponse.json(result.rows);
@@ -29,8 +39,12 @@ export async function GET(request: Request) {
             { id: 3, name: 'Canaima', type: 'park', country: 'Venezuela' },
             { id: 4, name: 'Caracas', type: 'city', country: 'Venezuela' },
             { id: 5, name: 'Mérida', type: 'city', country: 'Venezuela' }
-        ].filter(d => d.name.toLowerCase().includes(q.toLowerCase()));
+        ];
 
-        return NextResponse.json(mockDestinations);
+        const filtered = q
+            ? mockDestinations.filter(d => d.name.toLowerCase().includes(q.toLowerCase()))
+            : mockDestinations;
+
+        return NextResponse.json(filtered);
     }
 }

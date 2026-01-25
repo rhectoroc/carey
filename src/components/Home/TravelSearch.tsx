@@ -43,13 +43,12 @@ export default function TravelSearch() {
     }, []);
 
     // Autocomplete Fetch
-    const fetchDestinations = async (query: string) => {
-        if (query.length < 2) {
-            setSuggestions([]);
-            return;
-        }
+    const fetchDestinations = async (query: string = '') => {
         try {
-            const res = await fetch(`/api/search/destinations?q=${encodeURIComponent(query)}`);
+            const url = query
+                ? `/api/search/destinations?q=${encodeURIComponent(query)}`
+                : '/api/search/destinations';
+            const res = await fetch(url);
             const data = await res.json();
             setSuggestions(data);
         } catch (err) {
@@ -101,6 +100,10 @@ export default function TravelSearch() {
                                 type="text"
                                 placeholder="¿A dónde quieres ir?"
                                 value={destination}
+                                onFocus={() => {
+                                    fetchDestinations(destination);
+                                    setShowSuggestions('dest');
+                                }}
                                 onChange={(e) => {
                                     setDestination(e.target.value);
                                     fetchDestinations(e.target.value);
