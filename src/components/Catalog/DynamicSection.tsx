@@ -20,9 +20,10 @@ interface DynamicSectionProps {
     sectionId?: string;
     bgImage?: string;
     variant?: 'luxuryFlow' | 'default';
+    subtitleVariant?: 'rolling' | 'staggered';
 }
 
-export default function DynamicSection({ title, subtitle, endpoint, type, className, sectionId, bgImage, variant }: DynamicSectionProps) {
+export default function DynamicSection({ title, subtitle, endpoint, type, className, sectionId, bgImage, variant, subtitleVariant = 'staggered' }: DynamicSectionProps) {
     const [items, setItems] = useState<any[]>([]);
     const [selectedItem, setSelectedItem] = useState<any>(null);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -144,11 +145,33 @@ export default function DynamicSection({ title, subtitle, endpoint, type, classN
             }
 
             if (subtitleWords) {
-                tl.fromTo(subtitleWords,
-                    { y: 30, opacity: 0 },
-                    { y: 0, opacity: 1, duration: 0.8, stagger: 0.02, ease: "expo.out" },
-                    "-=0.7"
-                );
+                if (subtitleVariant === 'rolling') {
+                    // Rolling Text Effect
+                    tl.fromTo(subtitleWords,
+                        {
+                            y: 20,
+                            rotationX: -90,
+                            opacity: 0,
+                            transformOrigin: "50% 0%"
+                        },
+                        {
+                            y: 0,
+                            rotationX: 0,
+                            opacity: 1,
+                            duration: 1,
+                            stagger: 0.05,
+                            ease: "back.out(1.7)"
+                        },
+                        "-=0.7"
+                    );
+                } else {
+                    // Standard Staggered Reveal
+                    tl.fromTo(subtitleWords,
+                        { y: 30, opacity: 0 },
+                        { y: 0, opacity: 1, duration: 0.8, stagger: 0.02, ease: "expo.out" },
+                        "-=0.7"
+                    );
+                }
             }
 
             ScrollTrigger.refresh();
@@ -240,9 +263,9 @@ export default function DynamicSection({ title, subtitle, endpoint, type, classN
                             <span key={i} className="word" style={{ display: 'inline-block', marginRight: '0.25em' }}>{word}</span>
                         ))}
                     </h2>
-                    <p className={styles.subtitle} ref={subtitleRef} style={{ overflow: 'hidden' }}>
+                    <p className={styles.subtitle} ref={subtitleRef} style={{ overflow: 'hidden', perspective: '1000px' }}>
                         {subtitle.split(' ').map((word, i) => (
-                            <span key={i} className="word" style={{ display: 'inline-block', marginRight: '0.2em' }}>{word}</span>
+                            <span key={i} className="word" style={{ display: 'inline-block', marginRight: '0.2em', backfaceVisibility: 'hidden' }}>{word}</span>
                         ))}
                     </p>
                 </div>

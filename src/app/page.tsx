@@ -33,6 +33,7 @@ export default function Home() {
                     endpoint="/api/catalog/destinations"
                     type="destination"
                     className={styles.popularDestinations}
+                    subtitleVariant="rolling"
                 />
 
                 <DynamicSection
