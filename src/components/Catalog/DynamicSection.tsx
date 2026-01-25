@@ -73,31 +73,42 @@ export default function DynamicSection({ title, subtitle, endpoint, type, classN
             if (!shapes) return;
 
             Array.from(shapes).forEach((shape, i) => {
+                // Initial random positions
+                gsap.set(shape, {
+                    x: gsap.utils.random(-100, 100),
+                    y: gsap.utils.random(-100, 100),
+                    scale: gsap.utils.random(0.8, 1.2)
+                });
+
+                // Floating movement
                 gsap.to(shape, {
-                    x: "random(-40, 40)",
-                    y: "random(-40, 40)",
-                    duration: `random(10, 20)`,
+                    x: "+=random(-200, 200)",
+                    y: "+=random(-200, 200)",
+                    scale: "random(0.7, 1.5)",
+                    rotation: "random(-45, 45)",
+                    duration: gsap.utils.random(8, 15),
                     repeat: -1,
                     yoyo: true,
                     ease: "sine.inOut",
-                    delay: i * 0.5
+                    delay: i * 1
                 });
             });
 
-            // Parallax movement on scroll for shapes
+            // Parallax movement on scroll for the entire container
             gsap.to(shapesRef.current, {
-                y: -50,
+                yPercent: -20,
+                ease: "none",
                 scrollTrigger: {
                     trigger: containerRef.current,
                     start: "top bottom",
                     end: "bottom top",
-                    scrub: 1
+                    scrub: 1.5
                 }
             });
         });
 
         return () => ctx.revert();
-    }, [variant]);
+    }, [variant, items]); // Add items to dependency to ensure it runs when content is ready
 
     const mapToService = (item: any, type: string) => {
         // Map API data to ServiceCard interface
