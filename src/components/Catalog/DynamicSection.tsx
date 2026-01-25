@@ -73,42 +73,47 @@ export default function DynamicSection({ title, subtitle, endpoint, type, classN
             if (!shapes) return;
 
             Array.from(shapes).forEach((shape, i) => {
-                // Initial random positions
+                // Initial positions spread out horizontally
                 gsap.set(shape, {
-                    x: gsap.utils.random(-100, 100),
-                    y: gsap.utils.random(-100, 100),
-                    scale: gsap.utils.random(0.8, 1.2)
+                    xPercent: gsap.utils.random(-20, 20),
+                    yPercent: gsap.utils.random(-20, 20),
                 });
 
-                // Floating movement
+                // Clear Horizontal Oscillating Movement
                 gsap.to(shape, {
-                    x: "+=random(-200, 200)",
-                    y: "+=random(-200, 200)",
-                    scale: "random(0.7, 1.5)",
-                    rotation: "random(-45, 45)",
-                    duration: gsap.utils.random(8, 15),
+                    xPercent: i % 2 === 0 ? 100 : -100, // Move left or right depending on index
+                    duration: gsap.utils.random(10, 15),
                     repeat: -1,
                     yoyo: true,
                     ease: "sine.inOut",
-                    delay: i * 1
+                    delay: i * 2,
+                });
+
+                // Subtle vertical float to keep it organic
+                gsap.to(shape, {
+                    yPercent: "+=30",
+                    duration: gsap.utils.random(5, 8),
+                    repeat: -1,
+                    yoyo: true,
+                    ease: "sine.inOut",
                 });
             });
 
-            // Parallax movement on scroll for the entire container
+            // Parallax movement on scroll
             gsap.to(shapesRef.current, {
-                yPercent: -20,
+                yPercent: -10,
                 ease: "none",
                 scrollTrigger: {
                     trigger: containerRef.current,
                     start: "top bottom",
                     end: "bottom top",
-                    scrub: 1.5
+                    scrub: true
                 }
             });
         });
 
         return () => ctx.revert();
-    }, [variant, items]); // Add items to dependency to ensure it runs when content is ready
+    }, [variant, items]);
 
     const mapToService = (item: any, type: string) => {
         // Map API data to ServiceCard interface
