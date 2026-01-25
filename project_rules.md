@@ -27,3 +27,10 @@
      - Si los formularios usan validación en tiempo real en un módulo, úsala en todos.
      - Mantén la misma paleta de colores, bordes y sombras definidos en el CSS/Theme global.
 - **Componentes Críticos:** Trata los Modals, Tablas y Sidebars como componentes globales. No hardcodees estilos únicos para una sola vista a menos que sea estrictamente necesario.
+# PERSISTENCIA DE CONTEXTO Y RECUPERACIÓN DE ERRORES
+- **MEMORIA A LARGO PLAZO:**
+  1. Mantén actualizado un archivo en la raíz llamado `DEV_LOG.md`.
+  2. **Regla de Oro:** Cada vez que completes una tarea exitosamente (ej: crear un componente, ajustar una query SQL), agrega una línea en `DEV_LOG.md` con la fecha, la tarea realizada y el estado actual.
+  3. Si el agente se reinicia o falla, tu PRIMERA acción debe ser leer `DEV_LOG.md` para saber en qué punto nos quedamos.
+- **MANEJO DE CRASHES:**
+  - Si la sesión se termina inesperadamente, no intentes adivinar. Lee el último commit de Git y el `DEV_LOG.md` para reconstruir el contexto antes de proponer código nuevo.
