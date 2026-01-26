@@ -76,21 +76,21 @@ export default function TravelPlanner() {
 
             <div style={{ maxWidth: '1200px', margin: '0 auto', position: 'relative', zIndex: 1, textAlign: 'center' }}>
                 <h2 ref={titleRef} style={{ fontSize: '3rem', marginBottom: '1.5rem', overflow: 'hidden' }}>
-                    {"Asesoría Integral de Viajes".split(' ').map((word, i) => (
+                    {t('planner.title').split(' ').map((word, i) => (
                         <span key={i} className="word" style={{ display: 'inline-block', marginRight: '0.25em' }}>{word}</span>
                     ))}
                 </h2>
                 <p ref={descRef} style={{ fontSize: '1.2rem', marginBottom: '3rem', maxWidth: '700px', marginLeft: 'auto', marginRight: 'auto', opacity: 0.9, overflow: 'hidden' }}>
-                    {"Diseñamos tu viaje a la medida. Desde la logística hasta los pequeños detalles, deja que nuestros expertos se encarguen de todo.".split(' ').map((word, i) => (
+                    {t('planner.subtitle').split(' ').map((word, i) => (
                         <span key={i} className="word" style={{ display: 'inline-block', marginRight: '0.2em' }}>{word}</span>
                     ))}
                 </p>
 
                 <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', flexWrap: 'wrap', marginBottom: '3rem' }}>
                     {[
-                        { icon: FileQuestion, title: 'Consulta Inicial', text: 'Cuéntanos tus sueños y presupuesto.' },
-                        { icon: Plane, title: 'Diseño del Plan', text: 'Creamos un itinerario personalizado.' },
-                        { icon: CalendarCheck, title: 'Reservas & Gestión', text: 'Nos encargamos de toda la logística.' }
+                        { icon: FileQuestion, title: t('planner.step1Title'), text: t('planner.step1Text') },
+                        { icon: Plane, title: t('planner.step2Title'), text: t('planner.step2Text') },
+                        { icon: CalendarCheck, title: t('planner.step3Title'), text: t('planner.step3Text') }
                     ].map((item, i) => (
                         <div key={i} style={{
                             background: 'rgba(255,255,255,0.15)',
@@ -128,7 +128,7 @@ export default function TravelPlanner() {
                         justifyContent: 'center'
                     }}>
                     <img src="/images/carey-avatar.png" alt="Carey" style={{ width: '50px', height: '50px', objectFit: 'contain' }} />
-                    Contáctanos
+                    {t('planner.contact')}
                 </button>
             </div>
         </section>

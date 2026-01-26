@@ -7,7 +7,7 @@ import TravelSearch from './TravelSearch';
 import styles from './Hero.module.css';
 
 export default function Hero() {
-    const { t } = useLanguage();
+    const { language, t } = useLanguage();
     const subtitleRef = useRef<HTMLParagraphElement>(null);
     const brandTitleContainerRef = useRef<HTMLHeadingElement>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
@@ -15,7 +15,7 @@ export default function Hero() {
     useEffect(() => {
         const ctx = gsap.context(() => {
             if (subtitleRef.current) {
-                const fullText = "Servicios Turísticos Integrales";
+                const fullText = t('hero.subtitle');
                 subtitleRef.current.innerText = "";
 
                 const obj = { val: 0 };
@@ -62,7 +62,7 @@ export default function Hero() {
             }
         });
         return () => ctx.revert();
-    }, []);
+    }, [language, t]);
 
     return (
         <section className={styles.hero}>
@@ -90,7 +90,7 @@ export default function Hero() {
                     <span className={styles.venezuela}>Venezuela</span>
                 </h1>
                 <p ref={subtitleRef} className={styles.subtitle}>
-                    Servicios Turísticos Integrales
+                    {t('hero.subtitle')}
                 </p>
 
                 <TravelSearch />

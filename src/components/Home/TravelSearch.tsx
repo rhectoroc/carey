@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Search, Calendar, MapPin, Users, Hotel, Plane, Compass, ChevronDown, MousePointer2, Briefcase, User, PawPrint, IceCream, Baby } from 'lucide-react';
+import { useLanguage } from '@/context/LanguageContext';
 import styles from './TravelSearch.module.css';
 
 import { useRouter } from 'next/navigation';
@@ -14,6 +15,7 @@ interface Destination {
 }
 
 export default function TravelSearch() {
+    const { t } = useLanguage();
     const router = useRouter();
     const [activeTab, setActiveTab] = useState<'hotels' | 'tours'>('hotels');
 
@@ -78,13 +80,13 @@ export default function TravelSearch() {
                     className={`${styles.tabBtn} ${activeTab === 'hotels' ? styles.activeTab : ''}`}
                     onClick={() => setActiveTab('hotels')}
                 >
-                    <Hotel size={18} /> Hoteles
+                    <Hotel size={18} /> {t('search.hotels')}
                 </button>
                 <button
                     className={`${styles.tabBtn} ${activeTab === 'tours' ? styles.activeTab : ''}`}
                     onClick={() => setActiveTab('tours')}
                 >
-                    <Compass size={18} /> Tours
+                    <Compass size={18} /> {t('search.tours')}
                 </button>
             </div>
 
@@ -93,12 +95,12 @@ export default function TravelSearch() {
 
                     {/* DESTINATION */}
                     <div className={styles.field} style={{ flex: 2 }}>
-                        <label>Destino</label>
+                        <label>{t('search.destination')}</label>
                         <div className={styles.inputWrapper}>
                             <MapPin size={18} className={styles.inputIcon} />
                             <input
                                 type="text"
-                                placeholder="¿A dónde quieres ir?"
+                                placeholder={t('search.placeholder')}
                                 value={destination}
                                 onFocus={() => {
                                     fetchDestinations(destination);
@@ -124,7 +126,7 @@ export default function TravelSearch() {
 
                     {/* GUESTS / PASSENGERS */}
                     <div className={styles.field} style={{ position: 'relative', flex: 1 }}>
-                        <label>{activeTab === 'tours' ? 'Personas' : 'Huéspedes'}</label>
+                        <label>{activeTab === 'tours' ? t('search.people') : t('search.guests')}</label>
                         <div className={styles.inputWrapper} onClick={() => setShowGuestPicker(!showGuestPicker)} style={{ cursor: 'pointer' }}>
                             <div className={styles.guestSummary}>
                                 <div className={styles.guestItem}>
@@ -152,7 +154,7 @@ export default function TravelSearch() {
                         {showGuestPicker && (
                             <div className={styles.guestPopup}>
                                 <div className={styles.guestRow}>
-                                    <div><span>Adultos</span><small>11+ años</small></div>
+                                    <div><span>{t('search.adults')}</span><small>11+ años</small></div>
                                     <div className={styles.counterControl}>
                                         <button onClick={() => setAdults(Math.max(1, adults - 1))}>-</button>
                                         <span>{adults}</span>
@@ -160,7 +162,7 @@ export default function TravelSearch() {
                                     </div>
                                 </div>
                                 <div className={styles.guestRow}>
-                                    <div><span>Niños</span><small>4-10 años</small></div>
+                                    <div><span>{t('search.children')}</span><small>4-10 años</small></div>
                                     <div className={styles.counterControl}>
                                         <button onClick={() => setChildren(Math.max(0, children - 1))}>-</button>
                                         <span>{children}</span>
@@ -168,7 +170,7 @@ export default function TravelSearch() {
                                     </div>
                                 </div>
                                 <div className={styles.guestRow}>
-                                    <div><span>Infantes</span><small>0-3 años</small></div>
+                                    <div><span>{t('search.infants')}</span><small>0-3 años</small></div>
                                     <div className={styles.counterControl}>
                                         <button onClick={() => setInfants(Math.max(0, infants - 1))}>-</button>
                                         <span>{infants}</span>
@@ -176,7 +178,7 @@ export default function TravelSearch() {
                                     </div>
                                 </div>
                                 <div className={styles.guestRow}>
-                                    <div><span>Mascotas</span><small>Gatos o Perros</small></div>
+                                    <div><span>{t('search.pets')}</span><small>Gatos o Perros</small></div>
                                     <div className={styles.counterControl}>
                                         <button onClick={() => setPets(Math.max(0, pets - 1))}>-</button>
                                         <span>{pets}</span>
@@ -190,7 +192,7 @@ export default function TravelSearch() {
                     <div className={styles.searchActionContainer}>
                         <button className={styles.searchActionBtn} onClick={handleSearch}>
                             <Search size={20} />
-                            Buscar
+                            {t('search.button')}
                         </button>
                     </div>
                 </div>

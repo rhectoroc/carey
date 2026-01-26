@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Service } from '@/data/mockServices';
 import { MapPin, Star, Utensils, Bus, Car, Martini, Cookie, PartyPopper, ChevronLeft, ChevronRight, CheckCircle } from 'lucide-react';
+import { useLanguage } from '@/context/LanguageContext';
 import styles from './ServiceCard.module.css';
 
 interface ServiceCardProps {
@@ -22,6 +23,7 @@ export const getFeatureIcon = (feature: string) => {
 };
 
 export default function ServiceCard({ service, onClick }: ServiceCardProps) {
+    const { t } = useLanguage();
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
     // Ensure the main image (service.image) is at the beginning of the images list if it's not already
@@ -67,7 +69,7 @@ export default function ServiceCard({ service, onClick }: ServiceCardProps) {
                     <img src={images[currentImageIndex]} alt={service.title} className={styles.image} />
                 ) : (
                     <div className={styles.imagePlaceholder} style={{ background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <span style={{ color: '#94a3b8', fontSize: '0.8rem' }}>Sin imagen disponible</span>
+                        <span style={{ color: '#94a3b8', fontSize: '0.8rem' }}>{t('catalog.noImage')}</span>
                     </div>
                 )}
 
@@ -126,7 +128,7 @@ export default function ServiceCard({ service, onClick }: ServiceCardProps) {
                             alignItems: 'center',
                             gap: '3px'
                         }}>
-                            Oferta 🔥
+                            {t('catalog.offer')} 🔥
                         </span>
                     )}
                     {service.is_featured && (
@@ -143,7 +145,7 @@ export default function ServiceCard({ service, onClick }: ServiceCardProps) {
                             alignItems: 'center',
                             gap: '3px'
                         }}>
-                            Destacado ⭐
+                            {t('catalog.featured')} ⭐
                         </span>
                     )}
                 </div>
@@ -182,11 +184,11 @@ export default function ServiceCard({ service, onClick }: ServiceCardProps) {
                             fontSize: '0.8rem',
                             fontWeight: 'bold'
                         }}>
-                            Consultar tarifa
+                            {t('catalog.consult')}
                         </div>
                     ) : (
                         <div className={styles.price}>
-                            <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 'normal' }}>desde</span>
+                            <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 'normal' }}>{t('catalog.from')}</span>
                             <span style={{ fontSize: '1.25rem', fontWeight: '700', color: 'var(--color-text-dark)' }}> ${service.price}</span>
                         </div>
                     )}

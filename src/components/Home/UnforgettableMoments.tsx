@@ -111,7 +111,7 @@ export default function UnforgettableMoments() {
                 </h2>
                 {momentsList.length === 0 && (
                     <div style={{ textAlign: 'center', padding: '2rem', color: '#666' }}>
-                        Cargando momentos increíbles...
+                        {t('home.loadingMoments')}
                     </div>
                 )}
                 <div className={styles.momentsGrid}>

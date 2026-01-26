@@ -2,8 +2,9 @@
 
 import { useEffect, useState, useMemo } from 'react';
 import { Service } from '@/data/mockServices';
-import { X, MapPin, ChevronLeft, ChevronRight, Info, Clock } from 'lucide-react';
+import { Info, Clock, MapPin, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useChatbot } from '@/context/ChatbotContext';
+import { useLanguage } from '@/context/LanguageContext';
 import { getFeatureIcon } from './ServiceCard';
 import styles from './ServiceModal.module.css';
 
@@ -14,6 +15,7 @@ interface ServiceModalProps {
 }
 
 export default function ServiceModal({ isOpen, onClose, service }: ServiceModalProps) {
+    const { t, language } = useLanguage();
     const { openChatbot } = useChatbot();
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -139,7 +141,7 @@ export default function ServiceModal({ isOpen, onClose, service }: ServiceModalP
                                         fontWeight: 'bold',
                                         boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
                                     }}>
-                                        OFERTA 🔥
+                                        {t('catalog.offer').toUpperCase()} 🔥
                                     </span>
                                 )}
                                 {service.is_featured && (
@@ -152,7 +154,7 @@ export default function ServiceModal({ isOpen, onClose, service }: ServiceModalP
                                         fontWeight: 'bold',
                                         boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
                                     }}>
-                                        DESTACADO ⭐
+                                        {t('catalog.featured').toUpperCase()} ⭐
                                     </span>
                                 )}
                                 {service.tags?.map((tag, index) => (
@@ -175,36 +177,36 @@ export default function ServiceModal({ isOpen, onClose, service }: ServiceModalP
 
                     <div className={styles.section}>
                         <p className={styles.description}>
-                            {service.description || "Disfruta de una experiencia única diseñada para brindarte los mejores momentos."}
+                            {service.description || t('modal.defaultDesc')}
                         </p>
                     </div>
 
                     {(service.price || service.price_child || service.price_infant) && (
                         <div className={styles.section}>
-                            <h4 className={styles.sectionTitle}>Tarifas detalladas</h4>
+                            <h4 className={styles.sectionTitle}>{t('modal.details')}</h4>
                             <div className={styles.pricingGrid}>
                                 {service.price && (
                                     <div className={styles.priceItem}>
-                                        <span className={styles.priceLabel}>Adultos</span>
+                                        <span className={styles.priceLabel}>{t('modal.adults')}</span>
                                         <span className={styles.priceValue}>${service.price}</span>
                                     </div>
                                 )}
                                 {service.price_child && (
                                     <div className={styles.priceItem}>
-                                        <span className={styles.priceLabel}>Niños (4-10)</span>
+                                        <span className={styles.priceLabel}>{t('modal.children')} (4-10)</span>
                                         <span className={styles.priceValue}>${service.price_child}</span>
                                     </div>
                                 )}
                                 {service.price_infant && (
                                     <div className={styles.priceItem}>
-                                        <span className={styles.priceLabel}>Infantes (0-3)</span>
+                                        <span className={styles.priceLabel}>{t('modal.infants')} (0-3)</span>
                                         <span className={styles.priceValue}>${service.price_infant}</span>
                                     </div>
                                 )}
                             </div>
                             {service.priceValidUntil && (
                                 <p style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '10px', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                                    <Info size={14} /> Tarifas vigentes hasta el {new Date(service.priceValidUntil).toLocaleDateString()}
+                                    <Info size={14} /> {t('modal.validUntil')} {new Date(service.priceValidUntil).toLocaleDateString(language === 'es' ? 'es-ES' : 'en-US')}
                                 </p>
                             )}
                         </div>
@@ -212,7 +214,7 @@ export default function ServiceModal({ isOpen, onClose, service }: ServiceModalP
 
                     {service.features && service.features.length > 0 && (
                         <div className={styles.section}>
-                            <h4 className={styles.sectionTitle}>¿Qué incluye?</h4>
+                            <h4 className={styles.sectionTitle}>{t('modal.includes')}</h4>
                             <div className={styles.featuresGrid}>
                                 {service.features.map((feature, idx) => (
                                     <div key={idx} className={styles.featureItem}>
@@ -228,7 +230,7 @@ export default function ServiceModal({ isOpen, onClose, service }: ServiceModalP
 
                     <div className={styles.footer}>
                         <button className={styles.actionButton} onClick={handleConsultar}>
-                            Reservar Ahora
+                            {t('modal.bookNow')}
                         </button>
                     </div>
                 </div>

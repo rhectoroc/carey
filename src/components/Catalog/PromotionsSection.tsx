@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ServiceCard from './ServiceCard';
 import ServiceModal from './ServiceModal';
+import { useLanguage } from '@/context/LanguageContext';
 import styles from './CategoryGrid.module.css';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -12,6 +13,7 @@ if (typeof window !== 'undefined') {
 }
 
 export default function PromotionsSection() {
+    const { t } = useLanguage();
     const [items, setItems] = useState<any[]>([]);
     const [selectedItem, setSelectedItem] = useState<any>(null);
     const sectionRef = useRef<HTMLElement>(null);
@@ -138,12 +140,12 @@ export default function PromotionsSection() {
             <div className={styles.section}> {/* Layout constraints on inner */}
                 <div className={styles.header}>
                     <h2 ref={titleRef} className={styles.title} style={{ color: '#e63946', overflow: 'hidden' }}>
-                        {"🔥 Ofertas y Promociones".split(' ').map((word, i) => (
+                        {t('sections.promotions').split(' ').map((word, i) => (
                             <span key={i} className="word" style={{ display: 'inline-block', marginRight: '0.25em' }}>{word}</span>
                         ))}
                     </h2>
                     <p ref={subtitleRef} className={styles.subtitle} style={{ overflow: 'hidden' }}>
-                        {"Aprovecha nuestros descuentos exclusivos por tiempo limitado.".split(' ').map((word, i) => (
+                        {t('sections.promotionsSub').split(' ').map((word, i) => (
                             <span key={i} className="word" style={{ display: 'inline-block', marginRight: '0.2em' }}>{word}</span>
                         ))}
                     </p>

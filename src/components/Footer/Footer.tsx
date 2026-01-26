@@ -11,22 +11,22 @@ export default function Footer() {
             <div className={styles.content}>
                 <div className={styles.column}>
                     <img src="/LogoCarey01.png" alt="Carey Tour & Travel" className={styles.logo} />
-                    <p>Viajes exclusivos y experiencias inolvidables en Venezuela y el Caribe.</p>
+                    <p>{t('footer.tagline')}</p>
                 </div>
                 <div className={styles.column}>
-                    <h3>Enlaces Rápidos</h3>
+                    <h3>{t('footer.links')}</h3>
                     <a href="/">{t('nav.home')}</a>
                     <a href="/destinations">{t('nav.destinations')}</a>
                     <a href="/about">{t('nav.about')}</a>
                     <a href="/contact">{t('nav.contact')}</a>
                 </div>
                 <div className={styles.column}>
-                    <h3>Legal</h3>
-                    <a href="/terms">Términos y Condiciones</a>
-                    <a href="/privacy">Política de Privacidad</a>
+                    <h3>{t('footer.legal')}</h3>
+                    <a href="/terms">{t('footer.terms')}</a>
+                    <a href="/privacy">{t('footer.privacy')}</a>
                 </div>
                 <div className={styles.column}>
-                    <h3>Contacto</h3>
+                    <h3>{t('footer.contact')}</h3>
                     <p>info@viajes-carey.com</p>
                     <p>+58 412-2476575</p>
                     <p>Isla de Margarita, Nueva Esparta</p>

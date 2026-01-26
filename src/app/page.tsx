@@ -10,10 +10,13 @@ import DynamicSection from "@/components/Catalog/DynamicSection";
 import PromotionsSection from "@/components/Catalog/PromotionsSection";
 import UnforgettableMoments from "@/components/Home/UnforgettableMoments";
 import TravelPlanner from "@/components/Planner/TravelPlanner";
+import { useLanguage } from '@/context/LanguageContext';
 
 import styles from './page.module.css';
 
 export default function Home() {
+    const { t } = useLanguage();
+
     return (
         <>
             <Navbar />
@@ -25,8 +28,8 @@ export default function Home() {
 
                 {/* Dynamic Sections */}
                 <DynamicSection
-                    title="Destinos Populares"
-                    subtitle="Explora los lugares más increíbles de Venezuela."
+                    title={t('sections.popular')}
+                    subtitle={t('sections.popularSub')}
                     endpoint="/api/catalog/destinations"
                     type="destination"
                     className={styles.popularDestinations}
@@ -35,8 +38,8 @@ export default function Home() {
                 />
 
                 <DynamicSection
-                    title="Hoteles Exclusivos"
-                    subtitle="Hospédate en los mejores hoteles y posadas del país."
+                    title={t('sections.hotels')}
+                    subtitle={t('sections.hotelsSub')}
                     endpoint="/api/catalog/hotels"
                     type="hotel"
                     className={styles.exclusiveHotels}
@@ -44,8 +47,8 @@ export default function Home() {
                 />
 
                 <DynamicSection
-                    title="Tours & Aventuras"
-                    subtitle="Experiencias únicas diseñadas para ti."
+                    title={t('sections.tours')}
+                    subtitle={t('sections.toursSub')}
                     endpoint="/api/catalog/tours"
                     type="tour"
                     className={styles.toursAdventures}
@@ -53,8 +56,8 @@ export default function Home() {
                 />
 
                 <DynamicSection
-                    title="Traslados y Movilidad"
-                    subtitle="Viaja cómodo y seguro a tu destino."
+                    title={t('sections.transfers')}
+                    subtitle={t('sections.transfersSub')}
                     endpoint="/api/catalog/transfers"
                     type="vehicle"
                     cardVariant="slideUp"
