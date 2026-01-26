@@ -201,13 +201,17 @@ export default function DynamicSection({ title, subtitle, endpoint, type, classN
                         break;
                 }
 
-                gsap.fromTo(cards, initialVars, {
-                    ...cardConfig,
-                    scrollTrigger: {
-                        trigger: scope.querySelector(`.${styles.grid}`),
-                        start: "top 85%",
-                        toggleActions: "play none none reverse"
-                    }
+                // Animate Cards individually for better mobile experience
+                gsap.utils.toArray(cards).forEach((card: any) => {
+                    gsap.fromTo(card, initialVars, {
+                        ...cardConfig,
+                        stagger: 0, // No stagger needed for individual triggers
+                        scrollTrigger: {
+                            trigger: card,
+                            start: "top 90%",
+                            toggleActions: "play none none reverse"
+                        }
+                    });
                 });
             }
 
