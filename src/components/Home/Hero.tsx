@@ -74,7 +74,6 @@ export default function Hero() {
                 muted
                 playsInline
                 className={styles.videoBg}
-                poster="/LogoCarey01.png"
             >
                 <source src="/hero-video.mp4" type="video/mp4" />
                 Tu navegador no soporta el elemento de video.

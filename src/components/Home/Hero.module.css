@@ -11,6 +11,8 @@
     align-items: center;
     color: white;
     text-align: center;
+    background-color: #001428;
+    /* Solid dark blue fallback */
 }
 
 .videoBg {
@@ -27,8 +29,8 @@
     /* Changed from -2 */
     pointer-events: none;
     opacity: 0;
-    animation: fadeInVideo 1.5s ease forwards;
-    animation-delay: 0.5s;
+    animation: fadeInVideo 1s ease forwards;
+    animation-delay: 0.2s;
 }
 
 @keyframes fadeInVideo {
