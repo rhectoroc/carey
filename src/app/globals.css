@@ -28,15 +28,17 @@ body {
   background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
   color: #333;
   min-height: 100vh;
-  overflow-x: hidden; /* Prevent horizontal scroll */
+  overflow-x: hidden !important;
+  /* Strict prevention of horizontal scroll */
   position: relative;
   width: 100%;
-  padding-bottom: env(safe-area-inset-bottom); /* Support for mobile safe areas */
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 * {
   box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent; /* Remove highlight on tap for mobile */
+  -webkit-tap-highlight-color: transparent;
+  /* Remove highlight on tap for mobile */
 }
 
 a {

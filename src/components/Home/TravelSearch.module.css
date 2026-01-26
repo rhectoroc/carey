@@ -286,7 +286,7 @@
 /* Mobile Responsive */
 @media (max-width: 768px) {
     .searchContainer {
-        margin: -40px 1rem 0;
+        margin: 20px 1rem 0;
         width: auto;
     }
 
