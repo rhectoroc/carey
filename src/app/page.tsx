@@ -19,10 +19,7 @@ export default function Home() {
             <Navbar />
             <main>
                 <Hero />
-                {/* Adjusted spacing/layout */}
-                <div style={{ marginTop: '-40px', position: 'relative', zIndex: 10 }}>
-                    {/* TravelSearch is actually inside Hero in previous design, keeping consistency */}
-                </div>
+                {/* Spacing managed within components for better responsiveness */}
 
                 <PromotionsSection />
 

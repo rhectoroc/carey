@@ -286,7 +286,8 @@
 /* Mobile Responsive */
 @media (max-width: 768px) {
     .searchContainer {
-        margin: 20px 1rem 0;
+        margin: 40px 1rem 60px;
+        /* More top margin to clear subtitle, more bottom to clear next section */
         width: auto;
     }
 

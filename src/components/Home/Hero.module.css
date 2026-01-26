@@ -134,28 +134,38 @@
 
 @media (max-width: 768px) {
     .hero {
-        height: 70vh;
-        min-height: 500px;
+        height: auto;
+        min-height: 85vh;
         max-height: none;
-        overflow: hidden;
+        overflow: visible;
+        /* Allow search bar to be visible if it overflows */
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        justify-content: flex-start;
+        /* Align to top to clear navbar with padding */
         align-items: center;
+        padding-top: 100px;
+        /* Clear Navbar (70px) + some space */
+        padding-bottom: 40px;
     }
 
     .title {
         font-size: 2.2rem;
+        margin-top: 20px;
     }
 
     .subtitle {
         font-size: 1rem;
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem;
         padding: 8px 20px;
     }
 
     .content {
-        margin-top: 60px;
+        margin-top: 0;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 }
 
