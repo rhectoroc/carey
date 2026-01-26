@@ -134,14 +134,16 @@
 }
 
 .searchFooter {
-    display: none; /* Removed as button is now in grid */
+    display: none;
+    /* Removed as button is now in grid */
 }
 
 .searchActionBtn {
     background: var(--color-primary-teal, #1F6D8C);
     color: white;
     border: none;
-    height: 54px; /* Matches field height approximately */
+    height: 54px;
+    /* Matches field height approximately */
     padding: 0 2.5rem;
     border-radius: 12px;
     font-size: 1rem;
@@ -197,15 +199,17 @@
 .guestPopup {
     position: absolute;
     top: 110%;
-    left: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
     min-width: 280px;
     background: white;
     border: 1px solid #eee;
     border-radius: 8px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     z-index: 100;
-    padding: 1rem;
-    max-width: calc(100vw - 2rem);
+    padding: 1.25rem;
+    max-width: calc(100vw - 40px);
 }
 
 .guestRow {

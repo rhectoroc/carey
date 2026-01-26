@@ -19,3 +19,4 @@
 - **Gestión de Momentos Inolvidables:** Creación del sistema CRUD completo para la sección "Momentos Inolvidables". Incluye tabla en base de datos, APIs administrativas y públicas, y panel de gestión en el administrador.
 - **Control de Videos en Catálogo:** Flexibilización de la restricción de videos; ahora se permite exactamente un (1) video por Tour u Hotel, manteniendo el control de activos pero permitiendo contenido multimedia.
 - **Resiliencia y Corrección de Homepage:** Implementación de fallbacks (datos mock) en las APIs públicas para evitar que la página principal se vea vacía si la base de datos no es accesible. Corrección de bug en animaciones GSAP y soporte multi-idioma para la sección de Momentos.
+- **Refactorización Responsive (Mobile-First):** Auditoría UX y refactorización completa del layout global, navegación, grillas de catálogo y barra de búsqueda. Implementación de regla de 1 columna en móvil y áreas de toque de 44px. (Estado: Completado)
