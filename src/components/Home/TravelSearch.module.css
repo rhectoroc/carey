@@ -286,12 +286,12 @@
 /* Mobile Responsive */
 @media (max-width: 768px) {
     .searchContainer {
-        margin: 0 1rem;
+        margin: -40px 1rem 0;
         width: auto;
     }
 
     .inputsGrid {
-        flex-direction: column;
+        grid-template-columns: 1fr;
         align-items: stretch;
         gap: 0.8rem;
     }
