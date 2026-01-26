@@ -10,6 +10,7 @@ export default function Hero() {
     const { t } = useLanguage();
     const subtitleRef = useRef<HTMLParagraphElement>(null);
     const brandTitleContainerRef = useRef<HTMLHeadingElement>(null);
+    const videoRef = useRef<HTMLVideoElement>(null);
 
     useEffect(() => {
         const ctx = gsap.context(() => {
@@ -50,6 +51,15 @@ export default function Hero() {
                     }
                 );
             }
+
+            // Forced video playback for mobile
+            if (videoRef.current) {
+                videoRef.current.defaultMuted = true;
+                videoRef.current.muted = true;
+                videoRef.current.play().catch(err => {
+                    console.log("Video autoplay failed, waiting for user interaction or codec issue", err);
+                });
+            }
         });
         return () => ctx.revert();
     }, []);
@@ -58,13 +68,16 @@ export default function Hero() {
         <section className={styles.hero}>
             {/* Video Background Placeholder - Replace src with actual asset */}
             <video
+                ref={videoRef}
                 autoPlay
                 loop
                 muted
                 playsInline
                 className={styles.videoBg}
+                poster="/LogoCarey01.png"
             >
                 <source src="/hero-video.mp4" type="video/mp4" />
+                Tu navegador no soporta el elemento de video.
             </video>
 
             <div className={styles.overlay}></div>

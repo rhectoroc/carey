@@ -23,8 +23,22 @@
     width: auto;
     height: auto;
     object-fit: cover;
-    z-index: -2;
+    z-index: 0;
+    /* Changed from -2 */
     pointer-events: none;
+    opacity: 0;
+    animation: fadeInVideo 1.5s ease forwards;
+    animation-delay: 0.5s;
+}
+
+@keyframes fadeInVideo {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 .overlay {
@@ -34,14 +48,16 @@
     width: 100%;
     height: 100%;
     background: linear-gradient(to bottom,
-            rgba(0, 20, 40, 0.4) 0%,
-            rgba(0, 50, 80, 0.2) 50%,
-            rgba(0, 20, 40, 0.5) 100%);
-    z-index: -1;
+            rgba(0, 20, 40, 0.5) 0%,
+            rgba(0, 50, 80, 0.3) 50%,
+            rgba(0, 20, 40, 0.6) 100%);
+    z-index: 1;
+    /* Changed from -1 */
 }
 
 .content {
-    z-index: 1;
+    z-index: 2;
+    /* Changed from 1 */
     max-width: 1000px;
     padding: 0 1rem;
     margin-top: -80px;
