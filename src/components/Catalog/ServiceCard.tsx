@@ -176,26 +176,38 @@ export default function ServiceCard({ service, onClick, style }: ServiceCardProp
                 )}
 
                 <div className={styles.footer}>
-                    {service.priceValidUntil && new Date(service.priceValidUntil) < new Date() ? (
-                        <div className={styles.consultButton} style={{
-                            backgroundColor: 'var(--color-primary-teal)',
-                            color: 'white',
-                            padding: '6px 12px',
-                            borderRadius: '6px',
-                            fontSize: '0.8rem',
-                            fontWeight: 'bold'
-                        }}>
-                            {t('catalog.consult')}
-                        </div>
-                    ) : (
-                        <div className={styles.price}>
-                            <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 'normal' }}>{t('catalog.from')}</span>
-                            <span style={{ fontSize: '1.25rem', fontWeight: '700', color: 'var(--color-text-dark)' }}> ${service.price}</span>
-                        </div>
-                    )}
-                    <div style={{ fontSize: '0.7rem', color: '#64748b' }}>
-                        {service.duration}
+                    <div className={styles.price}>
+                        {service.priceValidUntil && new Date(service.priceValidUntil) < new Date() ? (
+                            <span style={{ fontSize: '0.9rem', color: '#e63946' }}>{t('catalog.consult')}</span>
+                        ) : (
+                            <>
+                                <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 'normal' }}>{t('catalog.from')}</span>
+                                <span style={{ fontSize: '1.25rem', fontWeight: '700', color: 'var(--color-text-dark)' }}> ${service.price}</span>
+                            </>
+                        )}
                     </div>
+                </div>
+
+                <div className={styles.actionsContainer}>
+                    <button
+                        className={`${styles.actionButton} ${styles.primaryAction}`}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            window.location.href = `/quote?${service.category.toLowerCase() === 'tour' ? 'tour_id' : 'hotel_id'}=${service.id}`;
+                        }}
+                    >
+                        Cotizar Ahora
+                    </button>
+                    <button
+                        className={`${styles.actionButton} ${styles.secondaryAction}`}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            const text = encodeURIComponent(`Hola Carey, tengo una duda sobre ${service.category}: ${service.title}`);
+                            window.open(`https://wa.me/584121234567?text=${text}`, '_blank');
+                        }}
+                    >
+                        <span style={{ fontSize: '1.1em' }}>💬</span> Consultar
+                    </button>
                 </div>
             </div>
         </div>
