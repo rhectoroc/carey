@@ -9,17 +9,37 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
         const { id } = await params;
         const body = await request.json();
-        const { name, slug, description, price, destination_id, image_url, stars, features, is_featured, is_promotion, type, price_child, price_infant } = body;
+        const { name, slug, description, price, destination_id, image_url, stars, features, is_featured, is_promotion, type, price_child, price_infant, room_types, occupancies, plan_types } = body;
 
         let sql = `
             UPDATE hotels
-            SET name = $1, slug = $2, description = $3, price = $4, destination_id = $5, image_url = $6, stars = $7, features = $8, is_featured = $9, is_promotion = $10, type = $11, price_child = $12, price_infant = $13, gallery = $14, tags = $15
-            WHERE id = $16
+            SET name = $1, slug = $2, description = $3, price = $4, destination_id = $5, image_url = $6, stars = $7, features = $8, is_featured = $9, is_promotion = $10, type = $11, price_child = $12, price_infant = $13, gallery = $14, tags = $15, room_types = $16, occupancies = $17, plan_types = $18
+            WHERE id = $19
         `;
-        const values = [name, slug, description, price, destination_id, image_url, stars, features, is_featured, is_promotion, type || 'Hotel', price_child, price_infant, body.gallery || [], body.tags || [], id];
+        const values = [
+            name,
+            slug,
+            description,
+            price,
+            destination_id,
+            image_url,
+            stars,
+            features,
+            is_featured,
+            is_promotion,
+            type || 'Hotel',
+            price_child,
+            price_infant,
+            body.gallery || [],
+            body.tags || [],
+            JSON.stringify(room_types || []),
+            JSON.stringify(occupancies || []),
+            JSON.stringify(plan_types || []),
+            id
+        ];
 
         if (user.role !== 'administrador') {
-            sql += ' AND created_by = $17';
+            sql = sql.replace('WHERE id = $19', 'WHERE id = $19 AND created_by = $20');
             values.push(user.id);
         }
 

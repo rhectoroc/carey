@@ -29,6 +29,9 @@ interface Hotel {
     is_featured: boolean;
     is_promotion?: boolean;
     type?: string;
+    room_types?: string[];
+    occupancies?: string[];
+    plan_types?: string[];
 }
 
 interface Destination {
@@ -352,6 +355,78 @@ export default function HotelsPage() {
                                 />
                             </div>
                         </div>
+                        <div style={{ display: 'flex', gap: '20px', marginBottom: '15px' }}>
+                            <div className={styles.formGroup} style={{ flex: 1 }}>
+                                <label className={styles.label} style={{ color: '#333', fontWeight: 'bold' }}>Tipos de Habitación</label>
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: '10px', background: '#f8fafc', padding: '15px', borderRadius: '8px', border: '1px solid #ddd' }}>
+                                    {['Standard', 'Family', 'Luxury'].map(type => (
+                                        <label key={type} style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.9rem' }}>
+                                            <input
+                                                type="checkbox"
+                                                checked={currentHotel.room_types?.includes(type) || false}
+                                                onChange={(e) => {
+                                                    const current = currentHotel.room_types || [];
+                                                    const updated = e.target.checked
+                                                        ? [...current, type]
+                                                        : current.filter(t => t !== type);
+                                                    setCurrentHotel({ ...currentHotel, room_types: updated });
+                                                }}
+                                            />
+                                            {type}
+                                        </label>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style={{ display: 'flex', gap: '20px', marginBottom: '15px' }}>
+                            <div className={styles.formGroup} style={{ flex: 1 }}>
+                                <label className={styles.label} style={{ color: '#333', fontWeight: 'bold' }}>Ocupación</label>
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: '10px', background: '#f8fafc', padding: '15px', borderRadius: '8px', border: '1px solid #ddd' }}>
+                                    {['Sencilla', 'Doble', 'Triple', 'Cuadruble', 'Niños'].map(occ => (
+                                        <label key={occ} style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.9rem' }}>
+                                            <input
+                                                type="checkbox"
+                                                checked={currentHotel.occupancies?.includes(occ) || false}
+                                                onChange={(e) => {
+                                                    const current = currentHotel.occupancies || [];
+                                                    const updated = e.target.checked
+                                                        ? [...current, occ]
+                                                        : current.filter(o => o !== occ);
+                                                    setCurrentHotel({ ...currentHotel, occupancies: updated });
+                                                }}
+                                            />
+                                            {occ}
+                                        </label>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style={{ display: 'flex', gap: '20px', marginBottom: '15px' }}>
+                            <div className={styles.formGroup} style={{ flex: 1 }}>
+                                <label className={styles.label} style={{ color: '#333', fontWeight: 'bold' }}>Tipo de Plan</label>
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: '10px', background: '#f8fafc', padding: '15px', borderRadius: '8px', border: '1px solid #ddd' }}>
+                                    {['Todo incluido', 'Solo desayunos', 'Desayunos y cena', 'Solo alojamiento'].map(plan => (
+                                        <label key={plan} style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.9rem' }}>
+                                            <input
+                                                type="checkbox"
+                                                checked={currentHotel.plan_types?.includes(plan) || false}
+                                                onChange={(e) => {
+                                                    const current = currentHotel.plan_types || [];
+                                                    const updated = e.target.checked
+                                                        ? [...current, plan]
+                                                        : current.filter(p => p !== plan);
+                                                    setCurrentHotel({ ...currentHotel, plan_types: updated });
+                                                }}
+                                            />
+                                            {plan}
+                                        </label>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
                         <div style={{ display: 'flex', gap: '10px' }}>
                             <div className={styles.formGroup} style={{ flex: 1 }}>
                                 <label className={styles.label} style={{ color: '#333' }}>Stars (1-5)</label>

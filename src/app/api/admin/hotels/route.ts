@@ -35,14 +35,34 @@ export async function POST(request: Request) {
         if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
         const body = await request.json();
-        const { name, slug, description, price, destination_id, image_url, stars, features, is_featured, is_promotion, type, price_child, price_infant } = body;
+        const { name, slug, description, price, destination_id, image_url, stars, features, is_featured, is_promotion, type, price_child, price_infant, room_types, occupancies, plan_types } = body;
 
         const sql = `
-            INSERT INTO hotels (name, slug, description, price, destination_id, image_url, stars, features, is_featured, is_promotion, type, price_child, price_infant, gallery, tags, created_by)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+            INSERT INTO hotels (name, slug, description, price, destination_id, image_url, stars, features, is_featured, is_promotion, type, price_child, price_infant, gallery, tags, created_by, room_types, occupancies, plan_types)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)
             RETURNING *
         `;
-        const values = [name, slug, description, price, destination_id, image_url, stars, features || [], is_featured || false, is_promotion || false, type || 'Hotel', price_child || 0, price_infant || 0, body.gallery || [], body.tags || [], user.id];
+        const values = [
+            name,
+            slug,
+            description,
+            price,
+            destination_id,
+            image_url,
+            stars,
+            features || [],
+            is_featured || false,
+            is_promotion || false,
+            type || 'Hotel',
+            price_child || 0,
+            price_infant || 0,
+            body.gallery || [],
+            body.tags || [],
+            user.id,
+            JSON.stringify(room_types || []),
+            JSON.stringify(occupancies || []),
+            JSON.stringify(plan_types || [])
+        ];
 
         const result = await query(sql, values);
         return NextResponse.json(result.rows[0], { status: 201 });
