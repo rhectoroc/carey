@@ -145,6 +145,24 @@ export default function HotelsPage() {
         }
     };
 
+    // Helper to calculate the correct display price for preview
+    const calculateDisplayPrice = () => {
+        // 1. If main price is set and > 0, use it
+        if (currentHotel.price && Number(currentHotel.price) > 0) return Number(currentHotel.price);
+
+        // 2. If matrix exists, find the lowest price > 0
+        if (currentHotel.pricing_matrix && currentHotel.pricing_matrix.length > 0) {
+            const prices = currentHotel.pricing_matrix
+                .map(m => Number(m.price))
+                .filter(p => !isNaN(p) && p > 0);
+
+            if (prices.length > 0) return Math.min(...prices);
+        }
+
+        // 3. Fallback to 0
+        return 0;
+    };
+
     const startCreate = () => {
         setCurrentHotel({ is_featured: false, stars: 3, tags: [], gallery: [] });
         setFeaturesInput('');
@@ -647,7 +665,7 @@ export default function HotelsPage() {
                             id: 'preview',
                             title: currentHotel.name || 'Hotel Name',
                             category: currentHotel.type || 'Hotel',
-                            price: currentHotel.price || (currentHotel.pricing_matrix && currentHotel.pricing_matrix.length > 0 ? Math.min(...currentHotel.pricing_matrix.map(m => m.price || Infinity)) : 0),
+                            price: calculateDisplayPrice(),
                             image: currentHotel.image_url || 'https://via.placeholder.com/400x300',
                             location: currentHotel.destination_name || 'Location',
                             rating: currentHotel.stars || 0,
@@ -677,7 +695,7 @@ export default function HotelsPage() {
                     id: 'preview',
                     title: currentHotel.name || 'Hotel Name',
                     category: currentHotel.type || 'Hotel',
-                    price: currentHotel.price || (currentHotel.pricing_matrix && currentHotel.pricing_matrix.length > 0 ? Math.min(...currentHotel.pricing_matrix.map(m => m.price || Infinity)) : 0),
+                    price: calculateDisplayPrice(),
                     image: currentHotel.image_url || 'https://via.placeholder.com/400x300',
                     location: currentHotel.destination_name || 'Location',
                     rating: currentHotel.stars || 0,
