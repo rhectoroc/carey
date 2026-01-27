@@ -13,7 +13,6 @@ interface Moment {
     description: string;
     video_url: string;
     thumbnail_url: string;
-    thumbnail_url: string;
     is_active: boolean;
     creator_name?: string;
 }
