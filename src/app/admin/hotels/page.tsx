@@ -53,6 +53,7 @@ export default function HotelsPage() {
     const [loading, setLoading] = useState(false);
     const [featuresInput, setFeaturesInput] = useState(''); // Keep as comma-separated string for input
     const [tagInput, setTagInput] = useState('');
+    const [roomTypeInput, setRoomTypeInput] = useState('');
     const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
     const { showNotification } = useNotification();
 
@@ -189,6 +190,20 @@ export default function HotelsPage() {
     const removeTag = (tagToRemove: string) => {
         const currentTags = currentHotel.tags || [];
         setCurrentHotel({ ...currentHotel, tags: currentTags.filter(t => t !== tagToRemove) });
+    };
+
+    const addRoomType = () => {
+        if (!roomTypeInput.trim()) return;
+        const currentTypes = currentHotel.room_types || [];
+        if (!currentTypes.includes(roomTypeInput.trim())) {
+            setCurrentHotel({ ...currentHotel, room_types: [...currentTypes, roomTypeInput.trim()] });
+        }
+        setRoomTypeInput('');
+    };
+
+    const removeRoomType = (typeToRemove: string) => {
+        const currentTypes = currentHotel.room_types || [];
+        setCurrentHotel({ ...currentHotel, room_types: currentTypes.filter(t => t !== typeToRemove) });
     };
 
     if (viewMode === 'list') {
@@ -381,24 +396,27 @@ export default function HotelsPage() {
                         </div>
                         <div style={{ display: 'flex', gap: '20px', marginBottom: '15px' }}>
                             <div className={styles.formGroup} style={{ flex: 1 }}>
-                                <label className={styles.label} style={{ color: '#333', fontWeight: 'bold' }}>Tipos de Habitación</label>
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: '10px', background: '#f8fafc', padding: '15px', borderRadius: '8px', border: '1px solid #ddd' }}>
-                                    {['Standard', 'Family', 'Luxury'].map(type => (
-                                        <label key={type} style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.9rem' }}>
-                                            <input
-                                                type="checkbox"
-                                                checked={currentHotel.room_types?.includes(type) || false}
-                                                onChange={(e) => {
-                                                    const current = currentHotel.room_types || [];
-                                                    const updated = e.target.checked
-                                                        ? [...current, type]
-                                                        : current.filter(t => t !== type);
-                                                    setCurrentHotel({ ...currentHotel, room_types: updated });
-                                                }}
-                                            />
-                                            {type}
-                                        </label>
-                                    ))}
+                                <div className={styles.formGroup} style={{ flex: 1 }}>
+                                    <label className={styles.label} style={{ color: '#333', fontWeight: 'bold' }}>Tipos de Habitación (Personalizados)</label>
+                                    <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+                                        <input
+                                            className={styles.input}
+                                            style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
+                                            value={roomTypeInput}
+                                            onChange={(e) => setRoomTypeInput(e.target.value)}
+                                            placeholder="Ej: Superior (Mar/Dunas), Junior Suite..."
+                                            onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addRoomType())}
+                                        />
+                                        <button type="button" onClick={addRoomType} className={styles.actionButton} style={{ padding: '0 15px' }}>Añadir</button>
+                                    </div>
+                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                                        {currentHotel.room_types?.map(type => (
+                                            <span key={type} style={{ background: '#e0f2fe', color: '#0369a1', padding: '4px 10px', borderRadius: '15px', display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.85rem', fontWeight: 'bold' }}>
+                                                {type}
+                                                <X size={14} style={{ cursor: 'pointer' }} onClick={() => removeRoomType(type)} />
+                                            </span>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
                         </div>
