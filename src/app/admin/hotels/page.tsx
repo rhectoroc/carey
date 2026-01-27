@@ -465,7 +465,7 @@ export default function HotelsPage() {
                                 <input
                                     type="date"
                                     className={styles.input}
-                                    style={{ width: 'auto', background: 'white' }}
+                                    style={{ width: 'auto', background: 'white', color: '#333' }}
                                     value={currentHotel.price_valid_until ? new Date(currentHotel.price_valid_until).toISOString().split('T')[0] : ''}
                                     onChange={(e) => setCurrentHotel({ ...currentHotel, price_valid_until: e.target.value })}
                                 />
