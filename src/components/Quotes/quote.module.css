@@ -1,9 +1,118 @@
-.container {
-    max-width: 600px;
+.quoteLayout {
+    width: 100%;
+    max-width: 1400px;
     margin: 0 auto;
     padding: 20px;
+    display: grid;
+    gap: 20px;
     font-family: system-ui, -apple-system, sans-serif;
 }
+
+/* Mobile: Single Column Stack */
+@media (max-width: 1023px) {
+    .quoteLayout {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Desktop: 3 Columns */
+@media (min-width: 1024px) {
+    .quoteLayout {
+        grid-template-columns: 300px 1fr 320px;
+        align-items: start;
+    }
+}
+
+.contextColumn,
+.feedbackColumn {
+    background: white;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+    position: sticky;
+    top: 100px;
+    /* Sticky on desktop */
+}
+
+/* Mobile Context Hidden/Simplified? Or just top */
+@media (max-width: 1023px) {
+
+    .contextColumn,
+    .feedbackColumn {
+        position: relative;
+        top: 0;
+    }
+
+    .contextColumn {
+        order: -1;
+        /* Show first */
+    }
+
+    .feedbackColumn {
+        order: 2;
+        /* Show last */
+    }
+}
+
+/* .formColumn takes remaining space in grid or full width in mobile */
+
+
+/* Context Cards */
+.contextImage {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 15px;
+}
+
+.contextTitle {
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+    color: #1e293b;
+    line-height: 1.2;
+}
+
+.contextMeta {
+    color: #64748b;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 5px;
+}
+
+/* Feedback Summary */
+.summaryRow {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 0.9rem;
+    color: #475569;
+}
+
+.summaryTotal {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 2px solid #e2e8f0;
+    text-align: right;
+}
+
+.totalLabel {
+    display: block;
+    font-size: 0.9rem;
+    color: #64748b;
+}
+
+.totalValue {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--color-primary-teal, #0d9488);
+}
+
 
 .title {
     font-size: 1.8rem;
@@ -14,12 +123,8 @@
 }
 
 .formSection {
+    /* Glass style inherited from grouping above */
     margin-bottom: 25px;
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    border: 1px solid #f0f0f0;
 }
 
 .sectionTitle {

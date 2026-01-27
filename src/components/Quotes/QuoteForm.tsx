@@ -210,266 +210,321 @@ export default function QuoteForm() {
         }
     };
 
-    if (submitted) {
-        return (
-            <div className={styles.container}>
-                <div className={styles.successCard}>
-                    <div className={styles.successIcon}>✓</div>
-                    <h2 className={styles.title} style={{ marginBottom: '10px' }}>¡Cotización Lista!</h2>
-                    <p style={{ color: '#666', marginBottom: '20px' }}>
-                        Hola <b>{contact.firstName}</b>, hemos calculado tu presupuesto estimado.
-                    </p>
+    // Animated Price Hook
+    const [animatedPrice, setAnimatedPrice] = useState(0);
 
-                    <div style={{ background: '#f8fafc', padding: '20px', borderRadius: '12px', textAlign: 'left', marginBottom: '20px' }}>
-                        {hotelId && (
-                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-                                <span style={{ color: '#666' }}>Hotel:</span>
-                                <span style={{ fontWeight: 'bold' }}>{hotels.find(h => h.id === Number(hotelId))?.name || 'Hotel'}</span>
-                            </div>
-                        )}
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-                            <span style={{ color: '#666' }}>Extras:</span>
-                            <span style={{ fontWeight: 'bold' }}>{selectedExtras.length} seleccionados</span>
-                        </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-                            <span style={{ color: '#666' }}>Pasajeros:</span>
-                            <span style={{ fontWeight: 'bold' }}>
-                                {guests.adults} Ad, {guests.child_4_10 + guests.child_0_3} Niños
-                            </span>
-                        </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '15px', paddingTop: '15px', borderTop: '1px solid #ddd' }}>
-                            <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Total Estimado:</span>
-                            <span style={{ fontSize: '1.4rem', fontWeight: 'bold', color: '#16a34a' }}>
-                                ${Number(quoteResult?.total_price).toLocaleString()}
-                            </span>
-                        </div>
-                    </div>
+    useEffect(() => {
+        const duration = 500; // ms
+        const steps = 20;
+        const stepTime = duration / steps;
+        const start = animatedPrice;
+        const end = liveTotal;
+        const increment = (end - start) / steps;
 
-                    <p style={{ fontSize: '0.9rem', color: '#888' }}>
-                        *Un agente te contactará pronto para confirmar disponibilidad.
-                    </p>
+        let current = start;
+        let step = 0;
 
-                    <button
-                        onClick={() => { setSubmitted(false); setQuoteResult(null); setLiveTotal(0); }}
-                        className={styles.submitButton}
-                        style={{ background: 'white', color: '#333', border: '1px solid #ddd', marginTop: '20px' }}
-                    >
-                        Nueva Cotización
-                    </button>
-                </div>
-            </div>
-        );
-    }
+        const timer = setInterval(() => {
+            step++;
+            current += increment;
+            if (step >= steps) {
+                setAnimatedPrice(end);
+                clearInterval(timer);
+            } else {
+                setAnimatedPrice(current);
+            }
+        }, stepTime);
+
+        return () => clearInterval(timer);
+    }, [liveTotal]);
+
+
+    const selectedHotel = hotels.find(h => h.id === Number(hotelId));
+    const serviceTitle = tourMode ? tourName : (selectedHotel?.name || 'Selecciona un Servicio');
+    const serviceImage = selectedHotel?.image || (tourMode ? '/images/tour-placeholder.jpg' : '');
+
+    // Background Image Logic
+    // If hotel selected -> Use hotel image
+    // If not, generic elegant travel background
+    const bgImage = serviceImage || 'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?q=80&w=2049&auto=format&fit=crop';
 
     return (
-        <div className={styles.container}>
-            <h1 className={styles.title}>
-                {tourMode ? (tourName ? `Cotizando: ${tourName}` : 'Cotizando Tour') : 'Cotiza tu Viaje'}
-            </h1>
+        <div style={{ position: 'relative', minHeight: '100vh', width: '100%' }}>
+            {/* Immersive Background */}
+            <div style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                backgroundImage: `url(${bgImage})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                filter: 'blur(8px)',
+                zIndex: 0,
+                transform: 'scale(1.1)' // Prevent blur edge artifacts
+            }} />
+            <div style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                background: 'rgba(0,0,0,0.4)', // Dark Overlay
+                zIndex: 1
+            }} />
 
-            {error && <div className={styles.error}>{error}</div>}
+            <div className={styles.quoteLayout} style={{ position: 'relative', zIndex: 10 }}>
+                {/* Column 1: Context */}
+                <div className={styles.contextColumn}>
+                    {selectedHotel && selectedHotel.image_url && (
+                        <img src={selectedHotel.image_url} alt={serviceTitle} className={styles.contextImage} />
+                    )}
+                    {/* Fallback or Tour Image logic could go here */}
 
-            <form onSubmit={handleSubmit}>
-                <div className={styles.formSection}>
-                    <div className={styles.sectionTitle}>1. {tourMode ? 'Fecha del Tour' : 'Destino y Fechas'}</div>
-
-                    {!tourMode && (
-                        <div className={styles.formGroup}>
-                            <label className={styles.label}>Selecciona tu Hotel</label>
-                            <select
-                                className={styles.select}
-                                value={hotelId}
-                                onChange={(e) => { setHotelId(e.target.value); setSelectedExtras([]); }}
-                                required
-                            >
-                                <option value="">-- Elige un Hotel --</option>
-                                {hotels.map(h => (
-                                    <option key={h.id} value={h.id}>{h.name}</option>
-                                ))}
-                            </select>
+                    <h2 className={styles.contextTitle}>{serviceTitle}</h2>
+                    <div className={styles.contextMeta}>
+                        📍 {selectedHotel?.location || (tourMode ? 'Tour / Actividad' : 'Destino')}
+                    </div>
+                    {selectedHotel?.stars && (
+                        <div className={styles.contextMeta}>
+                            ⭐ {selectedHotel.stars} Estrellas
                         </div>
                     )}
+                    <div style={{ marginTop: '15px', fontSize: '0.9rem', color: '#666', lineHeight: '1.4' }}>
+                        {selectedHotel?.description?.substring(0, 100)}...
+                    </div>
+                </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: tourMode ? '1fr' : '1fr 1fr', gap: '15px' }}>
-                        <div className={styles.formGroup}>
-                            <label className={styles.label}>{tourMode ? 'Fecha' : 'Llegada'}</label>
-                            <input
-                                type="date"
-                                className={styles.input}
-                                value={dates.checkIn}
-                                onChange={(e) => setDates({ ...dates, checkIn: e.target.value, checkOut: tourMode ? e.target.value : dates.checkOut })}
-                                required
-                            />
+                {/* Column 2: Form */}
+                <div className={styles.formColumn}>
+                    <h1 className={styles.title} style={{ textAlign: 'left', fontSize: '1.5rem', marginBottom: '20px' }}>
+                        Personaliza tu Experiencia
+                    </h1>
+
+                    {error && <div className={styles.error}>{error}</div>}
+
+                    <form id="quote-form" onSubmit={handleSubmit}>
+                        <div className={styles.formSection}>
+                            <div className={styles.sectionTitle}>1. {tourMode ? 'Fecha del Tour' : 'Fechas de Viaje'}</div>
+
+                            {!tourMode && (
+                                <div className={styles.formGroup}>
+                                    <label className={styles.label}>Hotel</label>
+                                    <select
+                                        className={styles.select}
+                                        value={hotelId}
+                                        onChange={(e) => { setHotelId(e.target.value); setSelectedExtras([]); }}
+                                        required
+                                    >
+                                        <option value="">-- Elige un Hotel --</option>
+                                        {hotels.map(h => (
+                                            <option key={h.id} value={h.id}>{h.name}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            )}
+
+                            <div style={{ display: 'grid', gridTemplateColumns: tourMode ? '1fr' : '1fr 1fr', gap: '15px' }}>
+                                <div className={styles.formGroup}>
+                                    <label className={styles.label}>{tourMode ? 'Fecha' : 'Llegada'}</label>
+                                    <input
+                                        type="date"
+                                        className={styles.input}
+                                        value={dates.checkIn}
+                                        onChange={(e) => setDates({ ...dates, checkIn: e.target.value, checkOut: tourMode ? e.target.value : dates.checkOut })}
+                                        required
+                                    />
+                                </div>
+                                {!tourMode && (
+                                    <div className={styles.formGroup}>
+                                        <label className={styles.label}>Salida</label>
+                                        <input
+                                            type="date"
+                                            className={styles.input}
+                                            value={dates.checkOut}
+                                            onChange={(e) => setDates({ ...dates, checkOut: e.target.value })}
+                                            required
+                                        />
+                                    </div>
+                                )}
+                            </div>
                         </div>
-                        {!tourMode && (
+
+                        <div className={styles.formSection}>
+                            <div className={styles.sectionTitle}>2. Huéspedes</div>
+
+                            <div className={styles.counterContainer}>
+                                <div>
+                                    <span className={styles.counterLabel}>Adultos</span>
+                                    <span className={styles.counterSubLabel}>+12 años</span>
+                                </div>
+                                <div className={styles.counterControls}>
+                                    <div className={styles.counterButton} onClick={() => handleGuestChange('adults', -1)}>-</div>
+                                    <span className={styles.value}>{guests.adults}</span>
+                                    <div className={styles.counterButton} onClick={() => handleGuestChange('adults', 1)}>+</div>
+                                </div>
+                            </div>
+
+                            <div className={styles.counterContainer}>
+                                <div>
+                                    <span className={styles.counterLabel}>Niños</span>
+                                    <span className={styles.counterSubLabel}>4 - 10 años</span>
+                                </div>
+                                <div className={styles.counterControls}>
+                                    <div className={styles.counterButton} onClick={() => handleGuestChange('child_4_10', -1)}>-</div>
+                                    <span className={styles.value}>{guests.child_4_10}</span>
+                                    <div className={styles.counterButton} onClick={() => handleGuestChange('child_4_10', 1)}>+</div>
+                                </div>
+                            </div>
+
+                            <div className={styles.counterContainer}>
+                                <div>
+                                    <span className={styles.counterLabel}>Bebés</span>
+                                    <span className={styles.counterSubLabel}>0 - 3 años</span>
+                                </div>
+                                <div className={styles.counterControls}>
+                                    <div className={styles.counterButton} onClick={() => handleGuestChange('child_0_3', -1)}>-</div>
+                                    <span className={styles.value}>{guests.child_0_3}</span>
+                                    <div className={styles.counterButton} onClick={() => handleGuestChange('child_0_3', 1)}>+</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Extras Section */}
+                        {(extras.tours.length > 0 || extras.transfers.length > 0) && (
+                            <div className={styles.formSection}>
+                                <div className={styles.sectionTitle}>3. Complementos</div>
+
+                                {extras.transfers.length > 0 && (
+                                    <div style={{ marginBottom: '15px' }}>
+                                        <label className={styles.label}>Traslados</label>
+                                        <div className={styles.extrasGrid}>
+                                            {extras.transfers.map((t: any) => (
+                                                <div
+                                                    key={t.id}
+                                                    className={`${styles.extraCard} ${selectedExtras.find(e => e.id === t.id && e.type === 'transfer') ? styles.selected : ''}`}
+                                                    onClick={() => toggleExtra(t, 'transfer')}
+                                                >
+                                                    <div className={styles.extraName}>{t.name}</div>
+                                                    <div className={styles.extraPrice}>+${t.price} pp</div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {extras.tours.length > 0 && (
+                                    <div>
+                                        <label className={styles.label}>Tours</label>
+                                        <div className={styles.extrasGrid}>
+                                            {extras.tours.map((t: any) => (
+                                                <div
+                                                    key={t.id}
+                                                    className={`${styles.extraCard} ${selectedExtras.find(e => e.id === t.id && e.type === 'tour') ? styles.selected : ''}`}
+                                                    onClick={() => toggleExtra(t, 'tour')}
+                                                >
+                                                    <div className={styles.extraName}>{t.name}</div>
+                                                    <div className={styles.extraPrice}>+${t.price} pp</div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        <div className={styles.formSection}>
+                            <div className={styles.sectionTitle}>4. Contacto</div>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+                                <div className={styles.formGroup}>
+                                    <label className={styles.label}>Nombre</label>
+                                    <input
+                                        className={styles.input}
+                                        value={contact.firstName}
+                                        onChange={(e) => setContact({ ...contact, firstName: e.target.value })}
+                                        required
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label className={styles.label}>Apellido</label>
+                                    <input
+                                        className={styles.input}
+                                        value={contact.lastName}
+                                        onChange={(e) => setContact({ ...contact, lastName: e.target.value })}
+                                        required
+                                    />
+                                </div>
+                            </div>
                             <div className={styles.formGroup}>
-                                <label className={styles.label}>Salida</label>
+                                <label className={styles.label}>Documento (ID)</label>
                                 <input
-                                    type="date"
                                     className={styles.input}
-                                    value={dates.checkOut}
-                                    onChange={(e) => setDates({ ...dates, checkOut: e.target.value })}
+                                    value={contact.documentId}
+                                    onChange={(e) => setContact({ ...contact, documentId: e.target.value })}
                                     required
                                 />
                             </div>
-                        )}
-                    </div>
-                </div>
-
-                <div className={styles.formSection}>
-                    <div className={styles.sectionTitle}>2. Huéspedes</div>
-
-                    <div className={styles.counterContainer}>
-                        <div>
-                            <span className={styles.counterLabel}>Adultos</span>
-                            <span className={styles.counterSubLabel}>+12 años</span>
-                        </div>
-                        <div className={styles.counterControls}>
-                            <div className={styles.counterButton} onClick={() => handleGuestChange('adults', -1)}>-</div>
-                            <span className={styles.value}>{guests.adults}</span>
-                            <div className={styles.counterButton} onClick={() => handleGuestChange('adults', 1)}>+</div>
-                        </div>
-                    </div>
-
-                    <div className={styles.counterContainer}>
-                        <div>
-                            <span className={styles.counterLabel}>Niños</span>
-                            <span className={styles.counterSubLabel}>4 - 10 años</span>
-                        </div>
-                        <div className={styles.counterControls}>
-                            <div className={styles.counterButton} onClick={() => handleGuestChange('child_4_10', -1)}>-</div>
-                            <span className={styles.value}>{guests.child_4_10}</span>
-                            <div className={styles.counterButton} onClick={() => handleGuestChange('child_4_10', 1)}>+</div>
-                        </div>
-                    </div>
-
-                    <div className={styles.counterContainer}>
-                        <div>
-                            <span className={styles.counterLabel}>Bebés</span>
-                            <span className={styles.counterSubLabel}>0 - 3 años</span>
-                        </div>
-                        <div className={styles.counterControls}>
-                            <div className={styles.counterButton} onClick={() => handleGuestChange('child_0_3', -1)}>-</div>
-                            <span className={styles.value}>{guests.child_0_3}</span>
-                            <div className={styles.counterButton} onClick={() => handleGuestChange('child_0_3', 1)}>+</div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Extras Section - Only shows if hotel/extras loaded */}
-                {(extras.tours.length > 0 || extras.transfers.length > 0) && (
-                    <div className={styles.formSection}>
-                        <div className={styles.sectionTitle}>3. Actividades y Traslados</div>
-
-                        {extras.transfers.length > 0 && (
-                            <div style={{ marginBottom: '15px' }}>
-                                <label className={styles.label}>Traslados Disponibles</label>
-                                <div className={styles.extrasGrid}>
-                                    {extras.transfers.map((t: any) => (
-                                        <div
-                                            key={t.id}
-                                            className={`${styles.extraCard} ${selectedExtras.find(e => e.id === t.id && e.type === 'transfer') ? styles.selected : ''}`}
-                                            onClick={() => toggleExtra(t, 'transfer')}
-                                        >
-                                            <div className={styles.extraName}>{t.name}</div>
-                                            <div className={styles.extraPrice}>+${t.price} pp</div>
-                                        </div>
-                                    ))}
-                                </div>
+                            <div className={styles.formGroup}>
+                                <label className={styles.label}>Email</label>
+                                <input
+                                    type="email"
+                                    className={styles.input}
+                                    value={contact.email}
+                                    onChange={(e) => setContact({ ...contact, email: e.target.value })}
+                                    required
+                                />
                             </div>
-                        )}
-
-                        {extras.tours.length > 0 && (
-                            <div>
-                                <label className={styles.label}>Tours Recomendados</label>
-                                <div className={styles.extrasGrid}>
-                                    {extras.tours.map((t: any) => (
-                                        <div
-                                            key={t.id}
-                                            className={`${styles.extraCard} ${selectedExtras.find(e => e.id === t.id && e.type === 'tour') ? styles.selected : ''}`}
-                                            onClick={() => toggleExtra(t, 'tour')}
-                                        >
-                                            <div className={styles.extraName}>{t.name}</div>
-                                            <div className={styles.extraPrice}>+${t.price} pp</div>
-                                        </div>
-                                    ))}
-                                </div>
+                            <div className={styles.formGroup}>
+                                <label className={styles.label}>Teléfono</label>
+                                <input
+                                    type="tel"
+                                    className={styles.input}
+                                    value={contact.phone}
+                                    onChange={(e) => setContact({ ...contact, phone: e.target.value })}
+                                />
                             </div>
-                        )}
-                    </div>
-                )}
-
-                <div className={styles.formSection}>
-                    <div className={styles.sectionTitle}>4. Tus Datos</div>
-
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
-                        <div className={styles.formGroup}>
-                            <label className={styles.label}>Nombre</label>
-                            <input
-                                className={styles.input}
-                                placeholder="Juan"
-                                value={contact.firstName}
-                                onChange={(e) => setContact({ ...contact, firstName: e.target.value })}
-                                required
-                            />
                         </div>
-                        <div className={styles.formGroup}>
-                            <label className={styles.label}>Apellido</label>
-                            <input
-                                className={styles.input}
-                                placeholder="Pérez"
-                                value={contact.lastName}
-                                onChange={(e) => setContact({ ...contact, lastName: e.target.value })}
-                                required
-                            />
-                        </div>
-                    </div>
-
-                    <div className={styles.formGroup}>
-                        <label className={styles.label}>Documento de Identidad (Cédula/Pasaporte)</label>
-                        <input
-                            className={styles.input}
-                            placeholder="V-12345678"
-                            value={contact.documentId}
-                            onChange={(e) => setContact({ ...contact, documentId: e.target.value })}
-                            required
-                        />
-                    </div>
-
-                    <div className={styles.formGroup}>
-                        <label className={styles.label}>Email</label>
-                        <input
-                            type="email"
-                            className={styles.input}
-                            placeholder="juan@ejemplo.com"
-                            value={contact.email}
-                            onChange={(e) => setContact({ ...contact, email: e.target.value })}
-                            required
-                        />
-                    </div>
-                    <div className={styles.formGroup}>
-                        <label className={styles.label}>Teléfono (WhatsApp)</label>
-                        <input
-                            type="tel"
-                            className={styles.input}
-                            placeholder="+58 412 1234567"
-                            value={contact.phone}
-                            onChange={(e) => setContact({ ...contact, phone: e.target.value })}
-                        />
-                    </div>
+                    </form>
                 </div>
 
-                <div className={styles.pricePreview} style={{ transition: 'all 0.3s' }}>
-                    <div style={{ fontSize: '0.9rem', color: '#666', marginBottom: '5px' }}>Presupuesto Estimado</div>
-                    <div style={{ fontSize: '1.8rem', fontWeight: 'bold', color: '#2563eb' }}>
-                        ${liveTotal.toLocaleString()}
+                {/* Column 3: Feedback */}
+                <div className={styles.feedbackColumn}>
+                    <h3 className={styles.sectionTitle}>Resumen</h3>
+                    <div className={styles.summaryRow}>
+                        <span>Check-in</span>
+                        <b>{dates.checkIn ? new Date(dates.checkIn).toLocaleDateString() : '-'}</b>
                     </div>
-                </div>
+                    {!tourMode && (
+                        <div className={styles.summaryRow}>
+                            <span>Check-out</span>
+                            <b>{dates.checkOut ? new Date(dates.checkOut).toLocaleDateString() : '-'}</b>
+                        </div>
+                    )}
+                    <div className={styles.summaryRow}>
+                        <span>Pasajeros</span>
+                        <b>{guests.adults} Ad, {guests.child_4_10 + guests.child_0_3} Niños</b>
+                    </div>
+                    <div className={styles.summaryRow}>
+                        <span>Extras</span>
+                        <b>{selectedExtras.length}</b>
+                    </div>
 
-                <button type="submit" className={styles.submitButton} disabled={loading}>
-                    {loading ? 'Generando Cotización...' : 'Enviar Solicitud'}
-                </button>
-            </form >
-        </div >
+                    <div className={styles.summaryTotal}>
+                        <span className={styles.totalLabel}>Total Estimado</span>
+                        <span className={styles.totalValue}>${Math.round(animatedPrice).toLocaleString()}</span>
+                    </div>
+
+                    <button
+                        type="submit"
+                        form="quote-form" // Link to form outside
+                        className={styles.submitButton}
+                        disabled={loading}
+                    >
+                        {loading ? 'Calculando...' : 'COTIZAR AHORA'}
+                    </button>
+                </div>
+            </div>
+        </div>
     );
 }

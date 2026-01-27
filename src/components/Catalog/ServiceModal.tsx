@@ -294,9 +294,22 @@ export default function ServiceModal({ isOpen, onClose, service }: ServiceModalP
                         </div>
                     )}
 
-                    <div className={styles.footer}>
-                        <button className={styles.actionButton} onClick={handleConsultar}>
-                            {t('modal.bookNow')}
+                    <div className={styles.footerActions}>
+                        <button
+                            className={styles.actionButton}
+                            style={{ flex: 1, background: 'transparent', color: '#64748b', border: '1px solid #e2e8f0' }}
+                            onClick={handleConsultar}
+                        >
+                            💬 Consultar con EVA
+                        </button>
+                        <button
+                            className={styles.actionButton}
+                            style={{ flex: 1, background: 'var(--color-primary-teal)', color: 'white', fontWeight: 'bold' }}
+                            onClick={() => {
+                                window.location.href = `/quote?${service.category.toLowerCase() === 'tour' ? 'tour_id' : 'hotel_id'}=${service.id}`;
+                            }}
+                        >
+                            COTIZAR AHORA
                         </button>
                     </div>
                 </div>

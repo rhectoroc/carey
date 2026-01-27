@@ -187,28 +187,6 @@ export default function ServiceCard({ service, onClick, style }: ServiceCardProp
                         )}
                     </div>
                 </div>
-
-                <div className={styles.actionsContainer}>
-                    <button
-                        className={`${styles.actionButton} ${styles.primaryAction}`}
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            window.location.href = `/quote?${service.category.toLowerCase() === 'tour' ? 'tour_id' : 'hotel_id'}=${service.id}`;
-                        }}
-                    >
-                        Cotizar Ahora
-                    </button>
-                    <button
-                        className={`${styles.actionButton} ${styles.secondaryAction}`}
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            const text = encodeURIComponent(`Hola Carey, tengo una duda sobre ${service.category}: ${service.title}`);
-                            window.open(`https://wa.me/584121234567?text=${text}`, '_blank');
-                        }}
-                    >
-                        <span style={{ fontSize: '1.1em' }}>💬</span> Consultar
-                    </button>
-                </div>
             </div>
         </div>
     );
