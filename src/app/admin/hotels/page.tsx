@@ -481,7 +481,10 @@ export default function HotelsPage() {
                                                         }}
                                                     >
                                                         <option value="">Seleccionar</option>
-                                                        {['Standard', 'Family', 'Luxury'].map(t => <option key={t} value={t}>{t}</option>)}
+                                                        {(currentHotel.room_types || []).length > 0
+                                                            ? (currentHotel.room_types || []).map(t => <option key={t} value={t}>{t}</option>)
+                                                            : <option disabled>Seleccione tipos arriba</option>
+                                                        }
                                                     </select>
                                                 </td>
                                                 <td style={{ padding: '5px' }}>
@@ -495,7 +498,10 @@ export default function HotelsPage() {
                                                         }}
                                                     >
                                                         <option value="">Seleccionar</option>
-                                                        {['Sencilla', 'Doble', 'Triple', 'Cuadruble', 'Niños'].map(o => <option key={o} value={o}>{o}</option>)}
+                                                        {(currentHotel.occupancies || []).length > 0
+                                                            ? (currentHotel.occupancies || []).map(o => <option key={o} value={o}>{o}</option>)
+                                                            : <option disabled>Seleccione ocupaciones arriba</option>
+                                                        }
                                                     </select>
                                                 </td>
                                                 <td style={{ padding: '5px' }}>
@@ -509,7 +515,10 @@ export default function HotelsPage() {
                                                         }}
                                                     >
                                                         <option value="">Seleccionar</option>
-                                                        {['Todo incluido', 'Solo desayunos', 'Desayunos y cena', 'Solo alojamiento'].map(p => <option key={p} value={p}>{p}</option>)}
+                                                        {(currentHotel.plan_types || []).length > 0
+                                                            ? (currentHotel.plan_types || []).map(p => <option key={p} value={p}>{p}</option>)
+                                                            : <option disabled>Seleccione planes arriba</option>
+                                                        }
                                                     </select>
                                                 </td>
                                                 <td style={{ padding: '5px' }}>
@@ -638,7 +647,7 @@ export default function HotelsPage() {
                             id: 'preview',
                             title: currentHotel.name || 'Hotel Name',
                             category: currentHotel.type || 'Hotel',
-                            price: currentHotel.price || 0,
+                            price: currentHotel.price || (currentHotel.pricing_matrix && currentHotel.pricing_matrix.length > 0 ? Math.min(...currentHotel.pricing_matrix.map(m => m.price || Infinity)) : 0),
                             image: currentHotel.image_url || 'https://via.placeholder.com/400x300',
                             location: currentHotel.destination_name || 'Location',
                             rating: currentHotel.stars || 0,
@@ -668,7 +677,7 @@ export default function HotelsPage() {
                     id: 'preview',
                     title: currentHotel.name || 'Hotel Name',
                     category: currentHotel.type || 'Hotel',
-                    price: currentHotel.price || 0,
+                    price: currentHotel.price || (currentHotel.pricing_matrix && currentHotel.pricing_matrix.length > 0 ? Math.min(...currentHotel.pricing_matrix.map(m => m.price || Infinity)) : 0),
                     image: currentHotel.image_url || 'https://via.placeholder.com/400x300',
                     location: currentHotel.destination_name || 'Location',
                     rating: currentHotel.stars || 0,
