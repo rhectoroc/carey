@@ -61,6 +61,12 @@ CREATE TABLE IF NOT EXISTS hotels (
     features JSONB DEFAULT '[]',
     gallery JSONB DEFAULT '[]',
     tags JSONB DEFAULT '[]',
+    pricing_matrix JSONB DEFAULT '[]',
+    room_types JSONB DEFAULT '[]',
+    occupancies JSONB DEFAULT '[]',
+    plan_types JSONB DEFAULT '[]',
+    show_price_publicly BOOLEAN DEFAULT TRUE,
+    price_valid_until DATE,
     rating NUMERIC(3, 1) DEFAULT 5.0,
     is_featured BOOLEAN DEFAULT FALSE,
     is_promotion BOOLEAN DEFAULT FALSE,
@@ -134,6 +140,7 @@ CREATE TABLE IF NOT EXISTS unforgettable_moments (
     description TEXT,
     video_url TEXT NOT NULL,
     thumbnail_url TEXT,
+    creator_name VARCHAR(255),
     is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     created_by INTEGER REFERENCES auth_user(id)
@@ -145,3 +152,36 @@ CREATE INDEX IF NOT EXISTS idx_tours_destination ON tours(destination_id);
 CREATE INDEX IF NOT EXISTS idx_transfers_destination ON transfers(destination_id);
 CREATE INDEX IF NOT EXISTS idx_hotels_tags ON hotels USING GIN (tags);
 CREATE INDEX IF NOT EXISTS idx_tours_tags ON tours USING GIN (tags);
+
+-- 9. Quotes Table (Sistema de Cotizaciones)
+CREATE TABLE IF NOT EXISTS quotes (
+    id SERIAL PRIMARY KEY,
+    user_name VARCHAR(100) NOT NULL,
+    user_email VARCHAR(255) NOT NULL,
+    user_phone VARCHAR(50),
+    hotel_id INTEGER REFERENCES hotels(id),
+    check_in DATE,
+    check_out DATE,
+    adults INTEGER DEFAULT 1,
+    children_4_10 INTEGER DEFAULT 0,
+    children_0_3 INTEGER DEFAULT 0,
+    extra_services JSONB DEFAULT '[]',
+    total_price NUMERIC(10, 2) DEFAULT 0,
+    status VARCHAR(50) DEFAULT 'pendiente',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    customer_id INTEGER REFERENCES customers(id) -- Linked customer
+);
+
+-- 10. Customers Table (New Stage 6)
+CREATE TABLE IF NOT EXISTS customers (
+    id SERIAL PRIMARY KEY,
+    document_id VARCHAR(50) UNIQUE NOT NULL, -- Cedula/Passport
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    email VARCHAR(255),
+    phone_number VARCHAR(50),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_customers_doc ON customers(document_id);

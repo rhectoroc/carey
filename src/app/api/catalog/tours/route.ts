@@ -23,6 +23,13 @@ export async function GET(request: Request) {
             paramIndex++;
         }
 
+        const destinationId = searchParams.get('destination_id');
+        if (destinationId) {
+            sql += ` AND t.destination_id = $${paramIndex}`;
+            values.push(destinationId);
+            paramIndex++;
+        }
+
         sql += ' ORDER BY t.name ASC';
 
         const result = await query(sql, values);
