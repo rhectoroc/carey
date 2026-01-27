@@ -13,6 +13,7 @@ interface Moment {
     description: string;
     video_url: string;
     thumbnail_url: string;
+    thumbnail_url: string;
     is_active: boolean;
     creator_name?: string;
 }
@@ -88,7 +89,7 @@ export default function MomentsPage() {
     };
 
     const startCreate = () => {
-        setCurrentMoment({ is_active: true });
+        setCurrentMoment({ is_active: true, creator_name: '', thumbnail_url: '' });
         setViewMode('create');
     };
 
@@ -164,12 +165,22 @@ export default function MomentsPage() {
             <div className={styles.modalForm} style={{ maxWidth: '800px', background: 'white', padding: '30px', borderRadius: '12px' }}>
                 <form onSubmit={handleSave}>
                     <div className={styles.formGroup}>
-                        <label className={styles.label}>Título</label>
+                        <label className={styles.label}>Título del Momento</label>
                         <input
                             className={styles.input}
                             value={currentMoment.title || ''}
                             onChange={(e) => setCurrentMoment({ ...currentMoment, title: e.target.value })}
+                            placeholder="Ej: Atardecer en Playa El Agua"
                             required
+                        />
+                    </div>
+                    <div className={styles.formGroup}>
+                        <label className={styles.label}>Nombre del Creador (Usuario/Influencer)</label>
+                        <input
+                            className={styles.input}
+                            value={currentMoment.creator_name || ''}
+                            onChange={(e) => setCurrentMoment({ ...currentMoment, creator_name: e.target.value })}
+                            placeholder="Ej: @viajero_feliz"
                         />
                     </div>
                     <div className={styles.formGroup}>
@@ -178,6 +189,7 @@ export default function MomentsPage() {
                             className={styles.input}
                             value={currentMoment.location || ''}
                             onChange={(e) => setCurrentMoment({ ...currentMoment, location: e.target.value })}
+                            placeholder="Ej: Margarita, Venezuela"
                         />
                     </div>
                     <div className={styles.formGroup}>
@@ -187,28 +199,38 @@ export default function MomentsPage() {
                             style={{ minHeight: '100px' }}
                             value={currentMoment.description || ''}
                             onChange={(e) => setCurrentMoment({ ...currentMoment, description: e.target.value })}
+                            placeholder="Breve descripción del momento..."
                         />
                     </div>
-                    <div className={styles.formGroup}>
-                        <label className={styles.label}>Video del Momento (Máx 1)</label>
-                        <ImageGalleryUpload
-                            images={currentMoment.video_url ? [currentMoment.video_url] : []}
-                            onChange={(media) => {
-                                const video = media.find(m => m.toLowerCase().match(/\.(mp4|webm|ogg|mov)$/));
-                                setCurrentMoment({ ...currentMoment, video_url: video || '' });
-                            }}
-                            maxImages={0}
-                            maxVideos={1}
-                        />
-                    </div>
-                    <div className={styles.formGroup}>
-                        <label className={styles.label}>URL de Miniatura (Thumbnail)</label>
-                        <input
-                            className={styles.input}
-                            value={currentMoment.thumbnail_url || ''}
-                            onChange={(e) => setCurrentMoment({ ...currentMoment, thumbnail_url: e.target.value })}
-                            placeholder="https://..."
-                        />
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                        <div className={styles.formGroup}>
+                            <label className={styles.label}>Video del Momento (Máx 1)</label>
+                            <p style={{ fontSize: '0.8rem', color: '#666', marginBottom: '5px' }}>Sube el video principal del momento.</p>
+                            <ImageGalleryUpload
+                                images={currentMoment.video_url ? [currentMoment.video_url] : []}
+                                onChange={(media) => {
+                                    const video = media.find(m => m.toLowerCase().match(/\.(mp4|webm|ogg|mov)$/));
+                                    setCurrentMoment({ ...currentMoment, video_url: video || '' });
+                                }}
+                                maxImages={0}
+                                maxVideos={1}
+                            />
+                        </div>
+                        <div className={styles.formGroup}>
+                            <label className={styles.label}>Miniatura / Portada (Thumbnail)</label>
+                            <p style={{ fontSize: '0.8rem', color: '#666', marginBottom: '5px' }}>Imagen de portada que se mostrará antes de reproducir.</p>
+                            <ImageGalleryUpload
+                                images={currentMoment.thumbnail_url ? [currentMoment.thumbnail_url] : []}
+                                onChange={(media) => {
+                                    // Take the first image uploaded
+                                    const image = media.find(m => !m.toLowerCase().match(/\.(mp4|webm|ogg|mov)$/));
+                                    setCurrentMoment({ ...currentMoment, thumbnail_url: image || '' });
+                                }}
+                                maxImages={1}
+                                maxVideos={0}
+                            />
+                        </div>
                     </div>
                     <div className={styles.formGroup}>
                         <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
