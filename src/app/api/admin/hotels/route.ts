@@ -35,11 +35,11 @@ export async function POST(request: Request) {
         if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
         const body = await request.json();
-        const { name, slug, description, price, destination_id, image_url, stars, features, is_featured, is_promotion, type, price_child, price_infant, room_types, occupancies, plan_types } = body;
+        const { name, slug, description, price, destination_id, image_url, stars, features, is_featured, is_promotion, type, price_child, price_infant, room_types, occupancies, plan_types, pricing_matrix, show_price_publicly, price_valid_until } = body;
 
         const sql = `
-            INSERT INTO hotels (name, slug, description, price, destination_id, image_url, stars, features, is_featured, is_promotion, type, price_child, price_infant, gallery, tags, created_by, room_types, occupancies, plan_types)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)
+            INSERT INTO hotels (name, slug, description, price, destination_id, image_url, stars, features, is_featured, is_promotion, type, price_child, price_infant, gallery, tags, created_by, room_types, occupancies, plan_types, pricing_matrix, show_price_publicly, price_valid_until)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22)
             RETURNING *
         `;
         const values = [
@@ -61,7 +61,10 @@ export async function POST(request: Request) {
             user.id,
             JSON.stringify(room_types || []),
             JSON.stringify(occupancies || []),
-            JSON.stringify(plan_types || [])
+            JSON.stringify(plan_types || []),
+            JSON.stringify(pricing_matrix || []),
+            show_price_publicly ?? true,
+            price_valid_until || null
         ];
 
         const result = await query(sql, values);

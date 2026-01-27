@@ -9,12 +9,12 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
         const { id } = await params;
         const body = await request.json();
-        const { name, slug, description, price, destination_id, image_url, stars, features, is_featured, is_promotion, type, price_child, price_infant, room_types, occupancies, plan_types } = body;
+        const { name, slug, description, price, destination_id, image_url, stars, features, is_featured, is_promotion, type, price_child, price_infant, room_types, occupancies, plan_types, pricing_matrix, show_price_publicly, price_valid_until } = body;
 
         let sql = `
             UPDATE hotels
-            SET name = $1, slug = $2, description = $3, price = $4, destination_id = $5, image_url = $6, stars = $7, features = $8, is_featured = $9, is_promotion = $10, type = $11, price_child = $12, price_infant = $13, gallery = $14, tags = $15, room_types = $16, occupancies = $17, plan_types = $18
-            WHERE id = $19
+            SET name = $1, slug = $2, description = $3, price = $4, destination_id = $5, image_url = $6, stars = $7, features = $8, is_featured = $9, is_promotion = $10, type = $11, price_child = $12, price_infant = $13, gallery = $14, tags = $15, room_types = $16, occupancies = $17, plan_types = $18, pricing_matrix = $19, show_price_publicly = $20, price_valid_until = $21
+            WHERE id = $22
         `;
         const values = [
             name,
@@ -35,11 +35,14 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
             JSON.stringify(room_types || []),
             JSON.stringify(occupancies || []),
             JSON.stringify(plan_types || []),
+            JSON.stringify(pricing_matrix || []),
+            show_price_publicly ?? true,
+            price_valid_until || null,
             id
         ];
 
         if (user.role !== 'administrador') {
-            sql = sql.replace('WHERE id = $19', 'WHERE id = $19 AND created_by = $20');
+            sql = sql.replace('WHERE id = $22', 'WHERE id = $22 AND created_by = $23');
             values.push(user.id);
         }
 

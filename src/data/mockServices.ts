@@ -17,6 +17,8 @@ export interface Service {
     features?: string[];
     is_featured?: boolean;
     is_promotion?: boolean;
+    pricing_matrix?: { room_type: string; occupancy: string; plan_type: string; price: number }[];
+    show_price_publicly?: boolean;
 }
 
 export const mockServices: Service[] = [

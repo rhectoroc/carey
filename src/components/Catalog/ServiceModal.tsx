@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import { Service } from '@/data/mockServices';
 import { Info, Clock, MapPin, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useChatbot } from '@/context/ChatbotContext';
@@ -32,6 +33,22 @@ export default function ServiceModal({ isOpen, onClose, service }: ServiceModalP
         return list;
     }, [service]);
 
+    const isPriceExpired = useMemo(() => {
+        if (!service?.priceValidUntil) return false;
+        const today = new Date();
+        const validUntil = new Date(service.priceValidUntil);
+        return today > validUntil;
+    }, [service]);
+
+    const isPriceHidden = service?.show_price_publicly === false || isPriceExpired;
+
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+        return () => setMounted(false);
+    }, []);
+
     useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = 'hidden';
@@ -44,7 +61,7 @@ export default function ServiceModal({ isOpen, onClose, service }: ServiceModalP
         };
     }, [isOpen]);
 
-    if (!isOpen || !service) return null;
+    if (!mounted || !isOpen || !service) return null;
 
     const handleConsultar = () => {
         const title = service.title;
@@ -72,8 +89,9 @@ export default function ServiceModal({ isOpen, onClose, service }: ServiceModalP
 
     const isVideo = (url: string) => url?.toLowerCase().match(/\.(mp4|webm|ogg|mov)$/);
 
-    return (
-        <div className={styles.overlay} onClick={onClose}>
+    // Use Portal to ensure modal is always on top of everything
+    const modalContent = (
+        <div className={styles.overlay} onClick={onClose} style={{ zIndex: 9999 }}>
             <div className={styles.modal} onClick={e => e.stopPropagation()}>
                 <button className={styles.closeButton} onClick={onClose}>
                     <X size={20} />
@@ -181,29 +199,77 @@ export default function ServiceModal({ isOpen, onClose, service }: ServiceModalP
                         </p>
                     </div>
 
-                    {(service.price || service.price_child || service.price_infant) && (
+                    {/* Pricing Section */}
+                    {(service.price || service.price_child || service.price_infant || (service.pricing_matrix && service.pricing_matrix.length > 0)) && (
                         <div className={styles.section}>
                             <h4 className={styles.sectionTitle}>{t('modal.details')}</h4>
-                            <div className={styles.pricingGrid}>
-                                {service.price && (
-                                    <div className={styles.priceItem}>
-                                        <span className={styles.priceLabel}>{t('modal.adults')}</span>
-                                        <span className={styles.priceValue}>${service.price}</span>
-                                    </div>
-                                )}
-                                {service.price_child && (
-                                    <div className={styles.priceItem}>
-                                        <span className={styles.priceLabel}>{t('modal.children')} (4-10)</span>
-                                        <span className={styles.priceValue}>${service.price_child}</span>
-                                    </div>
-                                )}
-                                {service.price_infant && (
-                                    <div className={styles.priceItem}>
-                                        <span className={styles.priceLabel}>{t('modal.infants')} (0-3)</span>
-                                        <span className={styles.priceValue}>${service.price_infant}</span>
-                                    </div>
-                                )}
-                            </div>
+
+                            {isPriceHidden ? (
+                                <div style={{
+                                    background: '#fff5f5',
+                                    border: '1px solid #feb2b2',
+                                    padding: '15px',
+                                    borderRadius: '8px',
+                                    textAlign: 'center',
+                                    color: '#c53030',
+                                    fontWeight: '600'
+                                }}>
+                                    {isPriceExpired ? 'Tarifa caducada - Consultar disponibilidad y precio' : 'Consultar disponibilidad y precio'}
+                                </div>
+                            ) : (
+                                <>
+                                    {/* Standard Pricing Grid */}
+                                    {(!service.pricing_matrix || service.pricing_matrix.length === 0) && (
+                                        <div className={styles.pricingGrid}>
+                                            {service.price && (
+                                                <div className={styles.priceItem}>
+                                                    <span className={styles.priceLabel}>{t('modal.adults')}</span>
+                                                    <span className={styles.priceValue}>${service.price}</span>
+                                                </div>
+                                            )}
+                                            {service.price_child && (
+                                                <div className={styles.priceItem}>
+                                                    <span className={styles.priceLabel}>{t('modal.children')} (4-10)</span>
+                                                    <span className={styles.priceValue}>${service.price_child}</span>
+                                                </div>
+                                            )}
+                                            {service.price_infant && (
+                                                <div className={styles.priceItem}>
+                                                    <span className={styles.priceLabel}>{t('modal.infants')} (0-3)</span>
+                                                    <span className={styles.priceValue}>${service.price_infant}</span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+
+                                    {/* Pricing Matrix Table */}
+                                    {service.pricing_matrix && service.pricing_matrix.length > 0 && (
+                                        <div style={{ overflowX: 'auto', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0', padding: '10px' }}>
+                                            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
+                                                <thead>
+                                                    <tr style={{ textAlign: 'left', borderBottom: '1px solid #e2e8f0' }}>
+                                                        <th style={{ padding: '8px' }}>Habitación</th>
+                                                        <th style={{ padding: '8px' }}>Ocupación</th>
+                                                        <th style={{ padding: '8px' }}>Plan</th>
+                                                        <th style={{ padding: '8px', textAlign: 'right' }}>Precio</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {service.pricing_matrix.map((row, idx) => (
+                                                        <tr key={idx} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                                                            <td style={{ padding: '8px' }}>{row.room_type}</td>
+                                                            <td style={{ padding: '8px' }}>{row.occupancy}</td>
+                                                            <td style={{ padding: '8px' }}>{row.plan_type}</td>
+                                                            <td style={{ padding: '8px', textAlign: 'right', fontWeight: 'bold', color: 'var(--color-primary-teal)' }}>${row.price}</td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    )}
+                                </>
+                            )}
+
                             {service.priceValidUntil && (
                                 <p style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '10px', display: 'flex', alignItems: 'center', gap: '5px' }}>
                                     <Info size={14} /> {t('modal.validUntil')} {new Date(service.priceValidUntil).toLocaleDateString(language === 'es' ? 'es-ES' : 'en-US')}
@@ -237,4 +303,6 @@ export default function ServiceModal({ isOpen, onClose, service }: ServiceModalP
             </div>
         </div>
     );
+
+    return createPortal(modalContent, document.body);
 }

@@ -32,6 +32,9 @@ interface Hotel {
     room_types?: string[];
     occupancies?: string[];
     plan_types?: string[];
+    pricing_matrix?: { room_type: string; occupancy: string; plan_type: string; price: number }[];
+    show_price_publicly?: boolean;
+    price_valid_until?: string;
 }
 
 interface Destination {
@@ -108,7 +111,10 @@ export default function HotelsPage() {
             price: Number(currentHotel.price),
             stars: Number(currentHotel.stars),
             destination_id: Number(currentHotel.destination_id),
-            gallery: finalGallery
+            gallery: finalGallery,
+            pricing_matrix: currentHotel.pricing_matrix || [],
+            show_price_publicly: currentHotel.show_price_publicly ?? true,
+            price_valid_until: currentHotel.price_valid_until || null
         };
 
         const method = currentHotel.id ? 'PUT' : 'POST';
@@ -427,18 +433,153 @@ export default function HotelsPage() {
                             </div>
                         </div>
 
-                        <div style={{ display: 'flex', gap: '10px' }}>
-                            <div className={styles.formGroup} style={{ flex: 1 }}>
-                                <label className={styles.label} style={{ color: '#333' }}>Stars (1-5)</label>
+                        <div style={{ display: 'flex', gap: '20px', marginBottom: '20px', alignItems: 'center', background: '#f8fafc', padding: '15px', borderRadius: '8px', border: '1px solid #ddd' }}>
+                            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontWeight: 'bold', color: '#333' }}>
                                 <input
-                                    type="number"
-                                    min="1" max="5"
+                                    type="checkbox"
+                                    checked={currentHotel.show_price_publicly ?? true}
+                                    onChange={(e) => setCurrentHotel({ ...currentHotel, show_price_publicly: e.target.checked })}
+                                />
+                                Mostrar precio públicamente
+                            </label>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                <label style={{ fontWeight: 'bold', color: '#333' }}>Precio válido hasta:</label>
+                                <input
+                                    type="date"
                                     className={styles.input}
-                                    style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
-                                    value={currentHotel.stars || ''}
-                                    onChange={(e) => setCurrentHotel({ ...currentHotel, stars: Number(e.target.value) })}
+                                    style={{ width: 'auto', background: 'white' }}
+                                    value={currentHotel.price_valid_until ? new Date(currentHotel.price_valid_until).toISOString().split('T')[0] : ''}
+                                    onChange={(e) => setCurrentHotel({ ...currentHotel, price_valid_until: e.target.value })}
                                 />
                             </div>
+                        </div>
+
+                        <div className={styles.formGroup} style={{ marginBottom: '30px' }}>
+                            <label className={styles.label} style={{ color: '#333', fontWeight: 'bold', fontSize: '1.1rem', marginBottom: '15px', display: 'block' }}>Cuadro de Precios (Matrix)</label>
+                            <div style={{ background: '#f8fafc', padding: '20px', borderRadius: '12px', border: '1px solid #ddd' }}>
+                                <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '15px' }}>
+                                    <thead>
+                                        <tr style={{ textAlign: 'left', borderBottom: '2px solid #eee' }}>
+                                            <th style={{ padding: '10px' }}>Habitación</th>
+                                            <th style={{ padding: '10px' }}>Ocupación</th>
+                                            <th style={{ padding: '10px' }}>Plan</th>
+                                            <th style={{ padding: '10px' }}>Precio ($)</th>
+                                            <th style={{ padding: '10px', width: '50px' }}></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {(currentHotel.pricing_matrix || []).map((row, index) => (
+                                            <tr key={index} style={{ borderBottom: '1px solid #eee' }}>
+                                                <td style={{ padding: '5px' }}>
+                                                    <select
+                                                        className={styles.input}
+                                                        value={row.room_type}
+                                                        onChange={(e) => {
+                                                            const newMatrix = [...(currentHotel.pricing_matrix || [])];
+                                                            newMatrix[index].room_type = e.target.value;
+                                                            setCurrentHotel({ ...currentHotel, pricing_matrix: newMatrix });
+                                                        }}
+                                                    >
+                                                        <option value="">Seleccionar</option>
+                                                        {['Standard', 'Family', 'Luxury'].map(t => <option key={t} value={t}>{t}</option>)}
+                                                    </select>
+                                                </td>
+                                                <td style={{ padding: '5px' }}>
+                                                    <select
+                                                        className={styles.input}
+                                                        value={row.occupancy}
+                                                        onChange={(e) => {
+                                                            const newMatrix = [...(currentHotel.pricing_matrix || [])];
+                                                            newMatrix[index].occupancy = e.target.value;
+                                                            setCurrentHotel({ ...currentHotel, pricing_matrix: newMatrix });
+                                                        }}
+                                                    >
+                                                        <option value="">Seleccionar</option>
+                                                        {['Sencilla', 'Doble', 'Triple', 'Cuadruble', 'Niños'].map(o => <option key={o} value={o}>{o}</option>)}
+                                                    </select>
+                                                </td>
+                                                <td style={{ padding: '5px' }}>
+                                                    <select
+                                                        className={styles.input}
+                                                        value={row.plan_type}
+                                                        onChange={(e) => {
+                                                            const newMatrix = [...(currentHotel.pricing_matrix || [])];
+                                                            newMatrix[index].plan_type = e.target.value;
+                                                            setCurrentHotel({ ...currentHotel, pricing_matrix: newMatrix });
+                                                        }}
+                                                    >
+                                                        <option value="">Seleccionar</option>
+                                                        {['Todo incluido', 'Solo desayunos', 'Desayunos y cena', 'Solo alojamiento'].map(p => <option key={p} value={p}>{p}</option>)}
+                                                    </select>
+                                                </td>
+                                                <td style={{ padding: '5px' }}>
+                                                    <input
+                                                        type="number"
+                                                        className={styles.input}
+                                                        value={row.price}
+                                                        onChange={(e) => {
+                                                            const newMatrix = [...(currentHotel.pricing_matrix || [])];
+                                                            newMatrix[index].price = Number(e.target.value);
+                                                            setCurrentHotel({ ...currentHotel, pricing_matrix: newMatrix });
+                                                        }}
+                                                    />
+                                                </td>
+                                                <td style={{ padding: '5px' }}>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            const newMatrix = (currentHotel.pricing_matrix || []).filter((_, i) => i !== index);
+                                                            setCurrentHotel({ ...currentHotel, pricing_matrix: newMatrix });
+                                                        }}
+                                                        style={{ background: '#fee2e2', color: '#ef4444', border: 'none', borderRadius: '4px', padding: '8px', cursor: 'pointer' }}
+                                                    >
+                                                        <X size={16} />
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                                <button
+                                    type="button"
+                                    className={styles.actionButton}
+                                    onClick={() => {
+                                        const newMatrix = [...(currentHotel.pricing_matrix || []), { room_type: '', occupancy: '', plan_type: '', price: 0 }];
+                                        setCurrentHotel({ ...currentHotel, pricing_matrix: newMatrix });
+                                    }}
+                                    style={{ width: '100%', justifyContent: 'center', gap: '10px' }}
+                                >
+                                    <Plus size={18} /> Añadir Fila de Precio
+                                </button>
+                            </div>
+                        </div>
+
+                        <div style={{ display: 'none' }}> {/* Keeping old fields hidden to avoid breaking layout for now if needed, but matrix is primary */}
+                            <div style={{ display: 'flex', gap: '10px' }}>
+                                <div className={styles.formGroup} style={{ flex: 1 }}>
+                                    <label className={styles.label} style={{ color: '#333' }}>Stars (1-5)</label>
+                                    <input
+                                        type="number"
+                                        min="1" max="5"
+                                        className={styles.input}
+                                        style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
+                                        value={currentHotel.stars || ''}
+                                        onChange={(e) => setCurrentHotel({ ...currentHotel, stars: Number(e.target.value) })}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className={styles.formGroup}>
+                            <label className={styles.label} style={{ color: '#333', fontWeight: 'bold' }}>Estrellas (1-5)</label>
+                            <input
+                                type="number"
+                                min="1" max="5"
+                                className={styles.input}
+                                style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
+                                value={currentHotel.stars || ''}
+                                onChange={(e) => setCurrentHotel({ ...currentHotel, stars: Number(e.target.value) })}
+                            />
                         </div>
                         <div className={styles.formGroup}>
                             <label className={styles.label} style={{ color: '#333' }}>Features (comma separated)</label>
