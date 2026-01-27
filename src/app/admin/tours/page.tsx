@@ -445,6 +445,7 @@ export default function ToursPage() {
                             is_promotion: currentTour.is_promotion
                         } as Service}
                         onClick={() => setIsPreviewModalOpen(true)}
+                        style={{ opacity: 1 }}
                     />
                     <button
                         type="button"

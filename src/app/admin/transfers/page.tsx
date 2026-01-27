@@ -376,6 +376,7 @@ export default function TransfersPage() {
                             gallery: currentTransfer.gallery,
                             tags: currentTransfer.tags
                         }}
+                        style={{ opacity: 1 }}
                     />
                 </div>
             </div>

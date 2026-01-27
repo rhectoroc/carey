@@ -676,6 +676,7 @@ export default function HotelsPage() {
                             is_promotion: currentHotel.is_promotion
                         } as Service}
                         onClick={() => setIsPreviewModalOpen(true)}
+                        style={{ opacity: 1 }}
                     />
                     <button
                         type="button"

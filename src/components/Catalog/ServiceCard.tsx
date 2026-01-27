@@ -9,6 +9,7 @@ import styles from './ServiceCard.module.css';
 interface ServiceCardProps {
     service: Service;
     onClick?: () => void;
+    style?: React.CSSProperties;
 }
 
 export const getFeatureIcon = (feature: string) => {
@@ -22,7 +23,7 @@ export const getFeatureIcon = (feature: string) => {
     return <CheckCircle size={14} />;
 };
 
-export default function ServiceCard({ service, onClick }: ServiceCardProps) {
+export default function ServiceCard({ service, onClick, style }: ServiceCardProps) {
     const { t } = useLanguage();
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -53,7 +54,7 @@ export default function ServiceCard({ service, onClick }: ServiceCardProps) {
     const isMainMedia = images[currentImageIndex] === service.image;
 
     return (
-        <div className={`${styles.card} card-anim-target`} onClick={onClick} style={{ cursor: onClick ? 'pointer' : 'default', opacity: 0 }}>
+        <div className={`${styles.card} card-anim-target`} onClick={onClick} style={{ cursor: onClick ? 'pointer' : 'default', opacity: 0, ...style }}>
             <div className={styles.imageContainer} style={{ position: 'relative' }}>
                 {images[currentImageIndex]?.toLowerCase().match(/\.(mp4|webm|ogg|mov)$/) ? (
                     <video
