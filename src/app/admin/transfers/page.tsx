@@ -72,7 +72,7 @@ export default function TransfersPage() {
     };
 
     const handleDelete = async (id: number) => {
-        if (!confirm('Are you sure you want to delete this transfer?')) return;
+        if (!confirm('¿Estás seguro de que deseas eliminar este traslado?')) return;
         try {
             await fetch(`/api/admin/transfers/${id}`, { method: 'DELETE' });
             fetchTransfers();
@@ -152,7 +152,7 @@ export default function TransfersPage() {
                     <h1 className={styles.pageTitle}>Traslados</h1>
                     <button className={styles.actionButton} onClick={startCreate}>
                         <Plus size={20} />
-                        Add Transfer
+                        Añadir Traslado
                     </button>
                 </div>
 
@@ -160,13 +160,13 @@ export default function TransfersPage() {
                     <table className={styles.table}>
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Type</th>
-                                <th>Destination</th>
-                                <th>Price</th>
-                                <th>Capacity</th>
-                                <th>Tags</th>
-                                <th>Actions</th>
+                                <th>Nombre</th>
+                                <th>Tipo</th>
+                                <th>Destino</th>
+                                <th>Precio</th>
+                                <th>Capacidad</th>
+                                <th>Etiquetas</th>
+                                <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -208,7 +208,7 @@ export default function TransfersPage() {
                         <ArrowLeft size={24} />
                     </button>
                     <h1 className={styles.pageTitle}>
-                        {viewMode === 'create' ? 'Add Transfer' : 'Edit Transfer'}
+                        {viewMode === 'create' ? 'Añadir Traslado' : 'Editar Traslado'}
                     </h1>
                 </div>
             </div>
@@ -217,7 +217,7 @@ export default function TransfersPage() {
                 <div className={styles.modalForm} style={{ flex: 1, background: 'white', padding: '30px', borderRadius: '12px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
                     <form onSubmit={handleSave}>
                         <div className={styles.formGroup}>
-                            <label className={styles.label} style={{ color: '#333' }}>Name</label>
+                            <label className={styles.label} style={{ color: '#333' }}>Nombre</label>
                             <input
                                 className={styles.input}
                                 style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
@@ -237,7 +237,7 @@ export default function TransfersPage() {
                             />
                         </div>
                         <div className={styles.formGroup}>
-                            <label className={styles.label} style={{ color: '#333' }}>Type</label>
+                            <label className={styles.label} style={{ color: '#333' }}>Tipo</label>
                             <select
                                 className={styles.input}
                                 style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
@@ -251,7 +251,7 @@ export default function TransfersPage() {
                             </select>
                         </div>
                         <div className={styles.formGroup}>
-                            <label className={styles.label} style={{ color: '#333' }}>Destination</label>
+                            <label className={styles.label} style={{ color: '#333' }}>Destino</label>
                             <select
                                 className={styles.input}
                                 style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
@@ -263,7 +263,7 @@ export default function TransfersPage() {
                                 }}
                                 required
                             >
-                                <option value="">Select Destination</option>
+                                <option value="">Seleccionar Destino</option>
                                 {destinations.map(d => (
                                     <option key={d.id} value={d.id}>{d.name}</option>
                                 ))}
@@ -271,7 +271,7 @@ export default function TransfersPage() {
                         </div>
                         <div style={{ display: 'flex', gap: '10px' }}>
                             <div className={styles.formGroup} style={{ flex: 1 }}>
-                                <label className={styles.label} style={{ color: '#333' }}>Price</label>
+                                <label className={styles.label} style={{ color: '#333' }}>Precio</label>
                                 <input
                                     type="number"
                                     className={styles.input}
@@ -281,7 +281,7 @@ export default function TransfersPage() {
                                 />
                             </div>
                             <div className={styles.formGroup} style={{ flex: 1 }}>
-                                <label className={styles.label} style={{ color: '#333' }}>Capacity (Pax)</label>
+                                <label className={styles.label} style={{ color: '#333' }}>Capacidad (Pax)</label>
                                 <input
                                     type="number"
                                     className={styles.input}
@@ -292,7 +292,7 @@ export default function TransfersPage() {
                             </div>
                         </div>
                         <div className={styles.formGroup}>
-                            <label className={styles.label} style={{ color: '#333' }}>Description</label>
+                            <label className={styles.label} style={{ color: '#333' }}>Descripción</label>
                             <textarea
                                 className={styles.input}
                                 style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333', minHeight: '100px' }}
@@ -302,17 +302,17 @@ export default function TransfersPage() {
                         </div>
 
                         <div className={styles.formGroup}>
-                            <label className={styles.label} style={{ color: '#333' }}>Tags</label>
+                            <label className={styles.label} style={{ color: '#333' }}>Etiquetas</label>
                             <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
                                 <input
                                     className={styles.input}
                                     style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
                                     value={tagInput}
                                     onChange={(e) => setTagInput(e.target.value)}
-                                    placeholder="Add a tag..."
+                                    placeholder="Añadir etiqueta..."
                                     onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
                                 />
-                                <button type="button" onClick={addTag} className={styles.actionButton} style={{ padding: '0 15px' }}>Add</button>
+                                <button type="button" onClick={addTag} className={styles.actionButton} style={{ padding: '0 15px' }}>Añadir</button>
                             </div>
                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                                 {currentTransfer.tags?.map(tag => (
@@ -327,7 +327,7 @@ export default function TransfersPage() {
 
 
                         <div className={styles.formGroup}>
-                            <label className={styles.label} style={{ color: '#333' }}>Gallery (Max 6 images + 1 video)</label>
+                            <label className={styles.label} style={{ color: '#333' }}>Galería (Máx 6 imágenes + 1 video)</label>
                             <ImageGalleryUpload
                                 images={currentTransfer.gallery || []}
                                 onChange={(newGallery) => setCurrentTransfer({ ...currentTransfer, gallery: newGallery })}
@@ -343,7 +343,7 @@ export default function TransfersPage() {
                                     checked={currentTransfer.is_featured || false}
                                     onChange={(e) => setCurrentTransfer({ ...currentTransfer, is_featured: e.target.checked })}
                                 />
-                                Featured
+                                Destacado
                             </label>
                             <label style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#e63946' }}>
                                 <input
@@ -351,18 +351,18 @@ export default function TransfersPage() {
                                     checked={currentTransfer.is_promotion || false}
                                     onChange={(e) => setCurrentTransfer({ ...currentTransfer, is_promotion: e.target.checked })}
                                 />
-                                Promotion
+                                Promoción
                             </label>
                         </div>
                         <div className={styles.modalFooter}>
-                            <button type="button" className={styles.cancelButton} onClick={() => setViewMode('list')}>Cancel</button>
-                            <button type="submit" className={styles.saveButton} disabled={loading}>Save</button>
+                            <button type="button" className={styles.cancelButton} onClick={() => setViewMode('list')}>Cancelar</button>
+                            <button type="submit" className={styles.saveButton} disabled={loading}>Guardar</button>
                         </div>
                     </form>
                 </div>
 
                 <div className={styles.modalPreview} style={{ overflowY: 'auto', flex: 0.8, background: 'white', padding: '30px', borderRadius: '12px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start' }}>
-                    <div className={styles.modalPreviewTitle}>Live Preview</div>
+                    <div className={styles.modalPreviewTitle}>Vista Previa</div>
                     <ServiceCard
                         service={{
                             id: 'preview',

@@ -50,7 +50,7 @@ export default function UsersPage() {
     };
 
     const handleDelete = async (id: number) => {
-        if (confirm('Are you sure you want to delete this user?')) {
+        if (confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
             const res = await fetch(`/api/admin/users/${id}`, { method: 'DELETE' });
             if (res.ok) {
                 fetchUsers();
@@ -104,9 +104,9 @@ export default function UsersPage() {
     return (
         <div>
             <div className={styles.pageHeader}>
-                <h1 className={styles.pageTitle}>Users Management</h1>
+                <h1 className={styles.pageTitle}>Gestión de Usuarios</h1>
                 <button className={styles.actionButton} onClick={() => openModal()}>
-                    <Plus size={18} /> Add User
+                    <Plus size={18} /> Añadir Usuario
                 </button>
             </div>
 
@@ -114,12 +114,12 @@ export default function UsersPage() {
                 <table className={styles.table}>
                     <thead>
                         <tr>
-                            <th>Username</th>
-                            <th>Role</th>
-                            <th>Full Name</th>
+                            <th>Usuario</th>
+                            <th>Rol</th>
+                            <th>Nombre Completo</th>
                             <th>Email</th>
-                            <th>Phone</th>
-                            <th>Actions</th>
+                            <th>Teléfono</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -163,7 +163,7 @@ export default function UsersPage() {
                     <div className={styles.modalContent} style={{ maxWidth: '600px' }}>
                         <div className={styles.modalHeader}>
                             <h2 className={styles.modalTitle}>
-                                {currentUser.id ? 'Edit User' : 'Add User'}
+                                {currentUser.id ? 'Editar Usuario' : 'Añadir Usuario'}
                             </h2>
                             <button className={styles.closeButton} onClick={() => setIsModalOpen(false)}>
                                 <X size={24} />
@@ -172,7 +172,7 @@ export default function UsersPage() {
                         <form onSubmit={handleSave}>
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
                                 <div className={styles.formGroup}>
-                                    <label className={styles.label} style={{ color: '#333' }}>First Name</label>
+                                    <label className={styles.label} style={{ color: '#333' }}>Nombre</label>
                                     <input
                                         className={styles.input}
                                         style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
@@ -182,7 +182,7 @@ export default function UsersPage() {
                                     />
                                 </div>
                                 <div className={styles.formGroup}>
-                                    <label className={styles.label} style={{ color: '#333' }}>Last Name</label>
+                                    <label className={styles.label} style={{ color: '#333' }}>Apellido</label>
                                     <input
                                         className={styles.input}
                                         style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
@@ -206,7 +206,7 @@ export default function UsersPage() {
                                     />
                                 </div>
                                 <div className={styles.formGroup}>
-                                    <label className={styles.label} style={{ color: '#333' }}>Phone Number</label>
+                                    <label className={styles.label} style={{ color: '#333' }}>Teléfono</label>
                                     <input
                                         type="tel"
                                         className={styles.input}
@@ -218,7 +218,7 @@ export default function UsersPage() {
                             </div>
 
                             <div className={styles.formGroup}>
-                                <label className={styles.label} style={{ color: '#333' }}>Role</label>
+                                <label className={styles.label} style={{ color: '#333' }}>Rol</label>
                                 <select
                                     className={styles.input}
                                     style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
@@ -234,7 +234,7 @@ export default function UsersPage() {
 
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
                                 <div className={styles.formGroup}>
-                                    <label className={styles.label} style={{ color: '#333' }}>Username</label>
+                                    <label className={styles.label} style={{ color: '#333' }}>Usuario (Username)</label>
                                     <input
                                         className={styles.input}
                                         style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
@@ -245,7 +245,7 @@ export default function UsersPage() {
                                 </div>
                                 <div className={styles.formGroup}>
                                     <label className={styles.label} style={{ color: '#333' }}>
-                                        {currentUser.id ? 'New Password (Optional)' : 'Password'}
+                                        {currentUser.id ? 'Nueva Contraseña (Opcional)' : 'Contraseña'}
                                     </label>
                                     <input
                                         type="password"
@@ -259,8 +259,8 @@ export default function UsersPage() {
                             </div>
 
                             <div className={styles.modalFooter}>
-                                <button type="button" className={styles.cancelButton} onClick={() => setIsModalOpen(false)}>Cancel</button>
-                                <button type="submit" className={styles.saveButton} disabled={loading}>Save</button>
+                                <button type="button" className={styles.cancelButton} onClick={() => setIsModalOpen(false)}>Cancelar</button>
+                                <button type="submit" className={styles.saveButton} disabled={loading}>Guardar</button>
                             </div>
                         </form>
                     </div>

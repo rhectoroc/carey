@@ -44,13 +44,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     }
 
     const navItems = [
-        { name: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
-        { name: 'Hotels', href: '/admin/hotels', icon: Bed },
-        { name: 'Destinations', href: '/admin/destinations', icon: Map },
+        { name: 'Inicio', href: '/admin/dashboard', icon: LayoutDashboard },
+        { name: 'Hoteles', href: '/admin/hotels', icon: Bed },
+        { name: 'Destinos', href: '/admin/destinations', icon: Map },
         { name: 'Tours', href: '/admin/tours', icon: Compass },
         { name: 'Traslados', href: '/admin/transfers', icon: Car },
         { name: 'Momentos', href: '/admin/moments', icon: Camera },
-        { name: 'Users', href: '/admin/users', icon: User, adminOnly: true },
+        { name: 'Usuarios', href: '/admin/users', icon: User, adminOnly: true },
     ].filter(item => !item.adminOnly || user?.role === 'administrador');
 
     return (
@@ -81,19 +81,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                             style={{ marginTop: 'auto', border: 'none', background: 'transparent', cursor: 'pointer', width: '100%' }}
                         >
                             <LogOut size={20} />
-                            Logout
+                            Cerrar Sesión
                         </button>
                     </nav>
                 </aside>
                 <div className={styles.mainWrapper}>
                     <header className={styles.topHeader}>
                         <div className={styles.headerLeft}>
-                            <span className={styles.headerLogoText}>Carey Admin</span>
+                            <span className={styles.headerLogoText}>Admin Carey</span>
                         </div>
                         <div className={styles.headerRight}>
                             <div className={styles.userInfo}>
                                 <User size={18} />
-                                <span>{user?.username || 'Loading...'}</span>
+                                <span>{user?.username || 'Cargando...'}</span>
                             </div>
                         </div>
                     </header>

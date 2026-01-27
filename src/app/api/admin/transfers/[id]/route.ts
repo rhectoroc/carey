@@ -16,7 +16,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
             SET name = $1, slug = $2, type = $3, description = $4, price = $5, capacity = $6, destination_id = $7, image_url = $8, is_featured = $9, is_promotion = $10, gallery = $11, tags = $12
             WHERE id = $13
         `;
-        const values = [name, slug, type, description, price, capacity, destination_id, image_url, is_featured, is_promotion, body.gallery || [], body.tags || [], id];
+        const values = [name, slug, type, description, price, capacity, destination_id, image_url, is_featured, is_promotion, JSON.stringify(body.gallery || []), JSON.stringify(body.tags || []), id];
 
         if (user.role !== 'administrador') {
             sql += ' AND created_by = $14';

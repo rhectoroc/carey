@@ -42,7 +42,7 @@ export async function POST(request: Request) {
             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
             RETURNING *
         `;
-        const values = [name, slug, type, description, price, capacity, destination_id, image_url, is_featured || false, is_promotion || false, body.gallery || [], body.tags || [], user.id];
+        const values = [name, slug, type, description, price, capacity, destination_id, image_url, is_featured || false, is_promotion || false, JSON.stringify(body.gallery || []), JSON.stringify(body.tags || []), user.id];
 
         const result = await query(sql, values);
         return NextResponse.json(result.rows[0], { status: 201 });

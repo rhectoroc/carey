@@ -120,7 +120,7 @@ export default function ToursPage() {
     };
 
     const handleDelete = async (id: number) => {
-        if (!confirm('Are you sure?')) return;
+        if (!confirm('¿Estás seguro de que deseas eliminar este tour?')) return;
         setLoading(true);
         try {
             await fetch(`/api/admin/tours/${id}`, { method: 'DELETE' });
@@ -167,7 +167,7 @@ export default function ToursPage() {
                 <div className={styles.pageHeader}>
                     <h1 className={styles.pageTitle}>Tours</h1>
                     <button className={styles.actionButton} onClick={startCreate}>
-                        <Plus size={18} /> Add Tour
+                        <Plus size={18} /> Añadir Tour
                     </button>
                 </div>
 
@@ -175,14 +175,14 @@ export default function ToursPage() {
                     <table className={styles.table}>
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Destination</th>
-                                <th>Type</th>
-                                <th>Price</th>
-                                <th>Stars</th>
-                                <th>Duration</th>
-                                <th>Tags</th>
-                                <th>Actions</th>
+                                <th>Nombre</th>
+                                <th>Destino</th>
+                                <th>Tipo</th>
+                                <th>Precio</th>
+                                <th>Estrellas</th>
+                                <th>Duración</th>
+                                <th>Etiquetas</th>
+                                <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -226,7 +226,7 @@ export default function ToursPage() {
                         <ArrowLeft size={24} />
                     </button>
                     <h1 className={styles.pageTitle}>
-                        {viewMode === 'create' ? 'Add Tour' : 'Edit Tour'}
+                        {viewMode === 'create' ? 'Añadir Tour' : 'Editar Tour'}
                     </h1>
                 </div>
             </div>
@@ -235,7 +235,7 @@ export default function ToursPage() {
                 <div className={styles.modalForm} style={{ flex: 1, background: 'white', padding: '30px', borderRadius: '12px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
                     <form onSubmit={handleSave}>
                         <div className={styles.formGroup}>
-                            <label className={styles.label} style={{ color: '#333' }}>Name</label>
+                            <label className={styles.label} style={{ color: '#333' }}>Nombre</label>
                             <input
                                 className={styles.input}
                                 style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
@@ -247,7 +247,7 @@ export default function ToursPage() {
                         {/* Slug removed - handled automatically */}
                         <div style={{ display: 'flex', gap: '10px' }}>
                             <div className={styles.formGroup} style={{ flex: 1 }}>
-                                <label className={styles.label} style={{ color: '#333' }}>Destination</label>
+                                <label className={styles.label} style={{ color: '#333' }}>Destino</label>
                                 <select
                                     className={styles.input}
                                     style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
@@ -259,14 +259,14 @@ export default function ToursPage() {
                                     }}
                                     required
                                 >
-                                    <option value="">Select Destination</option>
+                                    <option value="">Seleccionar Destino</option>
                                     {destinations.map(d => (
                                         <option key={d.id} value={d.id}>{d.name}</option>
                                     ))}
                                 </select>
                             </div>
                             <div className={styles.formGroup} style={{ flex: 1 }}>
-                                <label className={styles.label} style={{ color: '#333' }}>Type</label>
+                                <label className={styles.label} style={{ color: '#333' }}>Tipo</label>
                                 <select
                                     className={styles.input}
                                     style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
@@ -282,7 +282,7 @@ export default function ToursPage() {
                             </div>
                         </div>
                         <div className={styles.formGroup}>
-                            <label className={styles.label} style={{ color: '#333' }}>Description</label>
+                            <label className={styles.label} style={{ color: '#333' }}>Descripción</label>
                             <textarea
                                 className={styles.input}
                                 style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333', minHeight: '100px' }}
@@ -291,7 +291,7 @@ export default function ToursPage() {
                             />
                         </div>
                         <div className={styles.formGroup}>
-                            <label className={styles.label} style={{ color: '#333' }}>Included (comma separated)</label>
+                            <label className={styles.label} style={{ color: '#333' }}>Incluye (separado por comas)</label>
                             <textarea
                                 className={styles.input}
                                 style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
@@ -301,17 +301,17 @@ export default function ToursPage() {
                         </div>
 
                         <div className={styles.formGroup}>
-                            <label className={styles.label} style={{ color: '#333' }}>Tags</label>
+                            <label className={styles.label} style={{ color: '#333' }}>Etiquetas</label>
                             <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
                                 <input
                                     className={styles.input}
                                     style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
                                     value={tagInput}
                                     onChange={(e) => setTagInput(e.target.value)}
-                                    placeholder="Add a tag..."
+                                    placeholder="Añadir etiqueta..."
                                     onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
                                 />
-                                <button type="button" onClick={addTag} className={styles.actionButton} style={{ padding: '0 15px' }}>Add</button>
+                                <button type="button" onClick={addTag} className={styles.actionButton} style={{ padding: '0 15px' }}>Añadir</button>
                             </div>
                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                                 {currentTour.tags?.map(tag => (
@@ -325,7 +325,7 @@ export default function ToursPage() {
 
                         <div style={{ display: 'flex', gap: '10px' }}>
                             <div className={styles.formGroup} style={{ flex: 1 }}>
-                                <label className={styles.label} style={{ color: '#333' }}>Price (Adult)</label>
+                                <label className={styles.label} style={{ color: '#333' }}>Precio (Adulto)</label>
                                 <input
                                     type="number"
                                     className={styles.input}
@@ -335,7 +335,7 @@ export default function ToursPage() {
                                 />
                             </div>
                             <div className={styles.formGroup} style={{ flex: 1 }}>
-                                <label className={styles.label} style={{ color: '#333' }}>Price (Child 4-10)</label>
+                                <label className={styles.label} style={{ color: '#333' }}>Precio (Niño 4-10)</label>
                                 <input
                                     type="number"
                                     className={styles.input}
@@ -345,7 +345,7 @@ export default function ToursPage() {
                                 />
                             </div>
                             <div className={styles.formGroup} style={{ flex: 1 }}>
-                                <label className={styles.label} style={{ color: '#333' }}>Price (Infant 0-3)</label>
+                                <label className={styles.label} style={{ color: '#333' }}>Precio (Bebé 0-3)</label>
                                 <input
                                     type="number"
                                     className={styles.input}
@@ -357,7 +357,7 @@ export default function ToursPage() {
                         </div>
                         <div style={{ display: 'flex', gap: '10px' }}>
                             <div className={styles.formGroup} style={{ flex: 1 }}>
-                                <label className={styles.label} style={{ color: '#333' }}>Price Valid Until</label>
+                                <label className={styles.label} style={{ color: '#333' }}>Precio Válido Hasta</label>
                                 <input
                                     type="date"
                                     className={styles.input}
@@ -367,7 +367,7 @@ export default function ToursPage() {
                                 />
                             </div>
                             <div className={styles.formGroup} style={{ flex: 1 }}>
-                                <label className={styles.label} style={{ color: '#333' }}>Duration (Text)</label>
+                                <label className={styles.label} style={{ color: '#333' }}>Duración (Texto)</label>
                                 <input
                                     type="text"
                                     className={styles.input}
@@ -379,7 +379,7 @@ export default function ToursPage() {
                                 />
                             </div>
                             <div className={styles.formGroup} style={{ flex: 1 }}>
-                                <label className={styles.label} style={{ color: '#333' }}>Stars (1-5)</label>
+                                <label className={styles.label} style={{ color: '#333' }}>Estrellas (1-5)</label>
                                 <input
                                     type="number"
                                     min="1" max="5"
@@ -409,7 +409,7 @@ export default function ToursPage() {
                                     checked={currentTour.is_featured || false}
                                     onChange={(e) => setCurrentTour({ ...currentTour, is_featured: e.target.checked })}
                                 />
-                                Featured
+                                Destacado
                             </label>
                             <label style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#e63946' }}>
                                 <input
@@ -417,26 +417,26 @@ export default function ToursPage() {
                                     checked={currentTour.is_promotion || false}
                                     onChange={(e) => setCurrentTour({ ...currentTour, is_promotion: e.target.checked })}
                                 />
-                                Promotion
+                                Promoción
                             </label>
                         </div>
                         <div className={styles.modalFooter}>
-                            <button type="button" className={styles.cancelButton} onClick={() => setViewMode('list')}>Cancel</button>
-                            <button type="submit" className={styles.saveButton} disabled={loading}>Save</button>
+                            <button type="button" className={styles.cancelButton} onClick={() => setViewMode('list')}>Cancelar</button>
+                            <button type="submit" className={styles.saveButton} disabled={loading}>Guardar</button>
                         </div>
                     </form>
                 </div>
 
                 <div className={styles.modalPreview} style={{ overflowY: 'auto', flex: 0.8, background: 'white', padding: '30px', borderRadius: '12px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start' }}>
-                    <div className={styles.modalPreviewTitle}>Live Preview</div>
+                    <div className={styles.modalPreviewTitle}>Vista Previa</div>
                     <ServiceCard
                         service={{
                             id: 'preview',
-                            title: currentTour.name || 'Tour Name',
-                            category: currentTour.type || 'Full Day',
+                            title: currentTour.name || 'Nombre del Tour',
+                            category: currentTour.type || 'Aventura',
                             price: currentTour.price || 0,
                             image: currentTour.image_url || 'https://via.placeholder.com/400x300',
-                            location: currentTour.destination_name || 'Destination',
+                            location: currentTour.destination_name || 'Destino',
                             rating: currentTour.stars || 5,
                             duration: currentTour.duration,
                             priceValidUntil: currentTour.price_valid_until,
@@ -455,7 +455,7 @@ export default function ToursPage() {
                         Ver Vista Completa (Modal)
                     </button>
                     <div style={{ marginTop: '20px', fontSize: '0.9rem', color: '#666', width: '100%' }}>
-                        <strong>Included:</strong>
+                        <strong>Incluido:</strong>
                         <ul style={{ paddingLeft: '20px', marginTop: '5px' }}>
                             {includedInput.split(',').filter(i => i.trim()).map((item, idx) => (
                                 <li key={idx}>{item.trim()}</li>

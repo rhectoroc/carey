@@ -43,7 +43,7 @@ export default function DestinationsPage() {
     };
 
     const handleDelete = async (id: number) => {
-        if (confirm('Are you sure you want to delete this destination?')) {
+        if (confirm('¿Estás seguro de que deseas eliminar este destino?')) {
             const res = await fetch(`/api/admin/destinations/${id}`, { method: 'DELETE' });
             if (res.ok) {
                 fetchDestinations();
@@ -121,9 +121,9 @@ export default function DestinationsPage() {
         return (
             <div>
                 <div className={styles.pageHeader}>
-                    <h1 className={styles.pageTitle}>Destinations</h1>
+                    <h1 className={styles.pageTitle}>Destinos</h1>
                     <button className={styles.actionButton} onClick={startCreate}>
-                        <Plus size={18} /> Add Destination
+                        <Plus size={18} /> Añadir Destino
                     </button>
                 </div>
 
@@ -131,12 +131,12 @@ export default function DestinationsPage() {
                     <table className={styles.table}>
                         <thead>
                             <tr>
-                                <th>Name</th>
+                                <th>Nombre</th>
                                 <th>Slug</th>
-                                <th>Type</th>
-                                <th>Featured</th>
-                                <th>Tags</th>
-                                <th>Actions</th>
+                                <th>Tipo</th>
+                                <th>Destacado</th>
+                                <th>Etiquetas</th>
+                                <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -145,7 +145,7 @@ export default function DestinationsPage() {
                                     <td>{dest.name}</td>
                                     <td>{dest.slug}</td>
                                     <td>{dest.type || 'Ciudad'}</td>
-                                    <td>{dest.is_featured ? 'Yes' : 'No'}</td>
+                                    <td>{dest.is_featured ? 'Sí' : 'No'}</td>
                                     <td>
                                         {dest.tags && dest.tags.map(t => (
                                             <span key={t} style={{ background: '#e2e8f0', padding: '2px 6px', borderRadius: '4px', fontSize: '0.8rem', marginRight: '4px' }}>
@@ -185,7 +185,7 @@ export default function DestinationsPage() {
                         <ArrowLeft size={24} />
                     </button>
                     <h1 className={styles.pageTitle}>
-                        {viewMode === 'create' ? 'Add Destination' : 'Edit Destination'}
+                        {viewMode === 'create' ? 'Añadir Destino' : 'Editar Destino'}
                     </h1>
                 </div>
             </div>
@@ -195,7 +195,7 @@ export default function DestinationsPage() {
                 <div className={styles.modalForm} style={{ flex: 1, background: 'white', padding: '30px', borderRadius: '12px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
                     <form onSubmit={handleSave}>
                         <div className={styles.formGroup}>
-                            <label className={styles.label} style={{ color: '#333' }}>Name</label>
+                            <label className={styles.label} style={{ color: '#333' }}>Nombre</label>
                             <input
                                 className={styles.input}
                                 style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
@@ -215,7 +215,7 @@ export default function DestinationsPage() {
                             />
                         </div>
                         <div className={styles.formGroup}>
-                            <label className={styles.label} style={{ color: '#333' }}>Type</label>
+                            <label className={styles.label} style={{ color: '#333' }}>Tipo</label>
                             <select
                                 className={styles.input}
                                 style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
@@ -231,7 +231,7 @@ export default function DestinationsPage() {
                             </select>
                         </div>
                         <div className={styles.formGroup}>
-                            <label className={styles.label} style={{ color: '#333' }}>Description</label>
+                            <label className={styles.label} style={{ color: '#333' }}>Descripción</label>
                             <textarea
                                 className={styles.input}
                                 style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333', minHeight: '100px' }}
@@ -241,17 +241,17 @@ export default function DestinationsPage() {
                         </div>
 
                         <div className={styles.formGroup}>
-                            <label className={styles.label} style={{ color: '#333' }}>Tags</label>
+                            <label className={styles.label} style={{ color: '#333' }}>Etiquetas</label>
                             <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
                                 <input
                                     className={styles.input}
                                     style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
                                     value={tagInput}
                                     onChange={(e) => setTagInput(e.target.value)}
-                                    placeholder="Add a tag..."
+                                    placeholder="Añadir etiqueta..."
                                     onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
                                 />
-                                <button type="button" onClick={addTag} className={styles.actionButton} style={{ padding: '0 15px' }}>Add</button>
+                                <button type="button" onClick={addTag} className={styles.actionButton} style={{ padding: '0 15px' }}>Añadir</button>
                             </div>
                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                                 {currentDestination.tags?.map(tag => (
@@ -266,7 +266,7 @@ export default function DestinationsPage() {
 
 
                         <div className={styles.formGroup}>
-                            <label className={styles.label} style={{ color: '#333' }}>Gallery (Max 6 images + 1 video)</label>
+                            <label className={styles.label} style={{ color: '#333' }}>Galería (Máx 6 imágenes + 1 video)</label>
                             <ImageGalleryUpload
                                 images={currentDestination.gallery || []}
                                 onChange={(newGallery) => setCurrentDestination({ ...currentDestination, gallery: newGallery })}
@@ -282,7 +282,7 @@ export default function DestinationsPage() {
                                     checked={currentDestination.is_featured || false}
                                     onChange={(e) => setCurrentDestination({ ...currentDestination, is_featured: e.target.checked })}
                                 />
-                                Featured
+                                Destacado
                             </label>
                             <label style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#e63946' }}>
                                 <input
@@ -290,13 +290,13 @@ export default function DestinationsPage() {
                                     checked={currentDestination.is_promotion || false}
                                     onChange={(e) => setCurrentDestination({ ...currentDestination, is_promotion: e.target.checked })}
                                 />
-                                Promotion
+                                Promoción
                             </label>
                         </div>
                         <div className={styles.modalFooter}>
-                            <button type="button" className={styles.cancelButton} onClick={() => setViewMode('list')}>Cancel</button>
+                            <button type="button" className={styles.cancelButton} onClick={() => setViewMode('list')}>Cancelar</button>
                             <button type="submit" className={styles.saveButton} disabled={loading}>
-                                {loading ? 'Saving...' : 'Save'}
+                                {loading ? 'Guardando...' : 'Guardar'}
                             </button>
                         </div>
                     </form>
@@ -304,7 +304,7 @@ export default function DestinationsPage() {
 
                 {/* Preview */}
                 <div className={styles.modalPreview} style={{ overflowY: 'auto', flex: 0.8, background: 'white', padding: '30px', borderRadius: '12px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start' }}>
-                    <div className={styles.modalPreviewTitle}>Live Preview</div>
+                    <div className={styles.modalPreviewTitle}>Vista Previa</div>
                     <ServiceCard
                         service={{
                             id: 'preview',
