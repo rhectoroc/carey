@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useMemo } from 'react';
 import { createPortal } from 'react-dom';
+import { useRouter } from 'next/navigation';
 import { Service } from '@/data/mockServices';
 import { Info, Clock, MapPin, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useChatbot } from '@/context/ChatbotContext';
@@ -15,8 +16,6 @@ interface ServiceModalProps {
     service: Service | null;
 }
 
-import QuoteForm from '../Quotes/QuoteForm';
-
 interface ServiceModalProps {
     isOpen: boolean;
     onClose: () => void;
@@ -24,10 +23,10 @@ interface ServiceModalProps {
 }
 
 export default function ServiceModal({ isOpen, onClose, service }: ServiceModalProps) {
+    const router = useRouter();
     const { t, language } = useLanguage();
     const { openChatbot } = useChatbot();
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
-    const [view, setView] = useState<'details' | 'quote'>('details');
 
     const images = useMemo(() => {
         if (!service) return [];
@@ -143,197 +142,189 @@ export default function ServiceModal({ isOpen, onClose, service }: ServiceModalP
                     </div>
                 </div>
 
-                <div className={styles.content} style={{ overflowY: view === 'quote' ? 'auto' : undefined }}>
-
-                    {view === 'quote' ? (
-                        <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-                            <QuoteForm
-                                embedded
-                                preSelectedService={service}
-                                onBack={() => setView('details')}
-                                onClose={onClose}
-                            />
+                <div className={styles.content}>
+                    <div className={styles.header}>
+                        <span className={styles.category}>{service.category}</span>
+                        <h3 className={styles.title}>{service.title}</h3>
+                        <div className={styles.location}>
+                            <MapPin size={18} />
+                            {service.location}
                         </div>
-                    ) : (
-                        <>
-                            <div className={styles.header}>
-                                <span className={styles.category}>{service.category}</span>
-                                <h3 className={styles.title}>{service.title}</h3>
-                                <div className={styles.location}>
-                                    <MapPin size={18} />
-                                    {service.location}
+                        {service.duration && (
+                            <div className={styles.location} style={{ marginTop: '5px', color: 'var(--color-primary-teal)', fontWeight: '500' }}>
+                                <Clock size={16} />
+                                {service.duration}
+                            </div>
+                        )}
+                        {((service.tags && service.tags.length > 0) || service.is_promotion || service.is_featured) && (
+                            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '10px' }}>
+                                {service.is_promotion && (
+                                    <span style={{
+                                        backgroundColor: '#e63946',
+                                        color: 'white',
+                                        padding: '4px 10px',
+                                        borderRadius: '20px',
+                                        fontSize: '0.75rem',
+                                        fontWeight: 'bold',
+                                        boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+                                    }}>
+                                        {t('catalog.offer').toUpperCase()} 🔥
+                                    </span>
+                                )}
+                                {service.is_featured && (
+                                    <span style={{
+                                        backgroundColor: '#FFD700',
+                                        color: '#000',
+                                        padding: '4px 10px',
+                                        borderRadius: '20px',
+                                        fontSize: '0.75rem',
+                                        fontWeight: 'bold',
+                                        boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+                                    }}>
+                                        {t('catalog.featured').toUpperCase()} ⭐
+                                    </span>
+                                )}
+                                {service.tags?.map((tag, index) => (
+                                    <span key={index} style={{
+                                        backgroundColor: '#fff',
+                                        color: 'red',
+                                        padding: '4px 10px',
+                                        borderRadius: '20px',
+                                        fontSize: '0.75rem',
+                                        fontWeight: 'bold',
+                                        boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+                                        border: '1px solid #fee2e2'
+                                    }}>
+                                        {tag}
+                                    </span>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+
+                    <div className={styles.section}>
+                        <p className={styles.description}>
+                            {service.description || t('modal.defaultDesc')}
+                        </p>
+                    </div>
+
+                    {/* Pricing Section */}
+                    {(service.price || service.price_child || service.price_infant || (service.pricing_matrix && service.pricing_matrix.length > 0)) && (
+                        <div className={styles.section}>
+                            <h4 className={styles.sectionTitle}>{t('modal.details')}</h4>
+
+                            {isPriceHidden ? (
+                                <div style={{
+                                    background: '#fff5f5',
+                                    border: '1px solid #feb2b2',
+                                    padding: '15px',
+                                    borderRadius: '8px',
+                                    textAlign: 'center',
+                                    color: '#c53030',
+                                    fontWeight: '600'
+                                }}>
+                                    {isPriceExpired ? 'Tarifa caducada - Consultar disponibilidad y precio' : 'Consultar disponibilidad y precio'}
                                 </div>
-                                {service.duration && (
-                                    <div className={styles.location} style={{ marginTop: '5px', color: 'var(--color-primary-teal)', fontWeight: '500' }}>
-                                        <Clock size={16} />
-                                        {service.duration}
-                                    </div>
-                                )}
-                                {((service.tags && service.tags.length > 0) || service.is_promotion || service.is_featured) && (
-                                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '10px' }}>
-                                        {service.is_promotion && (
-                                            <span style={{
-                                                backgroundColor: '#e63946',
-                                                color: 'white',
-                                                padding: '4px 10px',
-                                                borderRadius: '20px',
-                                                fontSize: '0.75rem',
-                                                fontWeight: 'bold',
-                                                boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
-                                            }}>
-                                                {t('catalog.offer').toUpperCase()} 🔥
-                                            </span>
-                                        )}
-                                        {service.is_featured && (
-                                            <span style={{
-                                                backgroundColor: '#FFD700',
-                                                color: '#000',
-                                                padding: '4px 10px',
-                                                borderRadius: '20px',
-                                                fontSize: '0.75rem',
-                                                fontWeight: 'bold',
-                                                boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
-                                            }}>
-                                                {t('catalog.featured').toUpperCase()} ⭐
-                                            </span>
-                                        )}
-                                        {service.tags?.map((tag, index) => (
-                                            <span key={index} style={{
-                                                backgroundColor: '#fff',
-                                                color: 'red',
-                                                padding: '4px 10px',
-                                                borderRadius: '20px',
-                                                fontSize: '0.75rem',
-                                                fontWeight: 'bold',
-                                                boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
-                                                border: '1px solid #fee2e2'
-                                            }}>
-                                                {tag}
-                                            </span>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-
-                            <div className={styles.section}>
-                                <p className={styles.description}>
-                                    {service.description || t('modal.defaultDesc')}
-                                </p>
-                            </div>
-
-                            {/* Pricing Section */}
-                            {(service.price || service.price_child || service.price_infant || (service.pricing_matrix && service.pricing_matrix.length > 0)) && (
-                                <div className={styles.section}>
-                                    <h4 className={styles.sectionTitle}>{t('modal.details')}</h4>
-
-                                    {isPriceHidden ? (
-                                        <div style={{
-                                            background: '#fff5f5',
-                                            border: '1px solid #feb2b2',
-                                            padding: '15px',
-                                            borderRadius: '8px',
-                                            textAlign: 'center',
-                                            color: '#c53030',
-                                            fontWeight: '600'
-                                        }}>
-                                            {isPriceExpired ? 'Tarifa caducada - Consultar disponibilidad y precio' : 'Consultar disponibilidad y precio'}
+                            ) : (
+                                <>
+                                    {/* Standard Pricing Grid */}
+                                    {(!service.pricing_matrix || service.pricing_matrix.length === 0) && (
+                                        <div className={styles.pricingGrid}>
+                                            {service.price && (
+                                                <div className={styles.priceItem}>
+                                                    <span className={styles.priceLabel}>{t('modal.adults')}</span>
+                                                    <span className={styles.priceValue}>${service.price}</span>
+                                                </div>
+                                            )}
+                                            {service.price_child && (
+                                                <div className={styles.priceItem}>
+                                                    <span className={styles.priceLabel}>{t('modal.children')} (4-10)</span>
+                                                    <span className={styles.priceValue}>${service.price_child}</span>
+                                                </div>
+                                            )}
+                                            {service.price_infant && (
+                                                <div className={styles.priceItem}>
+                                                    <span className={styles.priceLabel}>{t('modal.infants')} (0-3)</span>
+                                                    <span className={styles.priceValue}>${service.price_infant}</span>
+                                                </div>
+                                            )}
                                         </div>
-                                    ) : (
-                                        <>
-                                            {/* Standard Pricing Grid */}
-                                            {(!service.pricing_matrix || service.pricing_matrix.length === 0) && (
-                                                <div className={styles.pricingGrid}>
-                                                    {service.price && (
-                                                        <div className={styles.priceItem}>
-                                                            <span className={styles.priceLabel}>{t('modal.adults')}</span>
-                                                            <span className={styles.priceValue}>${service.price}</span>
-                                                        </div>
-                                                    )}
-                                                    {service.price_child && (
-                                                        <div className={styles.priceItem}>
-                                                            <span className={styles.priceLabel}>{t('modal.children')} (4-10)</span>
-                                                            <span className={styles.priceValue}>${service.price_child}</span>
-                                                        </div>
-                                                    )}
-                                                    {service.price_infant && (
-                                                        <div className={styles.priceItem}>
-                                                            <span className={styles.priceLabel}>{t('modal.infants')} (0-3)</span>
-                                                            <span className={styles.priceValue}>${service.price_infant}</span>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            )}
-
-                                            {/* Pricing Matrix Table */}
-                                            {service.pricing_matrix && service.pricing_matrix.length > 0 && (
-                                                <div style={{ overflowX: 'auto', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0', padding: '10px' }}>
-                                                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
-                                                        <thead>
-                                                            <tr style={{ textAlign: 'left', borderBottom: '1px solid #e2e8f0' }}>
-                                                                <th style={{ padding: '8px' }}>Habitación</th>
-                                                                <th style={{ padding: '8px' }}>Ocupación</th>
-                                                                <th style={{ padding: '8px' }}>Plan</th>
-                                                                <th style={{ padding: '8px', textAlign: 'right' }}>Precio</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            {service.pricing_matrix.map((row, idx) => (
-                                                                <tr key={idx} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                                                                    <td style={{ padding: '8px' }}>{row.room_type}</td>
-                                                                    <td style={{ padding: '8px' }}>{row.occupancy}</td>
-                                                                    <td style={{ padding: '8px' }}>{row.plan_type}</td>
-                                                                    <td style={{ padding: '8px', textAlign: 'right', fontWeight: 'bold', color: 'var(--color-primary-teal)' }}>${row.price}</td>
-                                                                </tr>
-                                                            ))}
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            )}
-                                        </>
                                     )}
 
-                                    {service.priceValidUntil && (
-                                        <p style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '10px', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                                            <Info size={14} /> {t('modal.validUntil')} {new Date(service.priceValidUntil).toLocaleDateString(language === 'es' ? 'es-ES' : 'en-US')}
-                                        </p>
+                                    {/* Pricing Matrix Table */}
+                                    {service.pricing_matrix && service.pricing_matrix.length > 0 && (
+                                        <div style={{ overflowX: 'auto', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0', padding: '10px' }}>
+                                            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
+                                                <thead>
+                                                    <tr style={{ textAlign: 'left', borderBottom: '1px solid #e2e8f0' }}>
+                                                        <th style={{ padding: '8px' }}>Habitación</th>
+                                                        <th style={{ padding: '8px' }}>Ocupación</th>
+                                                        <th style={{ padding: '8px' }}>Plan</th>
+                                                        <th style={{ padding: '8px', textAlign: 'right' }}>Precio</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {service.pricing_matrix.map((row, idx) => (
+                                                        <tr key={idx} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                                                            <td style={{ padding: '8px' }}>{row.room_type}</td>
+                                                            <td style={{ padding: '8px' }}>{row.occupancy}</td>
+                                                            <td style={{ padding: '8px' }}>{row.plan_type}</td>
+                                                            <td style={{ padding: '8px', textAlign: 'right', fontWeight: 'bold', color: 'var(--color-primary-teal)' }}>${row.price}</td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     )}
-                                </div>
+                                </>
                             )}
 
-                            {service.features && service.features.length > 0 && (
-                                <div className={styles.section}>
-                                    <h4 className={styles.sectionTitle}>{t('modal.includes')}</h4>
-                                    <div className={styles.featuresGrid}>
-                                        {service.features.map((feature, idx) => (
-                                            <div key={idx} className={styles.featureItem}>
-                                                <div className={styles.featureIcon}>
-                                                    {getFeatureIcon(feature)}
-                                                </div>
-                                                <span>{feature}</span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
+                            {service.priceValidUntil && (
+                                <p style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '10px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                    <Info size={14} /> {t('modal.validUntil')} {new Date(service.priceValidUntil).toLocaleDateString(language === 'es' ? 'es-ES' : 'en-US')}
+                                </p>
                             )}
-
-                            <div className={styles.footerActions}>
-                                <button
-                                    className={styles.actionButton}
-                                    style={{ flex: 1, background: 'transparent', color: '#64748b', border: '1px solid #e2e8f0' }}
-                                    onClick={handleConsultar}
-                                >
-                                    💬 Consultar con EVA
-                                </button>
-                                <button
-                                    className={styles.actionButton}
-                                    style={{ flex: 1, background: 'var(--color-primary-teal)', color: 'white', fontWeight: 'bold' }}
-                                    onClick={() => setView('quote')}
-                                >
-                                    COTIZAR AHORA
-                                </button>
-                            </div>
-                        </>
+                        </div>
                     )}
+
+                    {service.features && service.features.length > 0 && (
+                        <div className={styles.section}>
+                            <h4 className={styles.sectionTitle}>{t('modal.includes')}</h4>
+                            <div className={styles.featuresGrid}>
+                                {service.features.map((feature, idx) => (
+                                    <div key={idx} className={styles.featureItem}>
+                                        <div className={styles.featureIcon}>
+                                            {getFeatureIcon(feature)}
+                                        </div>
+                                        <span>{feature}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    <div className={styles.footerActions}>
+                        <button
+                            className={styles.actionButton}
+                            style={{ flex: 1, background: 'transparent', color: '#64748b', border: '1px solid #e2e8f0' }}
+                            onClick={handleConsultar}
+                        >
+                            💬 Consultar con EVA
+                        </button>
+                        <button
+                            className={styles.actionButton}
+                            style={{ flex: 1, background: 'var(--color-primary-teal)', color: 'white', fontWeight: 'bold' }}
+                            onClick={() => {
+                                const category = service.category.toLowerCase();
+                                const isTour = category.includes('tour') || category.includes('excursión');
+                                const param = isTour ? `tour_id=${service.id}` : `hotel_id=${service.id}`;
+                                router.push(`/quote?${param}`);
+                                onClose();
+                            }}
+                        >
+                            COTIZAR AHORA
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
