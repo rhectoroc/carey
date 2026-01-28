@@ -147,12 +147,6 @@ export default function ServiceModal({ isOpen, onClose, service }: ServiceModalP
 
                     {view === 'quote' ? (
                         <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-                            {/* Small header adjustment for embedded form */}
-                            <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
-                                <h4 style={{ fontSize: '0.9rem', color: '#C5A059', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: '700' }}>
-                                    Cotizador Inteligente
-                                </h4>
-                            </div>
                             <QuoteForm
                                 embedded
                                 preSelectedService={service}

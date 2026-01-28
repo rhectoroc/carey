@@ -297,3 +297,64 @@
         box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.1);
     }
 }
+
+/* Embedded Mode Overrides */
+.embeddedWrapper {
+    width: 100%;
+    height: 100%;
+    overflow-y: visible;
+    /* Let parent handle overflow */
+}
+
+/* Extras List View */
+.extrasList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem 0;
+}
+
+.extrasGroupTitle {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #64748b;
+    margin-top: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.extrasListItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+}
+
+.extrasListItem:hover {
+    background: #f8fafc;
+}
+
+.extrasListItem.selected {
+    background: #fffbf0;
+    border-color: #C5A059;
+}
+
+.extrasItemInfo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #334155;
+}
+
+.extrasItemPrice {
+    font-size: 0.85rem;
+    color: #64748b;
+    font-weight: 500;
+}

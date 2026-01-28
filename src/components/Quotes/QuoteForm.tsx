@@ -288,18 +288,27 @@ export default function QuoteForm({ embedded = false, preSelectedService, onBack
     }
 
     const content = (
-        <>
-            <div style={{ position: 'absolute', top: 20, left: 20, cursor: 'pointer', zIndex: 20 }} onClick={() => onBack ? onBack() : window.history.back()}>
-                <ArrowLeft size={24} color="#64748b" />
+        <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+            {!embedded && (
+                <div style={{ position: 'absolute', top: 20, left: 20, cursor: 'pointer', zIndex: 20 }} onClick={() => onBack ? onBack() : window.history.back()}>
+                    <ArrowLeft size={24} color="#64748b" />
+                </div>
+            )}
+
+            <div className={styles.header} style={{ marginBottom: '1.5rem', marginTop: embedded ? 0 : '2rem' }}>
+                {embedded && onBack && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10, cursor: 'pointer' }} onClick={onBack}>
+                        <ArrowLeft size={20} color="#64748b" />
+                        <span style={{ fontSize: '0.9rem', color: '#64748b', fontWeight: 600 }}>Volver a detalles</span>
+                    </div>
+                )}
+                <h1 className={styles.title} style={{ fontSize: embedded ? '1.5rem' : '1.8rem', textAlign: 'left' }}>{title}</h1>
+                {location && <div className={styles.subtitle} style={{ textAlign: 'left' }}>📍 {location}</div>}
             </div>
 
-            <div className={styles.header}>
-                <h1 className={styles.title}>{title}</h1>
-                {location && <div className={styles.subtitle}>📍 {location}</div>}
-            </div>
+            <form id="quoteForm" onSubmit={handleSubmit} className={styles.grid} style={{ flex: 1, overflowY: 'auto', paddingRight: '5px' }}>
 
-            <form id="quoteForm" onSubmit={handleSubmit} className={styles.grid}>
-
+                {/* Hotel Selector (only if not preselected/tour mode) */}
                 {(!tourMode && !preSelectedService) && (
                     <div className={styles.inputGroup}>
                         <label className={styles.label}>Hotel / Alojamiento</label>
@@ -310,23 +319,23 @@ export default function QuoteForm({ embedded = false, preSelectedService, onBack
                     </div>
                 )}
 
-                <div className={styles.inputGroup}>
-                    <div className={styles.row}>
-                        <div style={{ flex: 1 }}>
-                            <label className={styles.label}>Llegada</label>
-                            <input type="date" className={styles.input} value={dates.checkIn} onChange={e => setDates({ ...dates, checkIn: e.target.value })} required />
-                        </div>
-                        <div style={{ flex: 1 }}>
-                            <label className={styles.label}>Salida</label>
-                            <input type="date" className={styles.input} value={dates.checkOut} onChange={e => setDates({ ...dates, checkOut: e.target.value })} required />
-                        </div>
+                {/* DATES - 2 Cols */}
+                <div className={styles.row}>
+                    <div className={styles.inputGroup} style={{ flex: 1 }}>
+                        <label className={styles.label}>Llegada</label>
+                        <input type="date" className={styles.input} value={dates.checkIn} onChange={e => setDates({ ...dates, checkIn: e.target.value })} required />
+                    </div>
+                    <div className={styles.inputGroup} style={{ flex: 1 }}>
+                        <label className={styles.label}>Salida</label>
+                        <input type="date" className={styles.input} value={dates.checkOut} onChange={e => setDates({ ...dates, checkOut: e.target.value })} required />
                     </div>
                 </div>
 
+                {/* GUESTS */}
                 <div className={styles.inputGroup}>
                     <label className={styles.label}>Huéspedes</label>
                     <div className={styles.guestRow}>
-                        <span>Adultos</span>
+                        <span>Adultos (+12)</span>
                         <div className={styles.counter}>
                             <button type="button" className={styles.counterBtn} onClick={() => handleGuestChange('adults', -1)}>-</button>
                             <span>{guests.adults}</span>
@@ -334,23 +343,32 @@ export default function QuoteForm({ embedded = false, preSelectedService, onBack
                         </div>
                     </div>
                     <div className={styles.guestRow}>
-                        <span>Niños (4-10)</span>
+                        <span>Niños (4-11)</span>
                         <div className={styles.counter}>
                             <button type="button" className={styles.counterBtn} onClick={() => handleGuestChange('child_4_10', -1)}>-</button>
                             <span>{guests.child_4_10}</span>
                             <button type="button" className={styles.counterBtn} onClick={() => handleGuestChange('child_4_10', 1)}>+</button>
                         </div>
                     </div>
+                    <div className={styles.guestRow}>
+                        <span>Infantes (0-3)</span>
+                        <div className={styles.counter}>
+                            <button type="button" className={styles.counterBtn} onClick={() => handleGuestChange('child_0_3', -1)}>-</button>
+                            <span>{guests.child_0_3}</span>
+                            <button type="button" className={styles.counterBtn} onClick={() => handleGuestChange('child_0_3', 1)}>+</button>
+                        </div>
+                    </div>
                 </div>
 
+                {/* EXTRAS */}
                 {(extras.transfers.length > 0 || extras.tours.length > 0) && (
-                    <>
-                        <div className={styles.marqueeSection} onClick={() => setShowExtras(!showExtras)}>
+                    <div style={{ margin: '1rem 0' }}>
+                        <div className={styles.marqueeSection} onClick={() => setShowExtras(!showExtras)} style={{ margin: '0 -10px', borderRadius: 12 }}>
                             {!showExtras ? (
                                 <motion.div
                                     className={styles.marqueeTrack}
                                     animate={{ x: [0, -500] }}
-                                    transition={{ repeat: Infinity, duration: 15, ease: "linear" }}
+                                    transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
                                 >
                                     {[1, 2, 3].map(i => (
                                         <span key={i} className={styles.marqueeText}>
@@ -360,7 +378,7 @@ export default function QuoteForm({ embedded = false, preSelectedService, onBack
                                 </motion.div>
                             ) : (
                                 <div style={{ textAlign: 'center', fontSize: '0.9rem', color: '#C5A059', fontWeight: 600 }}>
-                                    👇 Personaliza tu experiencia (Clic para cerrar)
+                                    👆 Ocultar opciones
                                 </div>
                             )}
                         </div>
@@ -368,47 +386,80 @@ export default function QuoteForm({ embedded = false, preSelectedService, onBack
                         <AnimatePresence>
                             {showExtras && (
                                 <motion.div
-                                    className={styles.extrasContainer}
                                     initial={{ height: 0, opacity: 0 }}
                                     animate={{ height: "auto", opacity: 1 }}
                                     exit={{ height: 0, opacity: 0 }}
-                                    transition={{ duration: 0.4 }}
+                                    transition={{ duration: 0.3 }}
                                 >
-                                    <div className={styles.cardGrid}>
-                                        {extras.transfers.map(t => (
-                                            <div key={t.id}
-                                                className={`${styles.extraCard} ${selectedExtras.includes(t) ? styles.selected : ''}`}
-                                                onClick={() => toggleExtra(t, 'transfer')}
-                                            >
-                                                <Car size={20} color={selectedExtras.includes(t) ? "#C5A059" : "#64748b"} style={{ marginBottom: 5 }} />
-                                                <div style={{ fontWeight: 600, fontSize: '0.85rem' }}>{t.name}</div>
-                                                <div style={{ fontSize: '0.75rem', color: '#64748b' }}>+${t.price}</div>
-                                            </div>
-                                        ))}
-                                        {extras.tours.map(t => (
-                                            <div key={t.id}
-                                                className={`${styles.extraCard} ${selectedExtras.find(e => e.id === t.id && e.type === 'tour') ? styles.selected : ''}`}
-                                                onClick={() => toggleExtra(t, 'tour')}
-                                            >
-                                                <Compass size={20} color="#1F6D8C" style={{ marginBottom: 5 }} />
-                                                <div style={{ fontWeight: 600, fontSize: '0.85rem' }}>{t.name}</div>
-                                                <div style={{ fontSize: '0.75rem', color: '#64748b' }}>+${t.price}</div>
-                                            </div>
-                                        ))}
+                                    <div className={styles.extrasList}>
+                                        {extras.transfers.length > 0 && (
+                                            <>
+                                                <div className={styles.extrasGroupTitle}>TRASLADOS</div>
+                                                {extras.transfers.map(t => (
+                                                    <div key={t.id}
+                                                        className={`${styles.extrasListItem} ${selectedExtras.find(e => e.id === t.id && e.type === 'transfer') ? styles.selected : ''}`}
+                                                        onClick={() => toggleExtra(t, 'transfer')}
+                                                    >
+                                                        <div className={styles.extrasItemInfo}>
+                                                            <Car size={18} color={selectedExtras.find(e => e.id === t.id && e.type === 'transfer') ? "#C5A059" : "#64748b"} />
+                                                            <span>{t.name}</span>
+                                                        </div>
+                                                        <div className={styles.extrasItemPrice}>+${t.price}</div>
+                                                    </div>
+                                                ))}
+                                            </>
+                                        )}
+
+                                        {extras.tours.length > 0 && (
+                                            <>
+                                                <div className={styles.extrasGroupTitle}>TOURS & EXCURSIONES</div>
+                                                {extras.tours.map(t => (
+                                                    <div key={t.id}
+                                                        className={`${styles.extrasListItem} ${selectedExtras.find(e => e.id === t.id && e.type === 'tour') ? styles.selected : ''}`}
+                                                        onClick={() => toggleExtra(t, 'tour')}
+                                                    >
+                                                        <div className={styles.extrasItemInfo}>
+                                                            <Compass size={18} color="#1F6D8C" />
+                                                            <span>{t.name}</span>
+                                                        </div>
+                                                        <div className={styles.extrasItemPrice}>+${t.price}</div>
+                                                    </div>
+                                                ))}
+                                            </>
+                                        )}
                                     </div>
                                 </motion.div>
                             )}
                         </AnimatePresence>
-                    </>
+                    </div>
                 )}
 
-                <div className={styles.inputGroup}>
-                    <label className={styles.label}>Datos de Contacto</label>
+                {/* CONTACT */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                     <div className={styles.row}>
-                        <input className={styles.input} placeholder="Tu Nombre" value={contact.firstName} onChange={e => setContact({ ...contact, firstName: e.target.value })} required />
-                        <input className={styles.input} placeholder="Teléfono" value={contact.phone} onChange={e => setContact({ ...contact, phone: e.target.value })} required />
+                        <div className={styles.inputGroup} style={{ flex: 1 }}>
+                            <label className={styles.label}>Nombre</label>
+                            <input className={styles.input} placeholder="Tu Nombre" value={contact.firstName} onChange={e => setContact({ ...contact, firstName: e.target.value })} required />
+                        </div>
+                        <div className={styles.inputGroup} style={{ flex: 1 }}>
+                            <label className={styles.label}>Apellido</label>
+                            <input className={styles.input} placeholder="Tu Apellido" value={contact.lastName} onChange={e => setContact({ ...contact, lastName: e.target.value })} required />
+                        </div>
                     </div>
-                    <input style={{ marginTop: 10 }} className={styles.input} placeholder="Correo Electrónico" type="email" value={contact.email} onChange={e => setContact({ ...contact, email: e.target.value })} required />
+                    <div className={styles.row}>
+                        <div className={styles.inputGroup} style={{ flex: 1 }}>
+                            <label className={styles.label}>Cédula / Pasaporte</label>
+                            <input className={styles.input} placeholder="ID Documento" value={contact.documentId} onChange={e => setContact({ ...contact, documentId: e.target.value })} required />
+                        </div>
+                        <div className={styles.inputGroup} style={{ flex: 1 }}>
+                            <label className={styles.label}>Teléfono</label>
+                            <input className={styles.input} placeholder="+58..." type="tel" value={contact.phone} onChange={e => setContact({ ...contact, phone: e.target.value })} required />
+                        </div>
+                    </div>
+                    <div className={styles.inputGroup}>
+                        <label className={styles.label}>Email</label>
+                        <input className={styles.input} placeholder="correo@ejemplo.com" type="email" value={contact.email} onChange={e => setContact({ ...contact, email: e.target.value })} required />
+                    </div>
                 </div>
 
             </form>
@@ -428,11 +479,11 @@ export default function QuoteForm({ embedded = false, preSelectedService, onBack
                 </button>
             </div>
 
-        </>
+        </div>
     );
 
     if (embedded) {
-        return <div style={{ paddingBottom: '20px' }}>{content}</div>;
+        return <div className={styles.embeddedWrapper}>{content}</div>;
     }
 
     return (
