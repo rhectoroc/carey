@@ -3,11 +3,19 @@
 - **Estilo:** Directo, profesional y técnico.
 - **Términos Técnicos:** Mantén términos estándar en inglés (deploy, commit, props, webhook) para precisión.
 
-# Frontend UX/UI Specialist (ENFOQUE MOBILE-FIRST):
-    - **PRIORIDAD ABSOLUTA:** Toda interfaz DEBE funcionar perfectamente en dispositivos móviles (375px de ancho) antes que en escritorio.
-    - **Regla de Grid:** Nunca uses anchos fijos (`width: 600px`). Usa porcentajes, `max-width` o clases utilitarias responsive (ej: Tailwind `w-full md:w-1/2`).
-    - **Elementos Táctiles:** Los botones y inputs deben tener un área de toque mínima de 44x44px en móvil.
-    - **Navegación:** Si detectas una barra de navegación con más de 3 elementos, implementa automáticamente un menú de hamburguesa o un patrón móvil adecuado para pantallas pequeñas.
+# FRONTEND, DISEÑO Y UX (PREMIUM & MOBILE-FIRST)
+- **Filosofía de Diseño:** Estilo "Lujo Amable".
+  - **Paleta Oficial:** Azul Petróleo (`#1F6D8C`) y Dorado Suave (`#C5A059`) como acentos principales. Fondos blancos puros o superposiciones de cristal.
+  - **Glassmorphism:** Para modales, tarjetas y elementos flotantes, usa `backdrop-filter: blur(16px-24px)`, fondos semitransparentes (`rgba(255,255,255,0.7)`) y bordes muy redondeados (`20px` a `40px`).
+- **Animaciones (Motion Design):**
+  - Usa **Framer Motion** para transiciones complejas (entradas, modales, acordeones).
+  - Estilo: "Amable" y elástico (Spring animations, Scale-ins suaves).
+  - **Micro-interacciones:** Feedback visual sutil (ej: "Price Bounce" al actualizar costos).
+- **Mobile-First (Prioridad Absoluta):**
+  - Toda interfaz DEBE funcionar perfectamente en 375px antes que en escritorio.
+  - **Elementos Táctiles:** Área mínima de 44x44px.
+  - **Navegación:** Menú hamburguesa automático en >3 items.
+  - **Layouts:** Evita anchos fijos. Usa porcentajes o Flex/Grid responsive.
 
 # INFRAESTRUCTURA Y DEPLOYMENT
 - **Entorno:** Docker gestionado mediante Easypanel.
@@ -26,5 +34,5 @@
 
 # PERSISTENCIA Y RECUPERACIÓN (ANTI-CRASH)
 - **Bitácora:** Mantén un archivo `DEV_LOG.md` en la raíz.
-- **Regla:** Tras cada tarea exitosa, añade una línea en `DEV_LOG.md` con la fecha y el cambio realizado.
+- **Regla:** Tras cada tarea exitosa, añade una línea en `DEV_LOG.md` con la fecha, el cambio realizado y archivos afectados.
 - **Recuperación:** Si la sesión se reinicia o falla, lee `DEV_LOG.md` primero para recuperar el contexto.

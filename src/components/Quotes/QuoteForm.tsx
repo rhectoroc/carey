@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from './quote.module.css';
 import { useSearchParams } from 'next/navigation';
-import { motion, AnimatePresence, useAnimation } from 'framer-motion';
+import { motion, AnimatePresence, useAnimation, Variants } from 'framer-motion';
 import { Car, Compass, Calendar, Users, ArrowLeft } from 'lucide-react';
 
 export default function QuoteForm() {
@@ -187,7 +187,7 @@ export default function QuoteForm() {
     const bgImage = selectedHotel?.image || '/images/hero-bg.jpg';
 
     // Animation Variants
-    const modalVariants = {
+    const modalVariants: Variants = {
         hidden: { opacity: 0, scale: 0.9, y: 30 },
         visible: { opacity: 1, scale: 1, y: 0, transition: { type: "spring", duration: 0.6 } }
     };
