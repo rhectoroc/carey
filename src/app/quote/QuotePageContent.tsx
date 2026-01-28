@@ -260,86 +260,125 @@ export default function QuotePageContent() {
                 <div className={styles.content}>
                     <AnimatePresence mode="wait">
                         {/* STEP 1: Service Selection */}
-                        {currentStep === 1 && (
-                            <motion.div
-                                key="step1"
-                                initial={{ opacity: 0, x: 20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                exit={{ opacity: 0, x: -20 }}
-                                className={styles.stepContent}
-                            >
-                                <h2 className={styles.stepTitle}>¿Qué deseas cotizar?</h2>
+                        {currentStep === 1 && (() => {
+                            const hasPreselected = formData.hotelId || formData.tourId;
+                            const selectedService = formData.serviceType === 'hotel'
+                                ? hotels.find(h => h.id === Number(formData.hotelId))
+                                : tours.find(t => t.id === Number(formData.tourId));
 
-                                <div className={styles.serviceTypeSelector}>
-                                    <button
-                                        className={`${styles.serviceTypeBtn} ${formData.serviceType === 'hotel' ? styles.active : ''}`}
-                                        onClick={() => setFormData(prev => ({ ...prev, serviceType: 'hotel' }))}
-                                    >
-                                        <Hotel size={32} />
-                                        <span>Hotel / Alojamiento</span>
-                                    </button>
-                                    <button
-                                        className={`${styles.serviceTypeBtn} ${formData.serviceType === 'tour' ? styles.active : ''}`}
-                                        onClick={() => setFormData(prev => ({ ...prev, serviceType: 'tour' }))}
-                                    >
-                                        <Compass size={32} />
-                                        <span>Tour / Excursión</span>
-                                    </button>
-                                </div>
+                            return (
+                                <motion.div
+                                    key="step1"
+                                    initial={{ opacity: 0, x: 20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: -20 }}
+                                    className={styles.stepContent}
+                                >
+                                    {hasPreselected && selectedService ? (
+                                        // Vista de confirmación cuando viene pre-seleccionado
+                                        <>
+                                            <h2 className={styles.stepTitle}>Confirma tu selección</h2>
+                                            <p className={styles.stepSubtitle}>Has elegido este servicio para cotizar</p>
 
-                                {formData.serviceType === 'hotel' && (
-                                    <div className={styles.serviceGrid}>
-                                        {hotels.map(hotel => (
-                                            <div
-                                                key={hotel.id}
-                                                className={`${styles.serviceCard} ${formData.hotelId === hotel.id.toString() ? styles.selected : ''}`}
-                                                onClick={() => setFormData(prev => ({ ...prev, hotelId: hotel.id.toString() }))}
-                                            >
-                                                <img src={hotel.image} alt={hotel.name} className={styles.serviceCardImage} />
-                                                <div className={styles.serviceCardContent}>
-                                                    <h3 className={styles.serviceCardTitle}>{hotel.name}</h3>
-                                                    <p className={styles.serviceCardLocation}>
-                                                        <MapPin size={14} /> {hotel.location}
-                                                    </p>
-                                                    <p className={styles.serviceCardPrice}>Desde ${hotel.price}/noche</p>
-                                                </div>
-                                                {formData.hotelId === hotel.id.toString() && (
+                                            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>
+                                                <div className={`${styles.serviceCard} ${styles.selected}`} style={{ maxWidth: '400px', cursor: 'default' }}>
+                                                    <img src={selectedService.image} alt={selectedService.name} className={styles.serviceCardImage} />
+                                                    <div className={styles.serviceCardContent}>
+                                                        <h3 className={styles.serviceCardTitle}>{selectedService.name}</h3>
+                                                        <p className={styles.serviceCardLocation}>
+                                                            <MapPin size={14} /> {selectedService.location}
+                                                        </p>
+                                                        <p className={styles.serviceCardPrice}>
+                                                            {formData.serviceType === 'hotel'
+                                                                ? `Desde $${selectedService.price}/noche`
+                                                                : `$${selectedService.price}/persona`
+                                                            }
+                                                        </p>
+                                                    </div>
                                                     <div className={styles.serviceCardCheck}>
                                                         <Check size={20} />
                                                     </div>
-                                                )}
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-
-                                {formData.serviceType === 'tour' && (
-                                    <div className={styles.serviceGrid}>
-                                        {tours.map(tour => (
-                                            <div
-                                                key={tour.id}
-                                                className={`${styles.serviceCard} ${formData.tourId === tour.id.toString() ? styles.selected : ''}`}
-                                                onClick={() => setFormData(prev => ({ ...prev, tourId: tour.id.toString() }))}
-                                            >
-                                                <img src={tour.image} alt={tour.name} className={styles.serviceCardImage} />
-                                                <div className={styles.serviceCardContent}>
-                                                    <h3 className={styles.serviceCardTitle}>{tour.name}</h3>
-                                                    <p className={styles.serviceCardLocation}>
-                                                        <MapPin size={14} /> {tour.location}
-                                                    </p>
-                                                    <p className={styles.serviceCardPrice}>${tour.price}/persona</p>
                                                 </div>
-                                                {formData.tourId === tour.id.toString() && (
-                                                    <div className={styles.serviceCardCheck}>
-                                                        <Check size={20} />
-                                                    </div>
-                                                )}
                                             </div>
-                                        ))}
-                                    </div>
-                                )}
-                            </motion.div>
-                        )}
+                                        </>
+                                    ) : (
+                                        // Vista de selección normal
+                                        <>
+                                            <h2 className={styles.stepTitle}>¿Qué deseas cotizar?</h2>
+
+                                            <div className={styles.serviceTypeSelector}>
+                                                <button
+                                                    className={`${styles.serviceTypeBtn} ${formData.serviceType === 'hotel' ? styles.active : ''}`}
+                                                    onClick={() => setFormData(prev => ({ ...prev, serviceType: 'hotel' }))}
+                                                >
+                                                    <Hotel size={32} />
+                                                    <span>Hotel / Alojamiento</span>
+                                                </button>
+                                                <button
+                                                    className={`${styles.serviceTypeBtn} ${formData.serviceType === 'tour' ? styles.active : ''}`}
+                                                    onClick={() => setFormData(prev => ({ ...prev, serviceType: 'tour' }))}
+                                                >
+                                                    <Compass size={32} />
+                                                    <span>Tour / Excursión</span>
+                                                </button>
+                                            </div>
+
+                                            {formData.serviceType === 'hotel' && (
+                                                <div className={styles.serviceGrid}>
+                                                    {hotels.map(hotel => (
+                                                        <div
+                                                            key={hotel.id}
+                                                            className={`${styles.serviceCard} ${formData.hotelId === hotel.id.toString() ? styles.selected : ''}`}
+                                                            onClick={() => setFormData(prev => ({ ...prev, hotelId: hotel.id.toString() }))}
+                                                        >
+                                                            <img src={hotel.image} alt={hotel.name} className={styles.serviceCardImage} />
+                                                            <div className={styles.serviceCardContent}>
+                                                                <h3 className={styles.serviceCardTitle}>{hotel.name}</h3>
+                                                                <p className={styles.serviceCardLocation}>
+                                                                    <MapPin size={14} /> {hotel.location}
+                                                                </p>
+                                                                <p className={styles.serviceCardPrice}>Desde ${hotel.price}/noche</p>
+                                                            </div>
+                                                            {formData.hotelId === hotel.id.toString() && (
+                                                                <div className={styles.serviceCardCheck}>
+                                                                    <Check size={20} />
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+
+                                            {formData.serviceType === 'tour' && (
+                                                <div className={styles.serviceGrid}>
+                                                    {tours.map(tour => (
+                                                        <div
+                                                            key={tour.id}
+                                                            className={`${styles.serviceCard} ${formData.tourId === tour.id.toString() ? styles.selected : ''}`}
+                                                            onClick={() => setFormData(prev => ({ ...prev, tourId: tour.id.toString() }))}
+                                                        >
+                                                            <img src={tour.image} alt={tour.name} className={styles.serviceCardImage} />
+                                                            <div className={styles.serviceCardContent}>
+                                                                <h3 className={styles.serviceCardTitle}>{tour.name}</h3>
+                                                                <p className={styles.serviceCardLocation}>
+                                                                    <MapPin size={14} /> {tour.location}
+                                                                </p>
+                                                                <p className={styles.serviceCardPrice}>${tour.price}/persona</p>
+                                                            </div>
+                                                            {formData.tourId === tour.id.toString() && (
+                                                                <div className={styles.serviceCardCheck}>
+                                                                    <Check size={20} />
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </>
+                                    )}
+                                </motion.div>
+                            );
+                        })()}
 
                         {/* STEP 2: Dates & Guests */}
                         {currentStep === 2 && (
@@ -466,48 +505,70 @@ export default function QuotePageContent() {
                                 <h2 className={styles.stepTitle}>Servicios Adicionales</h2>
                                 <p className={styles.stepSubtitle}>Personaliza tu experiencia (opcional)</p>
 
-                                {extras.transfers.length > 0 && (
+                                {extras.tours.length > 0 && (
                                     <div className={styles.extrasCategory}>
-                                        <h3 className={styles.extrasCategoryTitle}>Traslados</h3>
-                                        <div className={styles.extrasGrid}>
-                                            {extras.transfers.map(transfer => (
-                                                <div
-                                                    key={transfer.id}
-                                                    className={`${styles.extraCard} ${formData.selectedExtras.find(e => e.id === transfer.id && e.type === 'transfer') ? styles.selected : ''}`}
-                                                    onClick={() => toggleExtra(transfer, 'transfer')}
-                                                >
-                                                    <h4 className={styles.extraCardTitle}>{transfer.name}</h4>
-                                                    <p className={styles.extraCardPrice}>+${transfer.price}/persona</p>
-                                                    {formData.selectedExtras.find(e => e.id === transfer.id && e.type === 'transfer') && (
-                                                        <div className={styles.extraCardCheck}>
-                                                            <Check size={18} />
+                                        <h3 className={styles.extrasCategoryTitle}>Tours & Excursiones</h3>
+                                        <div className={styles.marqueeContainer}>
+                                            <div className={styles.marqueeTrack}>
+                                                {/* Duplicamos los items para efecto infinito */}
+                                                {[...extras.tours, ...extras.tours].map((tour, idx) => {
+                                                    const isSelected = formData.selectedExtras.find(e => e.id === tour.id && e.type === 'tour');
+                                                    return (
+                                                        <div
+                                                            key={`${tour.id}-${idx}`}
+                                                            className={`${styles.marqueeCard} ${isSelected ? styles.selected : ''}`}
+                                                            onClick={() => toggleExtra(tour, 'tour')}
+                                                        >
+                                                            <div className={styles.marqueeCardImage}>
+                                                                <img src={tour.image} alt={tour.name} />
+                                                            </div>
+                                                            <div className={styles.marqueeCardContent}>
+                                                                <h4 className={styles.marqueeCardTitle}>{tour.name}</h4>
+                                                                <p className={styles.marqueeCardPrice}>+${tour.price}/persona</p>
+                                                            </div>
+                                                            {isSelected && (
+                                                                <div className={styles.marqueeCardCheck}>
+                                                                    <Check size={16} />
+                                                                </div>
+                                                            )}
                                                         </div>
-                                                    )}
-                                                </div>
-                                            ))}
+                                                    );
+                                                })}
+                                            </div>
                                         </div>
                                     </div>
                                 )}
 
-                                {extras.tours.length > 0 && (
+                                {extras.transfers.length > 0 && (
                                     <div className={styles.extrasCategory}>
-                                        <h3 className={styles.extrasCategoryTitle}>Tours & Excursiones</h3>
-                                        <div className={styles.extrasGrid}>
-                                            {extras.tours.map(tour => (
-                                                <div
-                                                    key={tour.id}
-                                                    className={`${styles.extraCard} ${formData.selectedExtras.find(e => e.id === tour.id && e.type === 'tour') ? styles.selected : ''}`}
-                                                    onClick={() => toggleExtra(tour, 'tour')}
-                                                >
-                                                    <h4 className={styles.extraCardTitle}>{tour.name}</h4>
-                                                    <p className={styles.extraCardPrice}>+${tour.price}/persona</p>
-                                                    {formData.selectedExtras.find(e => e.id === tour.id && e.type === 'tour') && (
-                                                        <div className={styles.extraCardCheck}>
-                                                            <Check size={18} />
+                                        <h3 className={styles.extrasCategoryTitle}>Traslados Privados</h3>
+                                        <div className={styles.marqueeContainer}>
+                                            <div className={styles.marqueeTrack}>
+                                                {/* Duplicamos los items para efecto infinito */}
+                                                {[...extras.transfers, ...extras.transfers].map((transfer, idx) => {
+                                                    const isSelected = formData.selectedExtras.find(e => e.id === transfer.id && e.type === 'transfer');
+                                                    return (
+                                                        <div
+                                                            key={`${transfer.id}-${idx}`}
+                                                            className={`${styles.marqueeCard} ${isSelected ? styles.selected : ''}`}
+                                                            onClick={() => toggleExtra(transfer, 'transfer')}
+                                                        >
+                                                            <div className={styles.marqueeCardImage}>
+                                                                <img src={transfer.image} alt={transfer.name} />
+                                                            </div>
+                                                            <div className={styles.marqueeCardContent}>
+                                                                <h4 className={styles.marqueeCardTitle}>{transfer.name}</h4>
+                                                                <p className={styles.marqueeCardPrice}>+${transfer.price}/persona</p>
+                                                            </div>
+                                                            {isSelected && (
+                                                                <div className={styles.marqueeCardCheck}>
+                                                                    <Check size={16} />
+                                                                </div>
+                                                            )}
                                                         </div>
-                                                    )}
-                                                </div>
-                                            ))}
+                                                    );
+                                                })}
+                                            </div>
                                         </div>
                                     </div>
                                 )}

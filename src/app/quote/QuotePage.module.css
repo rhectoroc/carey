@@ -23,7 +23,7 @@
 /* Progress Bar */
 .progressSection {
     background: linear-gradient(135deg, #1F6D8C 0%, #2a8aad 100%);
-    padding: 2rem;
+    padding: 1.25rem 2rem;
 }
 
 .progressBar {
@@ -44,8 +44,8 @@
 }
 
 .progressStepIcon {
-    width: 56px;
-    height: 56px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.2);
     border: 3px solid rgba(255, 255, 255, 0.3);
@@ -71,7 +71,7 @@
 }
 
 .progressStepLabel {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 600;
     color: rgba(255, 255, 255, 0.7);
     text-transform: uppercase;
@@ -346,71 +346,129 @@
 
 /* Extras */
 .extrasCategory {
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
 }
 
 .extrasCategoryTitle {
     font-size: 1.2rem;
     font-weight: 700;
     color: #1e293b;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
-.extrasGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1rem;
+/* Marquee Container */
+.marqueeContainer {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    padding: 1rem 0;
 }
 
-.extraCard {
+.marqueeTrack {
+    display: flex;
+    gap: 1.5rem;
+    animation: marqueeScroll 30s linear infinite;
+    width: max-content;
+}
+
+.marqueeTrack:hover {
+    animation-play-state: paused;
+}
+
+@keyframes marqueeScroll {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+/* Marquee Card */
+.marqueeCard {
+    flex-shrink: 0;
+    width: 280px;
     background: white;
-    border: 2px solid #e2e8f0;
-    border-radius: 16px;
-    padding: 1.5rem;
+    border-radius: 20px;
+    overflow: hidden;
     cursor: pointer;
     transition: all 0.3s ease;
+    border: 3px solid transparent;
+    position: relative;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.marqueeCard:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 30px rgba(31, 109, 140, 0.15);
+    border-color: #1F6D8C;
+}
+
+.marqueeCard.selected {
+    border-color: #C5A059;
+    box-shadow: 0 12px 35px rgba(197, 160, 89, 0.3);
+    transform: translateY(-8px) scale(1.05);
+}
+
+.marqueeCardImage {
+    width: 100%;
+    height: 160px;
+    overflow: hidden;
     position: relative;
 }
 
-.extraCard:hover {
-    border-color: #1F6D8C;
-    transform: translateY(-4px);
-    box-shadow: 0 8px 20px rgba(31, 109, 140, 0.1);
+.marqueeCardImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
 }
 
-.extraCard.selected {
-    border-color: #C5A059;
-    background: rgba(197, 160, 89, 0.05);
-    box-shadow: 0 8px 20px rgba(197, 160, 89, 0.2);
+.marqueeCard:hover .marqueeCardImage img {
+    transform: scale(1.1);
 }
 
-.extraCardTitle {
+.marqueeCardContent {
+    padding: 1.25rem;
+    background: linear-gradient(to bottom, white 0%, rgba(248, 250, 252, 0.5) 100%);
+}
+
+.marqueeCardTitle {
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: 700;
     color: #1e293b;
     margin-bottom: 0.5rem;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
-.extraCardPrice {
-    font-size: 0.9rem;
-    font-weight: 700;
+.marqueeCardPrice {
+    font-size: 1.1rem;
+    font-weight: 800;
     color: #1F6D8C;
 }
 
-.extraCardCheck {
+.marqueeCardCheck {
     position: absolute;
     top: 0.75rem;
     right: 0.75rem;
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     background: #C5A059;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
+    box-shadow: 0 4px 12px rgba(197, 160, 89, 0.5);
+    z-index: 10;
 }
 
 .noExtras {
