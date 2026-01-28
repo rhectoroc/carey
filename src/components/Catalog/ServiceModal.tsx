@@ -61,7 +61,6 @@ export default function ServiceModal({ isOpen, onClose, service }: ServiceModalP
         if (isOpen) {
             document.body.style.overflow = 'hidden';
             setCurrentImageIndex(0);
-            setView('details'); // Reset to details on open
         } else {
             document.body.style.overflow = 'unset';
         }
