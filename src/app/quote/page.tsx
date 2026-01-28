@@ -10,13 +10,11 @@ export const metadata = {
 
 export default function QuotePage() {
     return (
-        <main style={{ background: '#f8fafc', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+        <main>
             <Navbar />
-            <div style={{ flex: 1, paddingTop: '100px', paddingBottom: '40px' }}>
-                <Suspense fallback={<div style={{ textAlign: 'center', padding: '50px' }}>Cargando cotizador...</div>}>
-                    <QuoteForm />
-                </Suspense>
-            </div>
+            <Suspense fallback={<div style={{ textAlign: 'center', padding: '50px' }}>Cargando cotizador...</div>}>
+                <QuoteForm />
+            </Suspense>
             <Footer />
         </main>
     );
