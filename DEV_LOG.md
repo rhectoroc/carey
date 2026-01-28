@@ -21,6 +21,7 @@
 - **Resiliencia y Corrección de Homepage:** Implementación de fallbacks (datos mock) en las APIs públicas para evitar que la página principal se vea vacía si la base de datos no es accesible. Corrección de bug en animaciones GSAP y soporte multi-idioma para la sección de Momentos.
 - **Refactorización Responsive (Mobile-First):** Auditoría UX y refactorización completa del layout global, navegación, grillas de catálogo y barra de búsqueda. Implementación de regla de 1 columna en móvil y áreas de toque de 44px. (Estado: Completado)
 - **Correcciones Mobile Post-Audit:** Refactorización profunda de Hero.tsx y CSS. Se despejó el título del Navbar aumentando padding superior, se cambió Hero a `height: auto` para evitar recortes, y se eliminó div con margen negativo en `page.tsx`. Implementación de animaciones de tarjetas individuales activadas por scroll (`gsap individually triggered`) para mejorar la experiencia en móviles. (Estado: Completado)
+
 ### 2026-01-27
 - **Traducción Panel Admin:** Traducción completa al español de todos los módulos administrativos (Dashboard, Hoteles, Tours, Destinos, Traslados, Usuarios). Estandarización de idioma y terminología técnica en inglés cuando amerita. (Estado: Completado)
 - **Corrección de Persistencia JSON:** Solución al error crítico "invalid input syntax for type json" en la creación/edición de Hoteles y Traslados. Implementación de serialización correcta (`JSON.stringify`) para columnas JSONB (features, gallery, tags). (Estado: Completado)
@@ -36,3 +37,15 @@
 - **UX Doble Acción:** Rediseño de tarjetas de servicios (`ServiceCard`) para incluir dos botones: "Cotizar Ahora" (Primario -> `/quote`) y "Consultar" (Secundario -> WhatsApp). Implementación responsive (Stack en móvil, Row en desktop). (Estado: Completado - Etapa 8)
 - **Fix Depuración Build (Framer Motion):** Solución a error de tipado en `QuoteForm.tsx` con Framer Motion 12.x. Se importó explícitamente el tipo `Variants` y se tipó el objeto de animaciones para cumplir con la inferencia de cadenas de TypeScript. (Estado: Completado)
 - **Modal Integrado de Cotización (Embedded):** Implementación de `QuoteForm` embebido en `ServiceModal`. Ajuste visual para eliminar parpadeo (removal of Framer Motion entry), redimensionamiento correcto, nuevos campos de contacto (Apellido, ID), y visualización de extras como lista limpia. Se eliminó texto redundante y se optimizó el layout del formulario. (Estado: Completado - Premium UX Polished)
+- **Nueva Página de Cotización Wizard:** Creación de página dedicada `/quote` con diseño innovador de 4 pasos:
+  - **Arquitectura:** Wizard paso a paso con barra de progreso visual, animaciones suaves entre pasos (Framer Motion), y precio en tiempo real siempre visible.
+  - **Paso 1 - Servicio:** Selección visual entre Hotel/Tour con tarjetas interactivas que muestran imagen, ubicación y precio.
+  - **Paso 2 - Fechas & Huéspedes:** Inputs de fecha optimizados y contadores elegantes para adultos, niños e infantes.
+  - **Paso 3 - Extras:** Selección opcional de traslados y tours adicionales con feedback visual.
+  - **Paso 4 - Contacto:** Formulario completo (nombre, apellido, documento, teléfono, email).
+  - **Diseño Premium:** Glassmorphism, gradientes con paleta oficial (Azul Petróleo #1F6D8C + Dorado #C5A059), micro-animaciones, y pantalla de éxito celebratoria.
+  - **Mobile-First:** Grids adaptativos, botones táctiles 44px+, footer reorganizado en columna para móviles.
+  - **Integración:** Conectado a APIs existentes, soporte para parámetros URL (`?hotel_id=X`, `?tour_id=X`), cálculo dinámico de precio.
+  - **Archivos:** `src/app/quote/page.tsx` (Suspense wrapper), `src/app/quote/QuotePageContent.tsx` (lógica wizard), `src/app/quote/QuotePage.module.css` (estilos premium).
+  (Estado: Completado - Innovador y Profesional)
+
