@@ -282,7 +282,7 @@ export default function QuotePageContent() {
 
                                             <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>
                                                 <div className={`${styles.serviceCard} ${styles.selected}`} style={{ maxWidth: '400px', cursor: 'default' }}>
-                                                    <img src={selectedService.image} alt={selectedService.name} className={styles.serviceCardImage} />
+                                                    <img src={selectedService.image_url} alt={selectedService.name} className={styles.serviceCardImage} />
                                                     <div className={styles.serviceCardContent}>
                                                         <h3 className={styles.serviceCardTitle}>{selectedService.name}</h3>
                                                         <p className={styles.serviceCardLocation}>
@@ -331,7 +331,7 @@ export default function QuotePageContent() {
                                                             className={`${styles.serviceCard} ${formData.hotelId === hotel.id.toString() ? styles.selected : ''}`}
                                                             onClick={() => setFormData(prev => ({ ...prev, hotelId: hotel.id.toString() }))}
                                                         >
-                                                            <img src={hotel.image} alt={hotel.name} className={styles.serviceCardImage} />
+                                                            <img src={hotel.image_url} alt={hotel.name} className={styles.serviceCardImage} />
                                                             <div className={styles.serviceCardContent}>
                                                                 <h3 className={styles.serviceCardTitle}>{hotel.name}</h3>
                                                                 <p className={styles.serviceCardLocation}>
@@ -357,7 +357,7 @@ export default function QuotePageContent() {
                                                             className={`${styles.serviceCard} ${formData.tourId === tour.id.toString() ? styles.selected : ''}`}
                                                             onClick={() => setFormData(prev => ({ ...prev, tourId: tour.id.toString() }))}
                                                         >
-                                                            <img src={tour.image} alt={tour.name} className={styles.serviceCardImage} />
+                                                            <img src={tour.image_url} alt={tour.name} className={styles.serviceCardImage} />
                                                             <div className={styles.serviceCardContent}>
                                                                 <h3 className={styles.serviceCardTitle}>{tour.name}</h3>
                                                                 <p className={styles.serviceCardLocation}>
@@ -520,7 +520,7 @@ export default function QuotePageContent() {
                                                             onClick={() => toggleExtra(tour, 'tour')}
                                                         >
                                                             <div className={styles.marqueeCardImage}>
-                                                                <img src={tour.image} alt={tour.name} />
+                                                                <img src={tour.image_url} alt={tour.name} />
                                                             </div>
                                                             <div className={styles.marqueeCardContent}>
                                                                 <h4 className={styles.marqueeCardTitle}>{tour.name}</h4>
@@ -554,7 +554,7 @@ export default function QuotePageContent() {
                                                             onClick={() => toggleExtra(transfer, 'transfer')}
                                                         >
                                                             <div className={styles.marqueeCardImage}>
-                                                                <img src={transfer.image} alt={transfer.name} />
+                                                                <img src={transfer.image_url} alt={transfer.name} />
                                                             </div>
                                                             <div className={styles.marqueeCardContent}>
                                                                 <h4 className={styles.marqueeCardTitle}>{transfer.name}</h4>
