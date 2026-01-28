@@ -244,286 +244,197 @@ export default function QuoteForm() {
     const serviceImage = selectedHotel?.image || (tourMode ? '/images/tour-placeholder.jpg' : '');
 
     // Background Image Logic
-    // If hotel selected -> Use hotel image
-    // If not, generic elegant travel background
     const bgImage = serviceImage || 'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?q=80&w=2049&auto=format&fit=crop';
 
-    return (
-        <div style={{ position: 'relative', minHeight: '100vh', width: '100%' }}>
-            {/* Immersive Background */}
-            <div style={{
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                backgroundImage: `url(${bgImage})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                filter: 'blur(8px)',
-                zIndex: 0,
-                transform: 'scale(1.1)' // Prevent blur edge artifacts
-            }} />
-            <div style={{
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                background: 'rgba(0,0,0,0.4)', // Dark Overlay
-                zIndex: 1
-            }} />
-
-            <div className={styles.quoteLayout} style={{ position: 'relative', zIndex: 10 }}>
-                {/* Column 1: Context */}
-                <div className={styles.contextColumn}>
-                    {selectedHotel && selectedHotel.image_url && (
-                        <img src={selectedHotel.image_url} alt={serviceTitle} className={styles.contextImage} />
-                    )}
-                    {/* Fallback or Tour Image logic could go here */}
-
-                    <h2 className={styles.contextTitle}>{serviceTitle}</h2>
-                    <div className={styles.contextMeta}>
-                        📍 {selectedHotel?.location || (tourMode ? 'Tour / Actividad' : 'Destino')}
-                    </div>
-                    {selectedHotel?.stars && (
-                        <div className={styles.contextMeta}>
-                            ⭐ {selectedHotel.stars} Estrellas
-                        </div>
-                    )}
-                    <div style={{ marginTop: '15px', fontSize: '0.9rem', color: '#666', lineHeight: '1.4' }}>
-                        {selectedHotel?.description?.substring(0, 100)}...
+    if (submitted) {
+        return (
+            <div className={styles.splitContainer}>
+                <div className={styles.leftPanel}>
+                    <img src={bgImage} alt="Success" className={styles.leftContextImage} />
+                    <div className={styles.leftContentOverlay}>
+                        <h2 className={styles.serviceTitle}>¡Todo Listo!</h2>
+                        <div className={styles.serviceMeta}>Revisa tu correo</div>
                     </div>
                 </div>
+                <div className={styles.rightPanel} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div className={styles.successCard}>
+                        <div style={{ fontSize: '3rem', marginBottom: '20px' }}>✓</div>
+                        <h2 className={styles.mainHeading}>Cotización Enviada</h2>
+                        <p style={{ color: '#6b7280', marginBottom: '30px' }}>
+                            Hola <b>{contact.firstName}</b>, hemos recibido tu solicitud para <b>{serviceTitle}</b>.
+                            Tu presupuesto estimado es de <b style={{ color: '#000' }}>${Number(quoteResult?.total_price).toLocaleString()}</b>.
+                        </p>
+                        <button
+                            onClick={() => { setSubmitted(false); setQuoteResult(null); setLiveTotal(0); }}
+                            className={styles.submitButton}
+                            style={{ background: 'white', color: '#000', border: '1px solid #e5e7eb' }}
+                        >
+                            Nueva Cotización
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
-                {/* Column 2: Form */}
-                <div className={styles.formColumn}>
-                    <h1 className={styles.title} style={{ textAlign: 'left', fontSize: '1.5rem', marginBottom: '20px' }}>
-                        Personaliza tu Experiencia
-                    </h1>
+    return (
+        <div className={styles.splitContainer}>
+            {/* LEFT PANEL: Context & Visuals */}
+            <div className={styles.leftPanel}>
+                <button onClick={() => window.history.back()} className={styles.backButton}>←</button>
+                <img src={bgImage} alt={serviceTitle} className={styles.leftContextImage} />
+                <div className={styles.leftContentOverlay}>
+                    <h2 className={styles.serviceTitle}>{serviceTitle}</h2>
+                    <div className={styles.serviceMeta}>
+                        {selectedHotel?.stars && <span>⭐ {selectedHotel.stars} Estrellas</span>}
+                        <span>📍 {selectedHotel?.location || (tourMode ? 'Tour / Actividad' : 'Destino')}</span>
+                    </div>
+                </div>
+            </div>
 
-                    {error && <div className={styles.error}>{error}</div>}
+            {/* RIGHT PANEL: Form */}
+            <div className={styles.rightPanel}>
+                <div className={styles.formHeader}>
+                    <h1 className={styles.mainHeading}>Personaliza tu Experiencia</h1>
+                    <p className={styles.subHeading}>Completa los detalles para recibir tu presupuesto al instante.</p>
+                </div>
 
-                    <form id="quote-form" onSubmit={handleSubmit}>
-                        <div className={styles.formSection}>
-                            <div className={styles.sectionTitle}>1. {tourMode ? 'Fecha del Tour' : 'Fechas de Viaje'}</div>
+                {error && <div style={{ color: 'red', marginBottom: '20px' }}>{error}</div>}
 
-                            {!tourMode && (
-                                <div className={styles.formGroup}>
-                                    <label className={styles.label}>Hotel</label>
-                                    <select
-                                        className={styles.select}
-                                        value={hotelId}
-                                        onChange={(e) => { setHotelId(e.target.value); setSelectedExtras([]); }}
-                                        required
-                                    >
-                                        <option value="">-- Elige un Hotel --</option>
-                                        {hotels.map(h => (
-                                            <option key={h.id} value={h.id}>{h.name}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                            )}
-
-                            <div style={{ display: 'grid', gridTemplateColumns: tourMode ? '1fr' : '1fr 1fr', gap: '15px' }}>
-                                <div className={styles.formGroup}>
-                                    <label className={styles.label}>{tourMode ? 'Fecha' : 'Llegada'}</label>
-                                    <input
-                                        type="date"
-                                        className={styles.input}
-                                        value={dates.checkIn}
-                                        onChange={(e) => setDates({ ...dates, checkIn: e.target.value, checkOut: tourMode ? e.target.value : dates.checkOut })}
-                                        required
-                                    />
-                                </div>
-                                {!tourMode && (
-                                    <div className={styles.formGroup}>
-                                        <label className={styles.label}>Salida</label>
-                                        <input
-                                            type="date"
-                                            className={styles.input}
-                                            value={dates.checkOut}
-                                            onChange={(e) => setDates({ ...dates, checkOut: e.target.value })}
-                                            required
-                                        />
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-
-                        <div className={styles.formSection}>
-                            <div className={styles.sectionTitle}>2. Huéspedes</div>
-
-                            <div className={styles.counterContainer}>
-                                <div>
-                                    <span className={styles.counterLabel}>Adultos</span>
-                                    <span className={styles.counterSubLabel}>+12 años</span>
-                                </div>
-                                <div className={styles.counterControls}>
-                                    <div className={styles.counterButton} onClick={() => handleGuestChange('adults', -1)}>-</div>
-                                    <span className={styles.value}>{guests.adults}</span>
-                                    <div className={styles.counterButton} onClick={() => handleGuestChange('adults', 1)}>+</div>
-                                </div>
-                            </div>
-
-                            <div className={styles.counterContainer}>
-                                <div>
-                                    <span className={styles.counterLabel}>Niños</span>
-                                    <span className={styles.counterSubLabel}>4 - 10 años</span>
-                                </div>
-                                <div className={styles.counterControls}>
-                                    <div className={styles.counterButton} onClick={() => handleGuestChange('child_4_10', -1)}>-</div>
-                                    <span className={styles.value}>{guests.child_4_10}</span>
-                                    <div className={styles.counterButton} onClick={() => handleGuestChange('child_4_10', 1)}>+</div>
-                                </div>
-                            </div>
-
-                            <div className={styles.counterContainer}>
-                                <div>
-                                    <span className={styles.counterLabel}>Bebés</span>
-                                    <span className={styles.counterSubLabel}>0 - 3 años</span>
-                                </div>
-                                <div className={styles.counterControls}>
-                                    <div className={styles.counterButton} onClick={() => handleGuestChange('child_0_3', -1)}>-</div>
-                                    <span className={styles.value}>{guests.child_0_3}</span>
-                                    <div className={styles.counterButton} onClick={() => handleGuestChange('child_0_3', 1)}>+</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Extras Section */}
-                        {(extras.tours.length > 0 || extras.transfers.length > 0) && (
-                            <div className={styles.formSection}>
-                                <div className={styles.sectionTitle}>3. Complementos</div>
-
-                                {extras.transfers.length > 0 && (
-                                    <div style={{ marginBottom: '15px' }}>
-                                        <label className={styles.label}>Traslados</label>
-                                        <div className={styles.extrasGrid}>
-                                            {extras.transfers.map((t: any) => (
-                                                <div
-                                                    key={t.id}
-                                                    className={`${styles.extraCard} ${selectedExtras.find(e => e.id === t.id && e.type === 'transfer') ? styles.selected : ''}`}
-                                                    onClick={() => toggleExtra(t, 'transfer')}
-                                                >
-                                                    <div className={styles.extraName}>{t.name}</div>
-                                                    <div className={styles.extraPrice}>+${t.price} pp</div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-
-                                {extras.tours.length > 0 && (
-                                    <div>
-                                        <label className={styles.label}>Tours</label>
-                                        <div className={styles.extrasGrid}>
-                                            {extras.tours.map((t: any) => (
-                                                <div
-                                                    key={t.id}
-                                                    className={`${styles.extraCard} ${selectedExtras.find(e => e.id === t.id && e.type === 'tour') ? styles.selected : ''}`}
-                                                    onClick={() => toggleExtra(t, 'tour')}
-                                                >
-                                                    <div className={styles.extraName}>{t.name}</div>
-                                                    <div className={styles.extraPrice}>+${t.price} pp</div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
+                <form id="quote-form" onSubmit={handleSubmit}>
+                    {/* 1. Dates */}
+                    <div className={styles.formSection}>
+                        <div className={styles.sectionTitle}>Fechas y Destino</div>
+                        {!tourMode && (
+                            <div className={styles.formGroup}>
+                                <label className={styles.label}>Hotel Preferido</label>
+                                <select
+                                    className={styles.select}
+                                    value={hotelId}
+                                    onChange={(e) => { setHotelId(e.target.value); setSelectedExtras([]); }}
+                                    required
+                                >
+                                    <option value="">-- Selecciona una opción --</option>
+                                    {hotels.map(h => (
+                                        <option key={h.id} value={h.id}>{h.name}</option>
+                                    ))}
+                                </select>
                             </div>
                         )}
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                            <div className={styles.formGroup}>
+                                <label className={styles.label}>{tourMode ? 'Fecha' : 'Llegada'}</label>
+                                <input type="date" className={styles.input} value={dates.checkIn} onChange={(e) => setDates({ ...dates, checkIn: e.target.value, checkOut: tourMode ? e.target.value : dates.checkOut })} required />
+                            </div>
+                            {!tourMode && (
+                                <div className={styles.formGroup}>
+                                    <label className={styles.label}>Salida</label>
+                                    <input type="date" className={styles.input} value={dates.checkOut} onChange={(e) => setDates({ ...dates, checkOut: e.target.value })} required />
+                                </div>
+                            )}
+                        </div>
+                    </div>
 
-                        <div className={styles.formSection}>
-                            <div className={styles.sectionTitle}>4. Contacto</div>
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
-                                <div className={styles.formGroup}>
-                                    <label className={styles.label}>Nombre</label>
-                                    <input
-                                        className={styles.input}
-                                        value={contact.firstName}
-                                        onChange={(e) => setContact({ ...contact, firstName: e.target.value })}
-                                        required
-                                    />
-                                </div>
-                                <div className={styles.formGroup}>
-                                    <label className={styles.label}>Apellido</label>
-                                    <input
-                                        className={styles.input}
-                                        value={contact.lastName}
-                                        onChange={(e) => setContact({ ...contact, lastName: e.target.value })}
-                                        required
-                                    />
-                                </div>
-                            </div>
-                            <div className={styles.formGroup}>
-                                <label className={styles.label}>Documento (ID)</label>
-                                <input
-                                    className={styles.input}
-                                    value={contact.documentId}
-                                    onChange={(e) => setContact({ ...contact, documentId: e.target.value })}
-                                    required
-                                />
-                            </div>
-                            <div className={styles.formGroup}>
-                                <label className={styles.label}>Email</label>
-                                <input
-                                    type="email"
-                                    className={styles.input}
-                                    value={contact.email}
-                                    onChange={(e) => setContact({ ...contact, email: e.target.value })}
-                                    required
-                                />
-                            </div>
-                            <div className={styles.formGroup}>
-                                <label className={styles.label}>Teléfono</label>
-                                <input
-                                    type="tel"
-                                    className={styles.input}
-                                    value={contact.phone}
-                                    onChange={(e) => setContact({ ...contact, phone: e.target.value })}
-                                />
+                    {/* 2. Guests */}
+                    <div className={styles.formSection}>
+                        <div className={styles.sectionTitle}>Pasajeros</div>
+                        <div className={styles.counterContainer}>
+                            <span className={styles.label}>Adultos (+12)</span>
+                            <div className={styles.counterControls}>
+                                <button type="button" className={styles.counterButton} onClick={() => handleGuestChange('adults', -1)}>-</button>
+                                <span className={styles.value}>{guests.adults}</span>
+                                <button type="button" className={styles.counterButton} onClick={() => handleGuestChange('adults', 1)}>+</button>
                             </div>
                         </div>
-                    </form>
-                </div>
-
-                {/* Column 3: Feedback */}
-                <div className={styles.feedbackColumn}>
-                    <h3 className={styles.sectionTitle}>Resumen</h3>
-                    <div className={styles.summaryRow}>
-                        <span>Check-in</span>
-                        <b>{dates.checkIn ? new Date(dates.checkIn).toLocaleDateString() : '-'}</b>
+                        <div className={styles.counterContainer}>
+                            <span className={styles.label}>Niños (4-10)</span>
+                            <div className={styles.counterControls}>
+                                <button type="button" className={styles.counterButton} onClick={() => handleGuestChange('child_4_10', -1)}>-</button>
+                                <span className={styles.value}>{guests.child_4_10}</span>
+                                <button type="button" className={styles.counterButton} onClick={() => handleGuestChange('child_4_10', 1)}>+</button>
+                            </div>
+                        </div>
+                        <div className={styles.counterContainer}>
+                            <span className={styles.label}>Bebés (0-3)</span>
+                            <div className={styles.counterControls}>
+                                <button type="button" className={styles.counterButton} onClick={() => handleGuestChange('child_0_3', -1)}>-</button>
+                                <span className={styles.value}>{guests.child_0_3}</span>
+                                <button type="button" className={styles.counterButton} onClick={() => handleGuestChange('child_0_3', 1)}>+</button>
+                            </div>
+                        </div>
                     </div>
-                    {!tourMode && (
-                        <div className={styles.summaryRow}>
-                            <span>Check-out</span>
-                            <b>{dates.checkOut ? new Date(dates.checkOut).toLocaleDateString() : '-'}</b>
+
+                    {/* 3. Extras */}
+                    {(extras.tours.length > 0 || extras.transfers.length > 0) && (
+                        <div className={styles.formSection}>
+                            <div className={styles.sectionTitle}>Complementos</div>
+                            {extras.transfers.length > 0 && (
+                                <div style={{ marginBottom: '20px' }}>
+                                    <label className={styles.label} style={{ marginBottom: '10px' }}>Traslados</label>
+                                    <div className={styles.extrasGrid}>
+                                        {extras.transfers.map((t: any) => (
+                                            <div key={t.id} className={`${styles.extraCard} ${selectedExtras.find(e => e.id === t.id && e.type === 'transfer') ? styles.selected : ''}`} onClick={() => toggleExtra(t, 'transfer')}>
+                                                <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>{t.name}</div>
+                                                <div style={{ fontSize: '0.8rem', color: '#666' }}>+${t.price} pp</div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                            {extras.tours.length > 0 && (
+                                <div>
+                                    <label className={styles.label} style={{ marginBottom: '10px' }}>Tours</label>
+                                    <div className={styles.extrasGrid}>
+                                        {extras.tours.map((t: any) => (
+                                            <div key={t.id} className={`${styles.extraCard} ${selectedExtras.find(e => e.id === t.id && e.type === 'tour') ? styles.selected : ''}`} onClick={() => toggleExtra(t, 'tour')}>
+                                                <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>{t.name}</div>
+                                                <div style={{ fontSize: '0.8rem', color: '#666' }}>+${t.price} pp</div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     )}
-                    <div className={styles.summaryRow}>
-                        <span>Pasajeros</span>
-                        <b>{guests.adults} Ad, {guests.child_4_10 + guests.child_0_3} Niños</b>
-                    </div>
-                    <div className={styles.summaryRow}>
-                        <span>Extras</span>
-                        <b>{selectedExtras.length}</b>
-                    </div>
 
-                    <div className={styles.summaryTotal}>
-                        <span className={styles.totalLabel}>Total Estimado</span>
-                        <span className={styles.totalValue}>${Math.round(animatedPrice).toLocaleString()}</span>
+                    {/* 4. Contact */}
+                    <div className={styles.formSection}>
+                        <div className={styles.sectionTitle}>Datos Personales</div>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                            <div className={styles.formGroup}>
+                                <label className={styles.label}>Nombre</label>
+                                <input className={styles.input} value={contact.firstName} onChange={(e) => setContact({ ...contact, firstName: e.target.value })} required />
+                            </div>
+                            <div className={styles.formGroup}>
+                                <label className={styles.label}>Apellido</label>
+                                <input className={styles.input} value={contact.lastName} onChange={(e) => setContact({ ...contact, lastName: e.target.value })} required />
+                            </div>
+                        </div>
+                        <div className={styles.formGroup}>
+                            <label className={styles.label}>Documento (ID)</label>
+                            <input className={styles.input} value={contact.documentId} onChange={(e) => setContact({ ...contact, documentId: e.target.value })} required />
+                        </div>
+                        <div className={styles.formGroup}>
+                            <label className={styles.label}>Email</label>
+                            <input type="email" className={styles.input} value={contact.email} onChange={(e) => setContact({ ...contact, email: e.target.value })} required />
+                        </div>
+                        <div className={styles.formGroup}>
+                            <label className={styles.label}>Teléfono</label>
+                            <input type="tel" className={styles.input} value={contact.phone} onChange={(e) => setContact({ ...contact, phone: e.target.value })} />
+                        </div>
                     </div>
+                </form>
+            </div>
 
-                    <button
-                        type="submit"
-                        form="quote-form" // Link to form outside
-                        className={styles.submitButton}
-                        disabled={loading}
-                    >
-                        {loading ? 'Calculando...' : 'COTIZAR AHORA'}
-                    </button>
+            {/* Sticky Footer Total */}
+            <div className={styles.stickyFooter}>
+                <div>
+                    <span className={styles.totalLabel}>Total Estimado</span>
+                    <span className={styles.totalValue}>${Math.round(animatedPrice).toLocaleString()}</span>
                 </div>
+                <button type="submit" form="quote-form" className={styles.submitButton} disabled={loading}>
+                    {loading ? 'Procesando...' : 'COTIZAR AHORA'}
+                </button>
             </div>
         </div>
     );

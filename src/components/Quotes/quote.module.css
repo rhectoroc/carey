@@ -1,340 +1,328 @@
-.quoteLayout {
-    width: 100%;
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 20px;
-    display: grid;
-    gap: 20px;
-    font-family: system-ui, -apple-system, sans-serif;
+/* Main Container */
+.splitContainer {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: #ffffff;
 }
 
-/* Mobile: Single Column Stack */
-@media (max-width: 1023px) {
-    .quoteLayout {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* Desktop: 3 Columns */
+/* Desktop Split */
 @media (min-width: 1024px) {
-    .quoteLayout {
-        grid-template-columns: 300px 1fr 320px;
-        align-items: start;
+    .splitContainer {
+        flex-direction: row;
     }
 }
 
-.contextColumn,
-.feedbackColumn {
-    background: white;
-    padding: 20px;
-    border-radius: 16px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    border: 1px solid #e2e8f0;
-    position: sticky;
-    top: 100px;
-    /* Sticky on desktop */
+/* ============================
+   LEFT PANEL (Visual Context)
+   ============================ */
+.leftPanel {
+    position: relative;
+    width: 100%;
+    height: 30vh;
+    /* Mobile height */
+    background-color: #1e293b;
+    overflow: hidden;
 }
 
-/* Mobile Context Hidden/Simplified? Or just top */
-@media (max-width: 1023px) {
-
-    .contextColumn,
-    .feedbackColumn {
-        position: relative;
+@media (min-width: 1024px) {
+    .leftPanel {
+        width: 45%;
+        height: 100vh;
+        position: fixed;
+        left: 0;
         top: 0;
     }
-
-    .contextColumn {
-        order: -1;
-        /* Show first */
-    }
-
-    .feedbackColumn {
-        order: 2;
-        /* Show last */
-    }
 }
 
-/* .formColumn takes remaining space in grid or full width in mobile */
-
-
-/* Context Cards */
-.contextImage {
+.leftContextImage {
     width: 100%;
-    height: 180px;
+    height: 100%;
     object-fit: cover;
-    border-radius: 12px;
-    margin-bottom: 15px;
+    filter: brightness(0.75);
+    /* Darken for text readability */
+    transition: transform 10s ease;
 }
 
-.contextTitle {
-    font-size: 1.4rem;
-    font-weight: 800;
-    margin-bottom: 10px;
-    color: #1e293b;
-    line-height: 1.2;
+.leftPanel:hover .leftContextImage {
+    transform: scale(1.05);
+    /* Subtle zoom effect */
 }
 
-.contextMeta {
-    color: #64748b;
-    font-size: 0.9rem;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    margin-bottom: 5px;
+.leftContentOverlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 30px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+    color: white;
+    z-index: 2;
 }
 
-/* Feedback Summary */
-.summaryRow {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 0;
-    border-bottom: 1px solid #f1f5f9;
-    font-size: 0.9rem;
-    color: #475569;
-}
-
-.summaryTotal {
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 2px solid #e2e8f0;
-    text-align: right;
-}
-
-.totalLabel {
-    display: block;
-    font-size: 0.9rem;
-    color: #64748b;
-}
-
-.totalValue {
+.serviceTitle {
     font-size: 2rem;
     font-weight: 800;
-    color: var(--color-primary-teal, #0d9488);
+    margin-bottom: 10px;
+    line-height: 1.1;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.serviceMeta {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 0.95rem;
+    opacity: 0.9;
+}
+
+.backButton {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(4px);
+    border: none;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.backButton:hover {
+    background: rgba(255, 255, 255, 0.4);
 }
 
 
-.title {
+/* ============================
+   RIGHT PANEL (Form Interaction)
+   ============================ */
+.rightPanel {
+    width: 100%;
+    background: white;
+    padding: 20px;
+    padding-bottom: 100px;
+    /* Space for sticky footer */
+}
+
+@media (min-width: 1024px) {
+    .rightPanel {
+        width: 55%;
+        margin-left: 45%;
+        /* Offset for fixed left panel */
+        padding: 50px 80px;
+        min-height: 100vh;
+    }
+}
+
+.formHeader {
+    margin-bottom: 40px;
+}
+
+.mainHeading {
     font-size: 1.8rem;
-    font-weight: bold;
-    margin-bottom: 25px;
-    text-align: center;
-    color: #1a1a1a;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 10px;
 }
 
+.subHeading {
+    color: #6b7280;
+    font-size: 1rem;
+}
+
+/* Form Elements Reset (Clean Style) */
 .formSection {
-    /* Glass style inherited from grouping above */
-    margin-bottom: 25px;
+    margin-bottom: 40px;
+    animation: fadeInUp 0.5s ease-out;
 }
 
 .sectionTitle {
-    font-size: 1.1rem;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
     font-weight: 600;
-    margin-bottom: 15px;
-    color: #444;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 8px;
+    color: #9ca3af;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #f3f4f6;
+    padding-bottom: 10px;
 }
 
 .formGroup {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .label {
     display: block;
-    margin-bottom: 8px;
+    font-size: 0.9rem;
     font-weight: 500;
-    color: #333;
-    font-size: 0.95rem;
+    color: #374151;
+    margin-bottom: 8px;
 }
 
 .input,
 .select {
     width: 100%;
-    padding: 12px 16px;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
+    padding: 14px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
     font-size: 1rem;
-    background-color: #fff;
-    transition: border-color 0.2s;
-    appearance: none;
-    -webkit-appearance: none;
-    /* Mobile fix */
+    transition: all 0.2s;
+    background: #f9fafb;
 }
 
 .input:focus,
 .select:focus {
-    border-color: #3b82f6;
+    background: white;
+    border-color: #0f172a;
+    /* Dark border focus */
     outline: none;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    box-shadow: 0 0 0 1px #0f172a;
 }
 
+/* Counters */
 .counterContainer {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    background: #f8fafc;
-    padding: 12px;
-    border-radius: 10px;
-    border: 1px solid #e2e8f0;
-    margin-bottom: 10px;
-}
-
-.counterLabel {
-    font-weight: 500;
-    color: #333;
-}
-
-.counterSubLabel {
-    font-size: 0.8rem;
-    color: #666;
-    display: block;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #f3f4f6;
 }
 
 .counterControls {
     display: flex;
     align-items: center;
     gap: 15px;
+    background: #f3f4f6;
+    padding: 5px;
+    border-radius: 30px;
 }
 
 .counterButton {
-    width: 44px;
-    /* Minimum touch target */
-    height: 44px;
-    border-radius: 12px;
-    border: 1px solid #e2e8f0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
     background: white;
+    border: 1px solid #e5e7eb;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.5rem;
     cursor: pointer;
-    touch-action: manipulation;
-    color: #3b82f6;
     font-weight: bold;
-    user-select: none;
-    transition: all 0.2s;
+    color: #374151;
+    transition: transform 0.1s;
 }
 
 .counterButton:active {
-    background-color: #eff6ff;
-    transform: scale(0.95);
+    transform: scale(0.9);
 }
 
 .value {
-    font-size: 1.2rem;
-    font-weight: bold;
-    min-width: 24px;
+    min-width: 20px;
     text-align: center;
-    color: #1e293b;
+    font-weight: 600;
+}
+
+/* Sticky Footer (Total & Action) */
+.stickyFooter {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    background: white;
+    padding: 20px 30px;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 50;
+    border-top: 1px solid #f3f4f6;
+}
+
+@media (min-width: 1024px) {
+    .stickyFooter {
+        width: 55%;
+        /* Match right panel width */
+        padding: 20px 80px;
+    }
+}
+
+.totalLabel {
+    display: block;
+    font-size: 0.85rem;
+    color: #6b7280;
+}
+
+.totalValue {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #111827;
 }
 
 .submitButton {
-    width: 100%;
-    padding: 16px;
-    background-color: #3b82f6;
+    background: #000;
     color: white;
+    padding: 16px 32px;
+    border-radius: 50px;
+    font-weight: 600;
     border: none;
-    border-radius: 12px;
-    font-size: 1.1rem;
-    font-weight: bold;
     cursor: pointer;
-    margin-top: 10px;
-    box-shadow: 0 4px 6px rgba(59, 130, 246, 0.2);
-    transition: transform 0.2s, background-color 0.2s;
+    transition: opacity 0.2s;
+}
+
+.submitButton:hover {
+    opacity: 0.9;
 }
 
 .submitButton:disabled {
-    background-color: #94a3b8;
+    background: #9ca3af;
     cursor: not-allowed;
-    box-shadow: none;
 }
 
-.submitButton:active {
-    transform: scale(0.98);
-}
-
-.error {
-    color: #ef4444;
-    background: #fef2f2;
-    padding: 10px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    font-size: 0.9rem;
-    border: 1px solid #fee2e2;
-}
-
+/* Extras Grid Clean */
 .extrasGrid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 10px;
-    margin-top: 10px;
+    gap: 12px;
 }
 
 .extraCard {
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    padding: 10px;
-    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 15px;
     cursor: pointer;
     transition: all 0.2s;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    text-align: center;
 }
 
 .extraCard.selected {
-    background: #eff6ff;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
-}
-
-.extraName {
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: #333;
-    margin-bottom: 5px;
-    line-height: 1.2;
-}
-
-.extraPrice {
-    font-size: 0.85rem;
-    color: #666;
+    border-color: #000;
+    background: #f9fafb;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .successCard {
-    background: white;
-    padding: 30px;
-    border-radius: 16px;
+    padding: 40px;
     text-align: center;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: 100px auto;
 }
 
-.successIcon {
-    width: 60px;
-    height: 60px;
-    background: #dcfce7;
-    color: #166534;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 20px;
-}
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
 
-.pricePreview {
-    padding: 15px;
-    background: #f0f9ff;
-    border: 1px solid #bae6fd;
-    border-radius: 8px;
-    margin-top: 15px;
-    text-align: center;
-    font-weight: bold;
-    color: #0284c7;
-}
-
-@media (max-width: 480px) {
-    .container {
-        padding: 15px;
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
