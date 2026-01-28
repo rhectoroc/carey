@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../admin.module.css';
 import { Plus, Edit, Trash2, X, ArrowLeft, Tag } from 'lucide-react';
+import { useNotification } from '@/components/UI/NotificationProvider';
 
 import ImageGalleryUpload from '@/components/Admin/ImageGalleryUpload';
 import ServiceCard from '@/components/Catalog/ServiceCard';
@@ -39,6 +40,7 @@ export default function TransfersPage() {
     const [loading, setLoading] = useState(true);
     const [currentTransfer, setCurrentTransfer] = useState<Partial<Transfer>>({});
     const [tagInput, setTagInput] = useState('');
+    const { showNotification } = useNotification();
 
     useEffect(() => {
         fetchTransfers();
@@ -76,8 +78,10 @@ export default function TransfersPage() {
         try {
             await fetch(`/api/admin/transfers/${id}`, { method: 'DELETE' });
             fetchTransfers();
+            showNotification('success', 'Traslado eliminado correctamente.');
         } catch (error) {
             console.error('Error deleting transfer', error);
+            showNotification('error', 'Error al eliminar el traslado.');
         }
     };
 
@@ -87,7 +91,7 @@ export default function TransfersPage() {
 
         // Verification
         if (!currentTransfer.name || !currentTransfer.destination_id) {
-            alert('Verification Failed: Name and Destination are required.');
+            showNotification('error', 'Verificación fallida: Nombre y Destino son requeridos.');
             setLoading(false);
             return;
         }
@@ -104,16 +108,16 @@ export default function TransfersPage() {
 
             if (res.ok) {
                 const savedData = await res.json();
-                alert(`✅ Transfer "${savedData.name}" saved successfully!`);
+                showNotification('success', `✅ Traslado "${savedData.name}" guardado exitosamente!`);
                 setViewMode('list');
                 fetchTransfers();
             } else {
                 const err = await res.json();
-                alert('❌ Failed to save transfer: ' + (err.error || 'Unknown'));
+                showNotification('error', '❌ Error al guardar traslado: ' + (err.error || 'Desconocido'));
             }
         } catch (error) {
             console.error('Error saving transfer', error);
-            alert('❌ Network Error');
+            showNotification('error', '❌ Error de red');
         } finally {
             setLoading(false);
         }

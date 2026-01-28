@@ -29,10 +29,10 @@ export default function AdminLogin() {
                 router.push('/admin/dashboard');
             } else {
                 const data = await res.json();
-                setError(data.error || 'Login failed');
+                setError(data.error || 'Autenticación fallida');
             }
         } catch (err) {
-            setError('An error occurred. Please try again.');
+            setError('Ocurrió un error. Inténtalo de nuevo.');
         } finally {
             setLoading(false);
         }
@@ -45,7 +45,7 @@ export default function AdminLogin() {
                 {error && <div className={styles.errorMessage}>{error}</div>}
                 <form onSubmit={handleSubmit}>
                     <div className={styles.formGroup}>
-                        <label className={styles.label}>Username</label>
+                        <label className={styles.label}>Usuario</label>
                         <input
                             type="text"
                             className={styles.input}
@@ -55,7 +55,7 @@ export default function AdminLogin() {
                         />
                     </div>
                     <div className={styles.formGroup}>
-                        <label className={styles.label}>Password</label>
+                        <label className={styles.label}>Contraseña</label>
                         <input
                             type="password"
                             className={styles.input}
@@ -65,9 +65,9 @@ export default function AdminLogin() {
                         />
                     </div>
                     <button type="submit" className={styles.button} disabled={loading}>
-                        {loading ? 'Signing in...' : 'Sign In'}
+                        {loading ? 'Iniciando...' : 'Iniciar Sesión'}
                     </button>
-                    <Link href="/" className={styles.backButton} title="Back to Home">
+                    <Link href="/" className={styles.backButton} title="Volver al Inicio">
                         <Home size={20} />
                     </Link>
                 </form>

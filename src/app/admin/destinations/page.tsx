@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../admin.module.css';
 import { Plus, Edit, Trash2, X, ArrowLeft, Tag } from 'lucide-react';
+import { useNotification } from '@/components/UI/NotificationProvider';
 
 import ImageGalleryUpload from '@/components/Admin/ImageGalleryUpload';
 import ServiceCard from '@/components/Catalog/ServiceCard';
@@ -29,6 +30,7 @@ export default function DestinationsPage() {
     const [currentDestination, setCurrentDestination] = useState<Partial<Destination>>({});
     const [loading, setLoading] = useState(false);
     const [tagInput, setTagInput] = useState('');
+    const { showNotification } = useNotification();
 
     useEffect(() => {
         fetchDestinations();
@@ -47,6 +49,9 @@ export default function DestinationsPage() {
             const res = await fetch(`/api/admin/destinations/${id}`, { method: 'DELETE' });
             if (res.ok) {
                 fetchDestinations();
+                showNotification('success', 'Destino eliminado correctamente.');
+            } else {
+                showNotification('error', 'Error al eliminar el destino.');
             }
         }
     };
@@ -57,7 +62,7 @@ export default function DestinationsPage() {
 
         // Verification
         if (!currentDestination.name) {
-            alert('Verification Failed: Name is required.');
+            showNotification('error', 'Verificación fallida: El nombre es obligatorio.');
             setLoading(false);
             return;
         }
@@ -76,16 +81,16 @@ export default function DestinationsPage() {
 
             if (res.ok) {
                 const savedData = await res.json();
-                alert(`✅ Destination "${savedData.name}" saved successfully!`);
+                showNotification('success', `✅ Destino "${savedData.name}" guardado exitosamente!`);
                 setViewMode('list');
                 fetchDestinations();
             } else {
                 const err = await res.json();
-                alert('❌ Failed to save: ' + (err.error || 'Unknown error'));
+                showNotification('error', '❌ Error al guardar: ' + (err.error || 'Error desconocido'));
             }
         } catch (error) {
             console.error(error);
-            alert('❌ Network error.');
+            showNotification('error', '❌ Error de red.');
         } finally {
             setLoading(false);
         }
