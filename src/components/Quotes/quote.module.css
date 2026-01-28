@@ -315,6 +315,7 @@
     margin: 100px auto;
 }
 
+
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -325,4 +326,121 @@
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/* Compact Layout Styles */
+.compactRow {
+    display: flex;
+    gap: 15px;
+    align-items: flex-end;
+}
+
+.compactRow>div {
+    flex: 1;
+}
+
+.compactRow>div:first-child {
+    flex: 2;
+    /* Hotel takes more space */
+}
+
+/* Passengers Compact */
+.passengersRow {
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+    background: #f9fafb;
+    padding: 10px;
+    border-radius: 12px;
+    border: 1px solid #f3f4f6;
+}
+
+.passengerItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+}
+
+.passengerLabel {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-bottom: 5px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.miniCounterControls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: white;
+    padding: 2px;
+    border-radius: 20px;
+    border: 1px solid #e5e7eb;
+}
+
+.miniCounterButton {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #f3f4f6;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: bold;
+    color: #374151;
+    font-size: 0.9rem;
+}
+
+.miniValue {
+    font-size: 0.9rem;
+    font-weight: 700;
+    min-width: 15px;
+    text-align: center;
+}
+
+/* Red Marquee Banner */
+.marqueeBanner {
+    background: linear-gradient(90deg, #ef4444, #dc2626);
+    color: white;
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(239, 68, 68, 0.2);
+    transition: transform 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    animation: pulseRed 2s infinite;
+}
+
+.marqueeBanner:hover {
+    transform: scale(1.02);
+}
+
+@keyframes pulseRed {
+    0% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+    }
+
+    70% {
+        box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+    }
+}
+
+/* Utilities override for compact */
+.compactInput {
+    padding: 10px;
+    font-size: 0.9rem;
 }
