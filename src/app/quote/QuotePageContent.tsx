@@ -25,6 +25,7 @@ export default function QuotePageContent() {
     const searchParams = useSearchParams();
     const [currentStep, setCurrentStep] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
+    const [dataLoading, setDataLoading] = useState(true);
     const [submitted, setSubmitted] = useState(false);
 
     // Form Data
@@ -70,11 +71,7 @@ export default function QuotePageContent() {
             checkOut: dayAfter.toISOString().split('T')[0]
         }));
 
-        // Load initial data
-        fetch('/api/catalog/hotels').then(r => r.json()).then(setHotels).catch(console.error);
-        fetch('/api/catalog/tours').then(r => r.json()).then(setTours).catch(console.error);
-
-        // Check URL params
+        // Check URL params first
         const hotelParam = searchParams.get('hotel_id');
         const tourParam = searchParams.get('tour_id');
 
@@ -83,9 +80,17 @@ export default function QuotePageContent() {
         } else if (tourParam) {
             setFormData(prev => ({ ...prev, serviceType: 'tour', tourId: tourParam }));
         }
+
+        // Load initial data
+        Promise.all([
+            fetch('/api/catalog/hotels').then(r => r.json()).then(setHotels).catch(console.error),
+            fetch('/api/catalog/tours').then(r => r.json()).then(setTours).catch(console.error)
+        ]).finally(() => {
+            setDataLoading(false);
+        });
     }, [searchParams]);
 
-    // Load extras when hotel changes
+    // Load extras when service changes
     useEffect(() => {
         if (formData.serviceType === 'hotel' && formData.hotelId) {
             const hotel = hotels.find(h => h.id === Number(formData.hotelId));
@@ -100,8 +105,21 @@ export default function QuotePageContent() {
                     });
                 });
             }
+        } else if (formData.serviceType === 'tour' && formData.tourId) {
+            const tour = tours.find(t => t.id === Number(formData.tourId));
+            if (tour?.destination_id) {
+                Promise.all([
+                    fetch(`/api/catalog/hotels?destination_id=${tour.destination_id}`).then(r => r.json()),
+                    fetch(`/api/catalog/transfers?destination_id=${tour.destination_id}`).then(r => r.json())
+                ]).then(([hotels, transfers]) => {
+                    setExtras({
+                        tours: Array.isArray(hotels) ? hotels : [], // Usamos 'tours' para almacenar hoteles cuando es un tour
+                        transfers: Array.isArray(transfers) ? transfers : []
+                    });
+                });
+            }
         }
-    }, [formData.hotelId, formData.serviceType, hotels]);
+    }, [formData.hotelId, formData.tourId, formData.serviceType, hotels, tours]);
 
     // Calculate price
     useEffect(() => {
@@ -261,6 +279,25 @@ export default function QuotePageContent() {
                     <AnimatePresence mode="wait">
                         {/* STEP 1: Service Selection */}
                         {currentStep === 1 && (() => {
+                            // Show loading state while data is being fetched
+                            if (dataLoading) {
+                                return (
+                                    <motion.div
+                                        key="loading"
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
+                                        className={styles.stepContent}
+                                        style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '300px' }}
+                                    >
+                                        <div style={{ textAlign: 'center' }}>
+                                            <div className={styles.loader}></div>
+                                            <p style={{ marginTop: '1rem', color: '#64748b' }}>Cargando servicios...</p>
+                                        </div>
+                                    </motion.div>
+                                );
+                            }
+
                             const hasPreselected = formData.hotelId || formData.tourId;
                             const selectedService = formData.serviceType === 'hotel'
                                 ? hotels.find(h => h.id === Number(formData.hotelId))
@@ -389,107 +426,202 @@ export default function QuotePageContent() {
                                 exit={{ opacity: 0, x: -20 }}
                                 className={styles.stepContent}
                             >
-                                <h2 className={styles.stepTitle}>Fechas y Huéspedes</h2>
+                                {formData.serviceType === 'hotel' ? (
+                                    <>
+                                        <h2 className={styles.stepTitle}>Fechas y Huéspedes</h2>
 
-                                <div className={styles.formGrid}>
-                                    <div className={styles.inputGroup}>
-                                        <label className={styles.label}>
-                                            <Calendar size={18} />
-                                            Fecha de Llegada
-                                        </label>
-                                        <input
-                                            type="date"
-                                            className={styles.input}
-                                            value={formData.checkIn}
-                                            onChange={e => setFormData(prev => ({ ...prev, checkIn: e.target.value }))}
-                                            required
-                                        />
-                                    </div>
+                                        <div className={styles.formGrid}>
+                                            <div className={styles.inputGroup}>
+                                                <label className={styles.label}>
+                                                    <Calendar size={18} />
+                                                    Fecha de Llegada (Check-in)
+                                                </label>
+                                                <input
+                                                    type="date"
+                                                    className={styles.input}
+                                                    value={formData.checkIn}
+                                                    onChange={e => setFormData(prev => ({ ...prev, checkIn: e.target.value }))}
+                                                    required
+                                                />
+                                            </div>
 
-                                    <div className={styles.inputGroup}>
-                                        <label className={styles.label}>
-                                            <Calendar size={18} />
-                                            Fecha de Salida
-                                        </label>
-                                        <input
-                                            type="date"
-                                            className={styles.input}
-                                            value={formData.checkOut}
-                                            onChange={e => setFormData(prev => ({ ...prev, checkOut: e.target.value }))}
-                                            required
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className={styles.guestsSection}>
-                                    <label className={styles.label}>
-                                        <Users size={18} />
-                                        Número de Huéspedes
-                                    </label>
-
-                                    <div className={styles.guestCounter}>
-                                        <span className={styles.guestLabel}>Adultos (+12 años)</span>
-                                        <div className={styles.counterControls}>
-                                            <button
-                                                type="button"
-                                                className={styles.counterBtn}
-                                                onClick={() => setFormData(prev => ({ ...prev, adults: Math.max(1, prev.adults - 1) }))}
-                                            >
-                                                -
-                                            </button>
-                                            <span className={styles.counterValue}>{formData.adults}</span>
-                                            <button
-                                                type="button"
-                                                className={styles.counterBtn}
-                                                onClick={() => setFormData(prev => ({ ...prev, adults: prev.adults + 1 }))}
-                                            >
-                                                +
-                                            </button>
+                                            <div className={styles.inputGroup}>
+                                                <label className={styles.label}>
+                                                    <Calendar size={18} />
+                                                    Fecha de Salida (Check-out)
+                                                </label>
+                                                <input
+                                                    type="date"
+                                                    className={styles.input}
+                                                    value={formData.checkOut}
+                                                    onChange={e => setFormData(prev => ({ ...prev, checkOut: e.target.value }))}
+                                                    required
+                                                />
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div className={styles.guestCounter}>
-                                        <span className={styles.guestLabel}>Niños (4-11 años)</span>
-                                        <div className={styles.counterControls}>
-                                            <button
-                                                type="button"
-                                                className={styles.counterBtn}
-                                                onClick={() => setFormData(prev => ({ ...prev, children_4_10: Math.max(0, prev.children_4_10 - 1) }))}
-                                            >
-                                                -
-                                            </button>
-                                            <span className={styles.counterValue}>{formData.children_4_10}</span>
-                                            <button
-                                                type="button"
-                                                className={styles.counterBtn}
-                                                onClick={() => setFormData(prev => ({ ...prev, children_4_10: prev.children_4_10 + 1 }))}
-                                            >
-                                                +
-                                            </button>
-                                        </div>
-                                    </div>
+                                        <div className={styles.guestsSection}>
+                                            <label className={styles.label}>
+                                                <Users size={18} />
+                                                Número de Huéspedes
+                                            </label>
 
-                                    <div className={styles.guestCounter}>
-                                        <span className={styles.guestLabel}>Infantes (0-3 años)</span>
-                                        <div className={styles.counterControls}>
-                                            <button
-                                                type="button"
-                                                className={styles.counterBtn}
-                                                onClick={() => setFormData(prev => ({ ...prev, children_0_3: Math.max(0, prev.children_0_3 - 1) }))}
-                                            >
-                                                -
-                                            </button>
-                                            <span className={styles.counterValue}>{formData.children_0_3}</span>
-                                            <button
-                                                type="button"
-                                                className={styles.counterBtn}
-                                                onClick={() => setFormData(prev => ({ ...prev, children_0_3: prev.children_0_3 + 1 }))}
-                                            >
-                                                +
-                                            </button>
+                                            <div className={styles.guestCounter}>
+                                                <span className={styles.guestLabel}>Adultos (+12 años)</span>
+                                                <div className={styles.counterControls}>
+                                                    <button
+                                                        type="button"
+                                                        className={styles.counterBtn}
+                                                        onClick={() => setFormData(prev => ({ ...prev, adults: Math.max(1, prev.adults - 1) }))}
+                                                    >
+                                                        -
+                                                    </button>
+                                                    <span className={styles.counterValue}>{formData.adults}</span>
+                                                    <button
+                                                        type="button"
+                                                        className={styles.counterBtn}
+                                                        onClick={() => setFormData(prev => ({ ...prev, adults: prev.adults + 1 }))}
+                                                    >
+                                                        +
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <div className={styles.guestCounter}>
+                                                <span className={styles.guestLabel}>Niños (4-11 años)</span>
+                                                <div className={styles.counterControls}>
+                                                    <button
+                                                        type="button"
+                                                        className={styles.counterBtn}
+                                                        onClick={() => setFormData(prev => ({ ...prev, children_4_10: Math.max(0, prev.children_4_10 - 1) }))}
+                                                    >
+                                                        -
+                                                    </button>
+                                                    <span className={styles.counterValue}>{formData.children_4_10}</span>
+                                                    <button
+                                                        type="button"
+                                                        className={styles.counterBtn}
+                                                        onClick={() => setFormData(prev => ({ ...prev, children_4_10: prev.children_4_10 + 1 }))}
+                                                    >
+                                                        +
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <div className={styles.guestCounter}>
+                                                <span className={styles.guestLabel}>Infantes (0-3 años)</span>
+                                                <div className={styles.counterControls}>
+                                                    <button
+                                                        type="button"
+                                                        className={styles.counterBtn}
+                                                        onClick={() => setFormData(prev => ({ ...prev, children_0_3: Math.max(0, prev.children_0_3 - 1) }))}
+                                                    >
+                                                        -
+                                                    </button>
+                                                    <span className={styles.counterValue}>{formData.children_0_3}</span>
+                                                    <button
+                                                        type="button"
+                                                        className={styles.counterBtn}
+                                                        onClick={() => setFormData(prev => ({ ...prev, children_0_3: prev.children_0_3 + 1 }))}
+                                                    >
+                                                        +
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
+                                    </>
+                                ) : (
+                                    <>
+                                        <h2 className={styles.stepTitle}>Fecha y Participantes</h2>
+                                        <p className={styles.stepSubtitle}>Selecciona la fecha del tour y el número de personas</p>
+
+                                        <div className={styles.formGrid}>
+                                            <div className={styles.inputGroup} style={{ gridColumn: '1 / -1' }}>
+                                                <label className={styles.label}>
+                                                    <Calendar size={18} />
+                                                    Fecha del Tour
+                                                </label>
+                                                <input
+                                                    type="date"
+                                                    className={styles.input}
+                                                    value={formData.checkIn}
+                                                    onChange={e => setFormData(prev => ({ ...prev, checkIn: e.target.value, checkOut: e.target.value }))}
+                                                    required
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className={styles.guestsSection}>
+                                            <label className={styles.label}>
+                                                <Users size={18} />
+                                                Número de Participantes
+                                            </label>
+
+                                            <div className={styles.guestCounter}>
+                                                <span className={styles.guestLabel}>Adultos (+12 años)</span>
+                                                <div className={styles.counterControls}>
+                                                    <button
+                                                        type="button"
+                                                        className={styles.counterBtn}
+                                                        onClick={() => setFormData(prev => ({ ...prev, adults: Math.max(1, prev.adults - 1) }))}
+                                                    >
+                                                        -
+                                                    </button>
+                                                    <span className={styles.counterValue}>{formData.adults}</span>
+                                                    <button
+                                                        type="button"
+                                                        className={styles.counterBtn}
+                                                        onClick={() => setFormData(prev => ({ ...prev, adults: prev.adults + 1 }))}
+                                                    >
+                                                        +
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <div className={styles.guestCounter}>
+                                                <span className={styles.guestLabel}>Niños (4-11 años)</span>
+                                                <div className={styles.counterControls}>
+                                                    <button
+                                                        type="button"
+                                                        className={styles.counterBtn}
+                                                        onClick={() => setFormData(prev => ({ ...prev, children_4_10: Math.max(0, prev.children_4_10 - 1) }))}
+                                                    >
+                                                        -
+                                                    </button>
+                                                    <span className={styles.counterValue}>{formData.children_4_10}</span>
+                                                    <button
+                                                        type="button"
+                                                        className={styles.counterBtn}
+                                                        onClick={() => setFormData(prev => ({ ...prev, children_4_10: prev.children_4_10 + 1 }))}
+                                                    >
+                                                        +
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <div className={styles.guestCounter}>
+                                                <span className={styles.guestLabel}>Infantes (0-3 años)</span>
+                                                <div className={styles.counterControls}>
+                                                    <button
+                                                        type="button"
+                                                        className={styles.counterBtn}
+                                                        onClick={() => setFormData(prev => ({ ...prev, children_0_3: Math.max(0, prev.children_0_3 - 1) }))}
+                                                    >
+                                                        -
+                                                    </button>
+                                                    <span className={styles.counterValue}>{formData.children_0_3}</span>
+                                                    <button
+                                                        type="button"
+                                                        className={styles.counterBtn}
+                                                        onClick={() => setFormData(prev => ({ ...prev, children_0_3: prev.children_0_3 + 1 }))}
+                                                    >
+                                                        +
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </>
+                                )}
                             </motion.div>
                         )}
 
@@ -507,24 +639,29 @@ export default function QuotePageContent() {
 
                                 {extras.tours.length > 0 && (
                                     <div className={styles.extrasCategory}>
-                                        <h3 className={styles.extrasCategoryTitle}>Tours & Excursiones</h3>
+                                        <h3 className={styles.extrasCategoryTitle}>
+                                            {formData.serviceType === 'hotel' ? 'Tours & Excursiones' : 'Hoteles en la Zona'}
+                                        </h3>
                                         <div className={styles.marqueeContainer}>
                                             <div className={styles.marqueeTrack}>
                                                 {/* Duplicamos los items para efecto infinito */}
-                                                {[...extras.tours, ...extras.tours].map((tour, idx) => {
-                                                    const isSelected = formData.selectedExtras.find(e => e.id === tour.id && e.type === 'tour');
+                                                {[...extras.tours, ...extras.tours].map((item, idx) => {
+                                                    const itemType = formData.serviceType === 'hotel' ? 'tour' : 'hotel';
+                                                    const isSelected = formData.selectedExtras.find(e => e.id === item.id && e.type === itemType);
                                                     return (
                                                         <div
-                                                            key={`${tour.id}-${idx}`}
+                                                            key={`${item.id}-${idx}`}
                                                             className={`${styles.marqueeCard} ${isSelected ? styles.selected : ''}`}
-                                                            onClick={() => toggleExtra(tour, 'tour')}
+                                                            onClick={() => toggleExtra(item, itemType)}
                                                         >
                                                             <div className={styles.marqueeCardImage}>
-                                                                <img src={tour.image_url} alt={tour.name} />
+                                                                <img src={item.image_url} alt={item.name} />
                                                             </div>
                                                             <div className={styles.marqueeCardContent}>
-                                                                <h4 className={styles.marqueeCardTitle}>{tour.name}</h4>
-                                                                <p className={styles.marqueeCardPrice}>+${tour.price}/persona</p>
+                                                                <h4 className={styles.marqueeCardTitle}>{item.name}</h4>
+                                                                <p className={styles.marqueeCardPrice}>
+                                                                    +${item.price}/{formData.serviceType === 'hotel' ? 'persona' : 'noche'}
+                                                                </p>
                                                             </div>
                                                             {isSelected && (
                                                                 <div className={styles.marqueeCardCheck}>
@@ -677,6 +814,13 @@ export default function QuotePageContent() {
                 {/* Footer with Navigation & Price */}
                 <div className={styles.footer}>
                     <div className={styles.footerLeft}>
+                        <button
+                            className={styles.cancelBtn}
+                            onClick={() => router.push('/')}
+                            title="Cancelar y volver al inicio"
+                        >
+                            ✕ Cancelar
+                        </button>
                         {currentStep > 1 && (
                             <button className={styles.backBtn} onClick={handleBack}>
                                 <ChevronLeft size={20} />
