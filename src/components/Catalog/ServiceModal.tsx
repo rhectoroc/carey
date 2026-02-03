@@ -315,13 +315,21 @@ export default function ServiceModal({ isOpen, onClose, service }: ServiceModalP
                             style={{ flex: 1, background: 'var(--color-primary-teal)', color: 'white', fontWeight: 'bold' }}
                             onClick={() => {
                                 const category = service.category.toLowerCase();
+                                const isDestination = category === 'destination' || category === 'destino';
+
+                                if (isDestination) {
+                                    router.push(`/search?location=${encodeURIComponent(service.title)}`);
+                                    onClose();
+                                    return;
+                                }
+
                                 const isTour = category.includes('tour') || category.includes('excursión');
                                 const param = isTour ? `tour_id=${service.id}` : `hotel_id=${service.id}`;
                                 router.push(`/quote?${param}`);
                                 onClose();
                             }}
                         >
-                            COTIZAR AHORA
+                            {(service.category === 'Destination' || service.category === 'Destino') ? 'EXPLORAR' : 'COTIZAR AHORA'}
                         </button>
                     </div>
                 </div>
