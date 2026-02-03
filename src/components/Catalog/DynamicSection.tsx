@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ServiceCard from './ServiceCard';
 import ServiceModal from './ServiceModal'; // Reusing existing modal if compatible
+import WaterfallCanvas from './WaterfallCanvas';
 import styles from './CategoryGrid.module.css'; // Reusing grid styles
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -254,10 +255,7 @@ export default function DynamicSection({ title, subtitle, endpoint, type, classN
             style={{ width: '100%', position: 'relative', overflow: 'hidden' }}
         >
             {variant === 'waterfall' && (
-                <div className={styles.waterfallBg}>
-                    <div className={styles.waterfallLayer}></div>
-                    <div className={styles.waterfallLayer}></div>
-                </div>
+                <WaterfallCanvas />
             )}
 
             {bgImage && (
