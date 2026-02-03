@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Service } from '@/data/mockServices';
-import { MapPin, Star, Utensils, Bus, Car, Martini, Cookie, PartyPopper, ChevronLeft, ChevronRight, CheckCircle } from 'lucide-react';
+import { MapPin, Star, Utensils, Bus, Car, Martini, Cookie, PartyPopper, ChevronLeft, ChevronRight, CheckCircle, Waves, Wifi, Wind, Tv, Dumbbell, Sparkles, Bed, Coffee } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import styles from './ServiceCard.module.css';
 
@@ -14,12 +14,20 @@ interface ServiceCardProps {
 
 export const getFeatureIcon = (feature: string) => {
     const lower = feature.toLowerCase();
-    if (lower.includes('almuerzo') || lower.includes('comida') || lower.includes('cena')) return <Utensils size={14} />;
+    if (lower.includes('almuerzo') || lower.includes('comida') || lower.includes('cena') || lower.includes('desayuno') || lower.includes('restaurant')) return <Utensils size={14} />;
     if (lower.includes('transporte') || lower.includes('traslado') || lower.includes('bus')) return <Bus size={14} />;
-    if (lower.includes('carro') || lower.includes('jeep')) return <Car size={14} />;
-    if (lower.includes('bebida') || lower.includes('hidratacion')) return <Martini size={14} />;
-    if (lower.includes('snack') || lower.includes('merienda')) return <Cookie size={14} />;
-    if (lower.includes('recreacion') || lower.includes('actividad')) return <PartyPopper size={14} />;
+    if (lower.includes('carro') || lower.includes('jeep') || lower.includes('estacionamiento')) return <Car size={14} />;
+    if (lower.includes('bebida') || lower.includes('hidratacion') || lower.includes('bar')) return <Martini size={14} />;
+    if (lower.includes('snack') || lower.includes('merienda') || lower.includes('snak')) return <Cookie size={14} />;
+    if (lower.includes('recreacion') || lower.includes('actividad') || lower.includes('animacion')) return <PartyPopper size={14} />;
+    if (lower.includes('piscina') || lower.includes('pool') || lower.includes('playa') || lower.includes('jacuzzi')) return <Waves size={14} />;
+    if (lower.includes('wifi') || lower.includes('internet')) return <Wifi size={14} />;
+    if (lower.includes('aire') || lower.includes('a/c') || lower.includes('clima')) return <Wind size={14} />;
+    if (lower.includes('tv') || lower.includes('televisión') || lower.includes('television')) return <Tv size={14} />;
+    if (lower.includes('gym') || lower.includes('gimnasio') || lower.includes('deporte')) return <Dumbbell size={14} />;
+    if (lower.includes('spa') || lower.includes('masaje') || lower.includes('relax')) return <Sparkles size={14} />;
+    if (lower.includes('cama') || lower.includes('habitacion') || lower.includes('hospedaje')) return <Bed size={14} />;
+    if (lower.includes('cafe') || lower.includes('cafetera')) return <Coffee size={14} />;
     return <CheckCircle size={14} />;
 };
 

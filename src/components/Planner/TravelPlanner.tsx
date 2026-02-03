@@ -49,7 +49,6 @@ export default function TravelPlanner() {
                 );
             }
 
-            ScrollTrigger.refresh();
         }, scope);
 
         return () => ctx.revert();
