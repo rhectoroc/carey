@@ -73,9 +73,11 @@ export default function ServiceModal({ isOpen, onClose, service }: ServiceModalP
 
     const handleConsultar = () => {
         const title = service.title;
-        const category = service.category.toLowerCase();
+        const category = (service.category || '').toLowerCase();
 
-        if (category === 'destination' || category === 'destino') {
+        console.log('Consulting service:', { title, category, service });
+
+        if (category.includes('destination') || category.includes('destino')) {
             const message = `Necesito más información acerca de los hoteles y tours disponibles para ${title}`;
             onClose();
             setTimeout(() => {
