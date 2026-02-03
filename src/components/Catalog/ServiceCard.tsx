@@ -99,7 +99,7 @@ export default function ServiceCard({ service, onClick, style }: ServiceCardProp
                 )}
 
                 <div className={styles.tagsContainer} style={{ position: 'absolute', top: '10px', left: '10px', display: 'flex', gap: '5px', flexWrap: 'wrap' }}>
-                    {service.tags && service.tags.map((tag, index) => (
+                    {Array.isArray(service.tags) && service.tags.map((tag, index) => (
                         <span key={index} style={{
                             backgroundColor: 'white',
                             color: 'red',

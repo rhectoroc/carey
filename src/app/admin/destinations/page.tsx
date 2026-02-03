@@ -152,7 +152,7 @@ export default function DestinationsPage() {
                                     <td>{dest.type || 'Ciudad'}</td>
                                     <td>{dest.is_featured ? 'Sí' : 'No'}</td>
                                     <td>
-                                        {dest.tags && dest.tags.map(t => (
+                                        {Array.isArray(dest.tags) && dest.tags.map(t => (
                                             <span key={t} style={{ background: '#e2e8f0', padding: '2px 6px', borderRadius: '4px', fontSize: '0.8rem', marginRight: '4px' }}>
                                                 {t}
                                             </span>
@@ -259,7 +259,7 @@ export default function DestinationsPage() {
                                 <button type="button" onClick={addTag} className={styles.actionButton} style={{ padding: '0 15px' }}>Añadir</button>
                             </div>
                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                                {currentDestination.tags?.map(tag => (
+                                {Array.isArray(currentDestination.tags) && currentDestination.tags.map(tag => (
                                     <span key={tag} style={{ background: 'var(--color-primary-teal)', color: 'white', padding: '4px 10px', borderRadius: '15px', display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.85rem' }}>
                                         {tag}
                                         <X size={14} style={{ cursor: 'pointer' }} onClick={() => removeTag(tag)} />
