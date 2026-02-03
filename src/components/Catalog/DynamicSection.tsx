@@ -19,7 +19,7 @@ interface DynamicSectionProps {
     className?: string;
     sectionId?: string;
     bgImage?: string;
-    variant?: 'luxuryFlow' | 'default';
+    variant?: 'luxuryFlow' | 'default' | 'waterfall';
     subtitleVariant?: 'rolling' | 'staggered';
     cardVariant?: 'slideUp' | 'popIn' | 'sideSlide' | 'flip';
 }
@@ -253,6 +253,13 @@ export default function DynamicSection({ title, subtitle, endpoint, type, classN
             className={`${className} ${bgImage ? styles.withBg : ''}`}
             style={{ width: '100%', position: 'relative', overflow: 'hidden' }}
         >
+            {variant === 'waterfall' && (
+                <div className={styles.waterfallBg}>
+                    <div className={styles.waterfallLayer}></div>
+                    <div className={styles.waterfallLayer}></div>
+                </div>
+            )}
+
             {bgImage && (
                 <div
                     ref={bgRef}
