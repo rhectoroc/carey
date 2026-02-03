@@ -33,7 +33,6 @@ export default function Home() {
                     endpoint="/api/catalog/destinations"
                     type="destination"
                     className={styles.popularDestinations}
-                    variant="waterfall"
                     subtitleVariant="rolling"
                     cardVariant="popIn"
                 />
