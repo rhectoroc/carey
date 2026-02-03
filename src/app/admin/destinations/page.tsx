@@ -313,6 +313,7 @@ export default function DestinationsPage() {
                             gallery: currentDestination.gallery,
                             tags: currentDestination.tags
                         }}
+                        style={{ opacity: 1 }}
                     />
                 </div>
             </div>
