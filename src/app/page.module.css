@@ -1,7 +1,18 @@
 .popularDestinations {
-    background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+    background: transparent;
     position: relative;
     overflow: hidden;
+    color: white;
+    /* Ensure text is visible on dark background */
+}
+
+/* Override title color for this dark section */
+.popularDestinations h2 {
+    color: white !important;
+}
+
+.popularDestinations p {
+    color: rgba(255, 255, 255, 0.8) !important;
 }
 
 .popularDestinations::before {

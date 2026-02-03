@@ -50,9 +50,9 @@ const WaterfallCanvas = () => {
             }
 
             draw(ctx: CanvasRenderingContext2D) {
-                // Using brand color (Teal/Blue) instead of gray for water effect
-                // r=31, g=109, b=140
-                ctx.strokeStyle = `rgba(31, 109, 140, ${this.alpha})`;
+                // Using bright teal/cyan for contrast against dark background
+                // r=34, g=211, b=238 (Cyan-400)
+                ctx.strokeStyle = `rgba(34, 211, 238, ${this.alpha * 2})`; // Increased brightness and alpha
                 ctx.beginPath();
                 ctx.moveTo(this.x + this.x / 2, this.y + this.y / 2);
                 ctx.lineTo(this.x + this.x / 2 + this.width / 2, this.y + this.y / 2 + this.height);
@@ -109,8 +109,9 @@ const WaterfallCanvas = () => {
                 width: '100%',
                 height: '100%',
                 pointerEvents: 'none',
-                opacity: 0.6, // Blend with background
-                mixBlendMode: 'multiply'
+                background: 'linear-gradient(to bottom, #0f172a, #1e293b)', // Dark slate background
+                opacity: 1,
+                zIndex: 0
             }}
         />
     );
