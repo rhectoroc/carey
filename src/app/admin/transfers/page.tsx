@@ -230,16 +230,7 @@ export default function TransfersPage() {
                                 required
                             />
                         </div>
-                        <div className={styles.formGroup}>
-                            <label className={styles.label} style={{ color: '#333' }}>Slug</label>
-                            <input
-                                className={styles.input}
-                                style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
-                                value={currentTransfer.slug || ''}
-                                onChange={(e) => setCurrentTransfer({ ...currentTransfer, slug: e.target.value })}
-                                required
-                            />
-                        </div>
+
                         <div className={styles.formGroup}>
                             <label className={styles.label} style={{ color: '#333' }}>Tipo</label>
                             <select

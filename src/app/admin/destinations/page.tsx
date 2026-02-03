@@ -209,16 +209,7 @@ export default function DestinationsPage() {
                                 required
                             />
                         </div>
-                        <div className={styles.formGroup}>
-                            <label className={styles.label} style={{ color: '#333' }}>Slug</label>
-                            <input
-                                className={styles.input}
-                                style={{ background: '#f8fafc', border: '1px solid #ddd', color: '#333' }}
-                                value={currentDestination.slug || ''}
-                                onChange={(e) => setCurrentDestination({ ...currentDestination, slug: e.target.value })}
-                                required
-                            />
-                        </div>
+
                         <div className={styles.formGroup}>
                             <label className={styles.label} style={{ color: '#333' }}>Tipo</label>
                             <select

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { query } from '@/lib/db';
 import { getCurrentUser } from '@/lib/auth';
+import { slugify } from '@/lib/slugify';
 
 export async function GET() {
     try {
@@ -38,11 +39,13 @@ export async function POST(request: Request) {
         if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
         const body = await request.json();
-        const { name, slug, description, image_url, is_featured, is_promotion, type } = body;
+        const { name, description, image_url, is_featured, is_promotion, type } = body;
 
-        if (!name || !slug) {
-            return NextResponse.json({ error: 'Name and Slug are required' }, { status: 400 });
+        if (!name) {
+            return NextResponse.json({ error: 'Name is required' }, { status: 400 });
         }
+
+        const slug = slugify(name);
 
         const sql = `
             INSERT INTO destinations (name, slug, description, image_url, is_featured, is_promotion, type, gallery, tags, created_by)

@@ -9,7 +9,6 @@ import ImageGalleryUpload from '@/components/Admin/ImageGalleryUpload';
 import ServiceCard from '@/components/Catalog/ServiceCard';
 import ServiceModal from '@/components/Catalog/ServiceModal';
 import { Service } from '@/data/mockServices';
-import { slugify } from '@/lib/slugify';
 
 interface Hotel {
     id: number;
@@ -100,14 +99,8 @@ export default function HotelsPage() {
 
         const featuresArray = featuresInput.split(',').map(f => f.trim()).filter(f => f);
         const finalGallery = currentHotel.gallery || [];
-        const autoSlug = slugify(currentHotel.name || '');
-
-        // Log for debugging
-        console.log('Saving Hotel:', { name: currentHotel.name, slug: autoSlug, galleryCount: finalGallery.length });
-
         const payload = {
             ...currentHotel,
-            slug: autoSlug,
             features: featuresArray,
             price: Number(currentHotel.price),
             stars: Number(currentHotel.stars),

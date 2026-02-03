@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { query } from '@/lib/db';
 import { getCurrentUser } from '@/lib/auth';
+import { slugify } from '@/lib/slugify';
 
 export async function GET() {
     try {
@@ -35,7 +36,9 @@ export async function POST(request: Request) {
         if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
         const body = await request.json();
-        const { name, slug, description, price, destination_id, image_url, stars, features, is_featured, is_promotion, type, price_child, price_infant, room_types, occupancies, plan_types, pricing_matrix, show_price_publicly, price_valid_until } = body;
+        const { name, description, price, destination_id, image_url, stars, features, is_featured, is_promotion, type, price_child, price_infant, room_types, occupancies, plan_types, pricing_matrix, show_price_publicly, price_valid_until } = body;
+
+        const slug = slugify(name);
 
         const sql = `
             INSERT INTO hotels (name, slug, description, price, destination_id, image_url, stars, features, is_featured, is_promotion, type, price_child, price_infant, gallery, tags, created_by, room_types, occupancies, plan_types, pricing_matrix, show_price_publicly, price_valid_until)
