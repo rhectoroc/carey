@@ -74,6 +74,16 @@ export default function ServiceModal({ isOpen, onClose, service }: ServiceModalP
     const handleConsultar = () => {
         const title = service.title;
         const category = service.category.toLowerCase();
+
+        if (category === 'destination' || category === 'destino') {
+            const message = `Necesito más información acerca de los hoteles y tours disponibles para ${title}`;
+            onClose();
+            setTimeout(() => {
+                openChatbot(message);
+            }, 300);
+            return;
+        }
+
         let actionMessage = `reservar el ${service.title}`;
 
         if (category.includes('tour') || category.includes('excursión')) {
