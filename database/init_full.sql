@@ -251,7 +251,7 @@ INSERT INTO unforgettable_moments (title, location, description, video_url, thum
 INSERT INTO auth_user (username, password_hash, role, first_name, last_name, email)
 VALUES (
     'admin',
-    '$2b$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.',  -- admin1234
+    '$2b$10$DX2snwrcuuUK9wpAOJFCseoFNf3x3asDX.aMI.CASR.A3Z7AXYTEm',  -- admin1234
     'administrador',
     'Admin',
     'Carey',
