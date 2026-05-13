@@ -1,13 +1,12 @@
 import { Pool } from 'pg';
 
-// Use environment variable for connection string
-// Example: postgres://postgres:password@host:5432/careytour
+// Connection string set via DATABASE_URL environment variable.
+// Example: postgres://postgres:password@carey_db:5432/carey?sslmode=disable
+// NOTE: SSL config is driven entirely by the connection string (sslmode param).
+//       Do NOT override ssl here to avoid conflicts with sslmode=disable.
 const connectionString = process.env.DATABASE_URL;
 
-const pool = new Pool({
-    connectionString,
-    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
-});
+const pool = new Pool({ connectionString });
 
 export const query = async (text: string, params?: any[]) => {
     const start = Date.now();
