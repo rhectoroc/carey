@@ -41,12 +41,17 @@ export async function POST(request: Request) {
 
         const response = NextResponse.json({ success: true, role: user.role });
 
+        // Detect HTTPS via X-Forwarded-Proto (set by Easypanel's reverse proxy).
+        // Do NOT rely on NODE_ENV alone — the app runs on HTTP internally even in production.
+        const proto = request.headers.get('x-forwarded-proto');
+        const isHttps = proto === 'https';
+
         // Set the session token in cookies
         response.cookies.set('admin_session', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
-            maxAge: 60 * 60 * 24, // 1 day cookie life (server-side inactivity will override this)
+            secure: isHttps,
+            sameSite: 'lax',       // 'strict' can block the cookie on first load after redirect
+            maxAge: 60 * 60 * 24,  // 1 día (inactividad de 15 min controlada server-side)
             path: '/',
         });
 
