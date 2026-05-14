@@ -49,3 +49,9 @@
   - **Archivos:** `src/app/quote/page.tsx` (Suspense wrapper), `src/app/quote/QuotePageContent.tsx` (lógica wizard), `src/app/quote/QuotePage.module.css` (estilos premium).
   (Estado: Completado - Innovador y Profesional)
 
+### 2026-05-13
+- **Migración a Nuevo VPS:** Creación de script `database/init_full.sql` unificado (schema + índices + seed data + usuario admin) para inicialización completa desde cero. Nombre de BD corregido a `carey`. (Estado: Completado)
+- **Corrección db.ts:** Eliminado override de SSL en el Pool de pg. La conexión `sslmode=disable` se respeta directamente desde la connection string `DATABASE_URL`, evitando conflictos. Archivo: `src/lib/db.ts`. (Estado: Completado)
+- **Fix Cookie de Sesión (Crítico):** Corregido bug donde la cookie `admin_session` se marcaba como `Secure: true` basándose en `NODE_ENV`, ignorando que Easypanel termina SSL en el proxy reverso. Ahora se detecta HTTPS real vía header `X-Forwarded-Proto`. `sameSite` cambiado de `strict` a `lax`. Archivo: `src/app/api/auth/login/route.ts`. (Estado: Completado)
+- **Volumen Docker:** Confirmado path `/files` como mount point para persistencia de imágenes. El `imageProcessor.ts` detecta automáticamente este directorio en producción. (Estado: Documentado)
+- **Usuarios Admin:** Hash bcrypt corregido para `admin`/`admin1234`. Creado usuario `rhectoroc@gmail.com` con rol `administrador` via pgcrypto en DbGate. (Estado: Completado)
