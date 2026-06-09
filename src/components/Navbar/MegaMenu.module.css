@@ -1,0 +1,114 @@
+.megaMenuOverlay {
+    position: fixed;
+    top: 70px; /* Adjust based on navbar height */
+    left: 0;
+    width: 100vw;
+    height: calc(100vh - 70px);
+    background-color: #f7f9f6; /* Very light subtle green/beige */
+    z-index: 99;
+    overflow-y: auto;
+    border-top: 1px solid rgba(0,0,0,0.05);
+}
+
+.megaMenuContainer {
+    display: flex;
+    justify-content: space-between;
+    padding: 60px 5%;
+    max-width: 1600px;
+    margin: 0 auto;
+    height: 100%;
+}
+
+.column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 15px;
+}
+
+.categoryTitle {
+    font-family: var(--font-playfair), serif;
+    font-size: 2.5rem;
+    color: #c9caca; /* Muted grey for the main title */
+    margin-bottom: 40px;
+    font-weight: 400;
+}
+
+.imageWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+}
+
+.imagePlaceholder {
+    width: 80px;
+    height: 220px;
+    background: linear-gradient(180deg, #d4a373 0%, #faedcd 100%); /* Elegant colors */
+    border-radius: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.column:hover .imagePlaceholder {
+    transform: translateY(-10px);
+}
+
+.imagePlaceholder span {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    font-family: var(--font-inter), sans-serif;
+    color: white;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.linkList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+}
+
+.listItem {
+    margin-bottom: 12px;
+}
+
+.link {
+    font-family: 'Inter', sans-serif;
+    color: #1a1a1a;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.2s ease;
+}
+
+.link:hover {
+    color: #26c6da; /* Accent color */
+}
+
+@media (max-width: 1024px) {
+    .megaMenuContainer {
+        flex-wrap: wrap;
+    }
+    .column {
+        flex: 0 0 33.33%;
+        margin-bottom: 40px;
+    }
+}
+
+@media (max-width: 768px) {
+    .column {
+        flex: 0 0 50%;
+    }
+}
+
+@media (max-width: 480px) {
+    .column {
+        flex: 0 0 100%;
+    }
+}

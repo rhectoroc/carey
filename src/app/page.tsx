@@ -3,7 +3,7 @@
 import Navbar from "@/components/Navbar/Navbar";
 import Footer from "@/components/Footer/Footer";
 import Link from 'next/link'; // Ensure Link is imported if needed, or remove unused imports
-import Hero from "@/components/Home/Hero";
+import HeroSlider from "@/components/Home/HeroSlider";
 import TravelSearch from "@/components/Home/TravelSearch";
 // import CategoryGrid from "@/components/Catalog/CategoryGrid"; // Replaced
 import DynamicSection from "@/components/Catalog/DynamicSection";
@@ -21,7 +21,7 @@ export default function Home() {
         <>
             <Navbar />
             <main>
-                <Hero />
+                <HeroSlider />
                 {/* Spacing managed within components for better responsiveness */}
 
                 <PromotionsSection />

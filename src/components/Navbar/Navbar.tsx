@@ -4,11 +4,13 @@ import { useState } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { Menu, Globe, User } from 'lucide-react';
 import Link from 'next/link';
+import MegaMenu from './MegaMenu';
 import styles from './Navbar.module.css';
 
 export default function Navbar() {
     const { language, setLanguage, t } = useLanguage();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [megaMenuOpen, setMegaMenuOpen] = useState(false);
 
     const toggleLanguage = () => {
         setLanguage(language === 'es' ? 'en' : 'es');
@@ -28,7 +30,13 @@ export default function Navbar() {
             <div className={styles.links}>
                 <Link href="/" className={styles.link}>{t('nav.home')}</Link>
                 <Link href="/about" className={styles.link}>{t('nav.about')}</Link>
-                <Link href="/destinations" className={styles.link}>{t('nav.destinations')}</Link>
+                <button 
+                    className={styles.link} 
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 'inherit' }}
+                    onClick={() => setMegaMenuOpen(!megaMenuOpen)}
+                >
+                    EXPLORAR +
+                </button>
                 <Link href="/contact" className={styles.link}>{t('nav.contact')}</Link>
             </div>
 
@@ -59,6 +67,8 @@ export default function Navbar() {
                 <Link href="/destinations" className={styles.mobileLink} onClick={() => setMobileMenuOpen(false)}>{t('nav.destinations')}</Link>
                 <Link href="/contact" className={styles.mobileLink} onClick={() => setMobileMenuOpen(false)}>{t('nav.contact')}</Link>
             </div>
+
+            <MegaMenu isOpen={megaMenuOpen} onClose={() => setMegaMenuOpen(false)} />
         </nav>
     );
 }

@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { ChatbotProvider } from "@/context/ChatbotContext";
 import Chatbot from "@/components/Chatbot/Chatbot";
+import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
+
+const playfair = Playfair_Display({ subsets: ["latin"], variable: '--font-playfair' });
+const inter = Inter({ subsets: ["latin"], variable: '--font-inter' });
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://viajes-carey.com";
 
@@ -90,7 +94,7 @@ export default function RootLayout({
                     }}
                 />
             </head>
-            <body>
+            <body className={`${inter.variable} ${playfair.variable}`}>
                 <LanguageProvider>
                     <ChatbotProvider>
                         {children}
