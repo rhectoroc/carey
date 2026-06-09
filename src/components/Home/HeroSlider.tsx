@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
 import Link from 'next/link';
 import styles from './HeroSlider.module.css';
 
@@ -43,33 +44,32 @@ export default function HeroSlider() {
     const sliderRef = useRef<HTMLDivElement>(null);
     const [activeIndex, setActiveIndex] = useState(0);
 
-    useEffect(() => {
+    useGSAP(() => {
         if (!containerRef.current || !sliderRef.current) return;
 
         const slidesElements = gsap.utils.toArray(`.${styles.slide}`) as HTMLElement[];
         if (slidesElements.length === 0) return;
 
         // Pin the container and animate slides
-        const ctx = gsap.context(() => {
-            ScrollTrigger.create({
-                trigger: containerRef.current,
-                start: "top top",
-                end: `+=${window.innerHeight * slides.length}`,
-                pin: true,
-                scrub: 1,
-                onUpdate: (self) => {
-                    // Calculate which slide is active based on progress
-                    const progress = self.progress;
-                    const index = Math.min(
-                        Math.floor(progress * slides.length),
-                        slides.length - 1
-                    );
-                    
-                    if (index !== activeIndex) {
-                        setActiveIndex(index);
-                    }
+        ScrollTrigger.create({
+            trigger: containerRef.current,
+            start: "top top",
+            end: `+=${window.innerHeight * slides.length}`,
+            pin: true,
+            scrub: 1,
+            onUpdate: (self) => {
+                // Calculate which slide is active based on progress
+                const progress = self.progress;
+                const index = Math.min(
+                    Math.floor(progress * slides.length),
+                    slides.length - 1
+                );
+                
+                if (index !== activeIndex) {
+                    setActiveIndex(index);
                 }
-            });
+            }
+        });
 
             // Animate slides in sequence
             slidesElements.forEach((slide, i) => {
@@ -89,10 +89,7 @@ export default function HeroSlider() {
                     }
                 );
             });
-        }, containerRef);
-
-        return () => ctx.revert(); // Cleanup
-    }, [activeIndex]);
+    }, { scope: containerRef });
 
     return (
         <div ref={containerRef} className={styles.heroContainer} style={{ backgroundColor: slides[activeIndex]?.color || '#ffffff' }}>
