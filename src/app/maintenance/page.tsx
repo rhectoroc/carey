@@ -46,9 +46,9 @@ export default function MaintenancePage() {
         <div className={styles.contactInfo}>
           <h3 className={styles.contactTitle}>¿Necesitas asistencia inmediata?</h3>
           <div className={styles.contactMethods}>
-            <a href="https://wa.me/584240000000" className={styles.contactMethod} target="_blank" rel="noopener noreferrer">
+            <a href="https://wa.me/584122476575" className={styles.contactMethod} target="_blank" rel="noopener noreferrer">
               <Phone size={20} className={styles.socialIcon} />
-              <span>Contáctanos por WhatsApp</span>
+              <span>Contáctanos por WhatsApp (+58 412-2476575)</span>
             </a>
             <a href="mailto:info@viajes-carey.com" className={styles.contactMethod}>
               <Mail size={20} className={styles.socialIcon} />
