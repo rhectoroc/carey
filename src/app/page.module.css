@@ -1,0 +1,65 @@
+.popularDestinations {
+    background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.popularDestinations::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(#e0e0e0 1px, transparent 1px);
+    background-size: 20px 20px;
+    opacity: 0.3;
+    z-index: 0;
+}
+
+.exclusiveHotels {
+    background: transparent;
+    color: #333;
+    position: relative;
+    overflow: hidden;
+}
+
+.exclusiveHotels::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(#e0e0e0 1px, transparent 1px);
+    background-size: 20px 20px;
+    opacity: 0.3;
+    z-index: 0;
+}
+
+.exclusiveHotels>div {
+    position: relative;
+    z-index: 1;
+}
+
+.exclusiveHotels p {
+    opacity: 0.7;
+}
+
+.toursAdventures {
+    background: linear-gradient(to right, #ffffff, #f0fdf4);
+    /* Very light green tint */
+    position: relative;
+}
+
+.toursAdventures::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    left: -50px;
+    width: 200px;
+    height: 200px;
+    background: rgba(74, 222, 128, 0.1);
+    border-radius: 50%;
+    filter: blur(40px);
+}
