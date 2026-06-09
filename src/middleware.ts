@@ -3,8 +3,8 @@ import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
     // Maintenance Mode Logic
-    // Set this environment variable to 'true' to activate maintenance mode
-    const MAINTENANCE_MODE = process.env.MAINTENANCE_MODE === 'true';
+    // Set to true manually to force maintenance mode without depending on .env
+    const MAINTENANCE_MODE = true;
     const isMaintenancePath = request.nextUrl.pathname === '/maintenance';
     const isAdminPath = request.nextUrl.pathname.startsWith('/admin');
 
