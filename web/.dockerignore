@@ -1,0 +1,19 @@
+
+# Dependencies
+node_modules
+.next
+.git
+.gitignore
+.dockerignore
+Dockerfile
+# Non-essential folders
+scripts
+database/migrations
+.gemini
+.antigravityignore
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.eslintcache
