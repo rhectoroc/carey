@@ -8,7 +8,18 @@ export function middleware(request: NextRequest) {
     const isMaintenancePath = request.nextUrl.pathname === '/maintenance';
     const isAdminPath = request.nextUrl.pathname.startsWith('/admin');
 
-    if (MAINTENANCE_MODE && !isAdminPath && !isMaintenancePath) {
+    const hasPreviewCookie = request.cookies.has('preview_mode');
+    const isPreviewRequest = request.nextUrl.searchParams.has('preview');
+
+    if (isPreviewRequest) {
+        // Strip the query parameter and set the cookie
+        const url = new URL(request.nextUrl.pathname, request.url);
+        const response = NextResponse.redirect(url);
+        response.cookies.set('preview_mode', 'true', { path: '/', maxAge: 60 * 60 * 24 }); // 24 hours
+        return response;
+    }
+
+    if (MAINTENANCE_MODE && !isAdminPath && !isMaintenancePath && !hasPreviewCookie) {
         return NextResponse.redirect(new URL('/maintenance', request.url));
     }
 
